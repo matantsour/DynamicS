@@ -1,3 +1,4 @@
+from django import urls
 from django.core import validators
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -64,8 +65,11 @@ class Login_Details(models.Model):
 
 
 class WorkingHour(models.Model):
-    id = models.IntegerField(primary_key=True)
-    type = models.CharField(max_length=100)
+    id = models.AutoField(primary_key=True)
+    u_id=models.ForeignKey(User,on_delete=CASCADE)
+    working_date=models.DateField()
+    stime=models.TimeField()
+    etime=models.TimeField()
 
     def __str__(self):
         return self.type
@@ -81,47 +85,62 @@ class Status(models.Model):
 
 class Status(models.Model):
     id = models.IntegerField(primary_key=True)
-    type = models.CharField(max_length=100)
+    desc = models.CharField(max_length=100)
 
     def __str__(self):
         return self.type
 
 
 class File(models.Model):
-    id = models.IntegerField(primary_key=True)
-    type = models.CharField(max_length=100)
+    id = models.AutoField(primary_key=True)
+    urls = models.URLField(max_length=300)
+    file_creation_date=models.DateField()
 
     def __str__(self):
         return self.type
 
 
 class Album(models.Model):
-    id = models.IntegerField(primary_key=True)
-    type = models.CharField(max_length=100)
+    id = models.AutoField(primary_key=True)
+    album_name = models.CharField(max_length=100)
+    release_date=models.DateField()
+    size=models.IntegerField()
+    length=models.FloatField()
 
     def __str__(self):
-        return self.type
+        return "-".join([self.id, self.album_name])
 
 
 class Creation(models.Model):
-    id = models.IntegerField(primary_key=True)
-    type = models.CharField(max_length=100)
+    id = models.AutoField(primary_key=True)
+    creator = models.CharField(max_length=100)
+    creation_date=models.DateField()
+    creator = models.CharField(max_length=100)
+    album_id=models.ForeignKey(Album,on_delete=CASCADE)
+    current_file = models.ForeignKey(File, null=True, blank=True, on_delete=models.SET_NULL)
+    previous_file=models.ForeignKey(File, null=True, blank=True, on_delete=models.SET_NULL)
+    profit=models.FloatField()
 
     def __str__(self):
         return self.type
 
 
 class Resource(models.Model):
-    id = models.IntegerField(primary_key=True)
-    type = models.CharField(max_length=100)
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    unit_cost=models.FloatField()
 
     def __str__(self):
         return self.type
 
 
 class Phase(models.Model):
-    id = models.IntegerField(primary_key=True)
-    type = models.CharField(max_length=100)
+    id = models.AutoField(primary_key=True)
+    creation_id = models.ForeignKey(Creation,on_delete=CASCADE)
+    creation_id = models.ForeignKey(Creation,on_delete=CASCADE)
+    status=models.ForeignKey(Status,on_delete=models.SET_NULL)
+    placement=models.IntegerField()
+    name=models.CharField(max_length=100)
     resources = models.ManyToManyField(Resource, through='Phase_Resources')
 
     def __str__(self):
@@ -129,8 +148,8 @@ class Phase(models.Model):
 
 
 class Phase_Resources(models.Model):
-    phase = models.ForeignKey(Phase)
-    resource = models.ForeignKey(Resource)
+    phase = models.ForeignKey(Phase,on_delete=CASCADE)
+    resource = models.ForeignKey(Resource,on_delete=CASCADE)
     resource_quantity = models.FloatField()
 
     def __str__(self):
