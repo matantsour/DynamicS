@@ -1,8 +1,43 @@
 {% load static %}
 
-<!DOCTYPE html>
 <html lang="en">
 <head>
+<style>
+   .button-24 {
+      width: 100%;
+      background: #C0C0C0;
+      border: 1px solid #FF4742;
+      border-radius: 6px;
+      box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+      box-sizing: border-box;
+      color: #FFFFFF;
+      cursor: pointer;
+      display: inline-block;
+      font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      outline: 0;
+      padding: 12px 14px;
+      text-align: center;
+      text-rendering: geometricprecision;
+      text-transform: none;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      vertical-align: middle;
+   }
+
+   .button-24:hover,
+   .button-24:active {
+   background-color: initial;
+   background-position: 0 0;
+   color: #FF4742;
+   }
+
+   .button-24:active {
+   opacity: .5;
+   }
+</style>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +50,8 @@
 </head>
 <body>
 
-    <table id="first_table" style="border: 1px solid #CE233C; border-radius: 5px; width: 100%; height: 100%; " dir="rtl" align="center" cellspacing="0" cellpadding="0">
+
+      <table id="first_table" style="border: 1px solid #CE233C; border-radius: 5px; width: 100%; height: 7%; " dir="rtl" align="center" cellspacing="0" cellpadding="0">
         <tr style="background-color: #CE233C">
            <th id="first_row" style="width: 5%">
            </th>
@@ -36,11 +72,28 @@
            <th  id="first_row" style="width: 12%">
            </th>
            <th id="first_row" style="border-radius:25px;width: 15%; font-family: Assistant; height: 50px;">
-              <table style="border: 2px solid #F5414F; border-radius: 50px; 100%; height: 70%" align="center">
+              <table style="border: 2px solid #F5414F; border-radius: 50px; 100%; height: 7%" align="center">
                  <tr>
                     <td style="font-size: 22px;font-weight:bold">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;אזור אישי&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
                  </tr>
-              </table>
-
+               </table>
+      </table>
+      <table align="right" cellpadding="2" style="text-align: center; width: 20%; height: 20%;">
+         <tr>
+            <td class='button-24'>פריט 1</td>
+         </tr>
+         <tr>
+            <td class='button-24'>פריט 2</td>
+         </tr>
+         <tr>
+            <td class='button-24'>פריט 3</td>
+         </tr>
+         <tr>
+            <td class='Button-24'>פריט 4</td>
+         </tr>
+      </table>
+      
+      
+      
 </body>
 </html>
