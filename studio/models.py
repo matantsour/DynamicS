@@ -23,11 +23,11 @@ class User(models.Model):
     user_type = models.ForeignKey(User_Type, on_delete=models.CASCADE)
     fname = models.CharField(max_length=100)
     lname = models.CharField(max_length=100)
-    city = models.CharField(max_length=100)
-    phone = models.CharField(max_length=12)
-    dob = models.DateField(max_length=8)
-    dor = models.DateField(max_length=8)  # date of registration
-    organization = models.CharField(max_length=100)
+    city = models.CharField(max_length=100,blank=True)
+    phone = models.CharField(max_length=12,blank=True)
+    dob = models.DateField(max_length=8,blank=True,null=True)
+    dor = models.DateField(max_length=8,blank=True,null=True)  # date of registration
+    organization = models.CharField(max_length=100,blank=True)
 
 
 class Employee(models.Model):
@@ -93,7 +93,7 @@ class Status(models.Model):
 
 class File(models.Model):
     id = models.AutoField(primary_key=True)
-    urls = models.URLField(max_length=300)
+    url = models.URLField(max_length=300)
     file_creation_date = models.DateField()
 
     def __str__(self):
@@ -103,9 +103,9 @@ class File(models.Model):
 class Album(models.Model):
     id = models.AutoField(primary_key=True)
     album_name = models.CharField(max_length=100)
-    release_date = models.DateField()
-    size = models.IntegerField()
-    length = models.FloatField()
+    release_date = models.DateField(blank=True,null=True)
+    size = models.IntegerField(blank=True,null=True)
+    length = models.FloatField(blank=True,null=True)
 
     def __str__(self):
         return "-".join([self.id, self.album_name])
@@ -113,10 +113,9 @@ class Album(models.Model):
 
 class Creation(models.Model):
     id = models.AutoField(primary_key=True)
-    creator = models.CharField(max_length=100)
-    creation_date = models.DateField()
-    creator = models.CharField(max_length=100)
-    album_id = models.ForeignKey(Album, on_delete=CASCADE)
+    creator = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
+    creation_date = models.DateField(blank=True,null=False,auto_now_add=True)
+    album_id = models.ForeignKey(Album, null=True, blank=True, on_delete=models.SET_NULL)
     current_file = models.ForeignKey(
         File, null=True, blank=True, on_delete=models.SET_NULL, related_name='current_file')
     previous_file = models.ForeignKey(
@@ -138,12 +137,11 @@ class Resource(models.Model):
 
 class Phase(models.Model):
     id = models.AutoField(primary_key=True)
-    creation_id = models.ForeignKey(Creation, on_delete=CASCADE)
-    creation_id = models.ForeignKey(Creation, on_delete=CASCADE)
+    creation_id = models.ForeignKey(Creation, on_delete=models.CASCADE)
     status = models.ForeignKey(Status, on_delete=models.CASCADE)
     placement = models.IntegerField()
     name = models.CharField(max_length=100)
-    resources = models.ManyToManyField(Resource, through='Phase_Resources')
+    resources = models.ManyToManyField(Resource,null=False, blank=True, through='Phase_Resources')
 
     def __str__(self):
         return self.id
@@ -166,6 +164,8 @@ class Meeting(models.Model):
     end_date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
+    topic=models.CharField(max_length=100)
+    location=models.CharField(max_length=100,blank=True)
     # https://djangotricks.blogspot.com/2019/10/working-with-dates-and-times-in-forms.html
 
     def __str__(self):
