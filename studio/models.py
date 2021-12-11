@@ -57,7 +57,7 @@ class Employee(models.Model):
     date_of_start = models.DateField(max_length=8)
 
     def __str__(self):
-        return "-".join([self.u_id.fname+" "+self.u_id.lname, self.title, self.u_id.user_type])
+        return "-".join([self.u_id.fname+" "+self.u_id.lname, self.title, self.u_id.user_type.type])
 
 
 class Login_Details(models.Model):
@@ -84,7 +84,7 @@ class WorkingHour(models.Model):
     etime = models.TimeField()
 
     def __str__(self):
-        return " | ".join([str(self.u_id), self.working_date, self.stime, self.etime])
+        return " | ".join([str(i) for i in [self.u_id, self.working_date, self.stime, self.etime]])
 
 
 class Status(models.Model):
@@ -102,7 +102,7 @@ class File(models.Model):
         null=False, blank=True, editable=False, auto_now=True)
 
     def __str__(self):
-        return self.url+"-"+self.file_creation_date
+        return str(self.file_creation_date)+"-"+self.url
 
 
 class Album(models.Model):
@@ -179,8 +179,8 @@ class Meeting(models.Model):
     # https://djangotricks.blogspot.com/2019/10/working-with-dates-and-times-in-forms.html
 
     def __str__(self):
-        attendees_number = str(len(list(self.attendees.all())))
-        return "-".join([self.topic, self.start_date, self.start_time, attendees_number])
+        attendees_number = str(len(list(self.attendees.all())))+" attendees"
+        return "-".join([str(i) for i in [self.topic, self.start_date, self.start_time, attendees_number]])
 
 
 class File_Deletion_History(models.Model):
