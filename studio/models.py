@@ -23,11 +23,15 @@ class User(models.Model):
     user_type = models.ForeignKey(User_Type, on_delete=models.CASCADE)
     fname = models.CharField(max_length=100)
     lname = models.CharField(max_length=100)
-    city = models.CharField(max_length=100,blank=True)
-    phone = models.CharField(max_length=12,blank=True)
-    dob = models.DateField(max_length=8,blank=True,null=True)
-    dor = models.DateField(max_length=8,blank=True,null=True)  # date of registration
-    organization = models.CharField(max_length=100,blank=True)
+    city = models.CharField(max_length=100, blank=True)
+    phone = models.CharField(max_length=12, blank=True)
+    dob = models.DateField(max_length=8, blank=True, null=True)
+    dor = models.DateField(max_length=8, blank=True, null=True,
+                           editable=False, auto_now_add=True)  # date of registration
+    organization = models.CharField(max_length=100, blank=True)
+
+    def __str__(self):
+        return "-".join([self.fname, self.lname, self.user_type.type])
 
 
 class Employee(models.Model):
@@ -53,7 +57,7 @@ class Employee(models.Model):
     date_of_start = models.DateField(max_length=8)
 
     def __str__(self):
-        return "-".join([self.u_id.fname+" "+self.u_id.lname, self.id, self.title, self.u_id.user_type])
+        return "-".join([self.u_id.fname+" "+self.u_id.lname, self.title, self.u_id.user_type])
 
 
 class Login_Details(models.Model):
@@ -67,7 +71,7 @@ class Login_Details(models.Model):
     password = models.CharField(max_length=50)
 
     def __str__(self):
-        return "-".join([self.u_id, self.email, self.password])
+        return "-".join([self.u_id.fname, self.u_id.lname, self.email])
 
 ##
 
@@ -80,21 +84,22 @@ class WorkingHour(models.Model):
     etime = models.TimeField()
 
     def __str__(self):
-        return " | ".join([self.u_id, self.working_date, self.stime, self.etime])
+        return " | ".join([str(self.u_id), self.working_date, self.stime, self.etime])
 
 
 class Status(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     desc = models.CharField(max_length=100)
 
     def __str__(self):
-        return "-".join([self.id, self.desc])
+        return self.desc
 
 
 class File(models.Model):
     id = models.AutoField(primary_key=True)
     url = models.URLField(max_length=300)
-    file_creation_date = models.DateField()
+    file_creation_date = models.DateField(
+        null=False, blank=True, editable=False, auto_now=True)
 
     def __str__(self):
         return self.url+"-"+self.file_creation_date
@@ -102,20 +107,23 @@ class File(models.Model):
 
 class Album(models.Model):
     id = models.AutoField(primary_key=True)
-    album_name = models.CharField(max_length=100)
-    release_date = models.DateField(blank=True,null=True)
-    size = models.IntegerField(blank=True,null=True)
-    length = models.FloatField(blank=True,null=True)
+    name = models.CharField(max_length=100)
+    release_date = models.DateField(blank=True, null=True)
+    size = models.IntegerField(blank=True, null=True, editable=False)
+    length = models.FloatField(blank=True, null=True, editable=False)
 
     def __str__(self):
-        return "-".join([self.id, self.album_name])
+        return "-".join([self.name])
 
 
 class Creation(models.Model):
     id = models.AutoField(primary_key=True)
-    creator = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
-    creation_date = models.DateField(blank=True,null=False,auto_now_add=True)
-    album_id = models.ForeignKey(Album, null=True, blank=True, on_delete=models.SET_NULL)
+    name = models.CharField(max_length=200,default='')
+    creator = models.ForeignKey(
+        User, null=True, blank=True, on_delete=models.SET_NULL)
+    creation_date = models.DateField(blank=True, null=False, auto_now_add=True)
+    album_id = models.ForeignKey(
+        Album, null=True, blank=True, on_delete=models.SET_NULL)
     current_file = models.ForeignKey(
         File, null=True, blank=True, on_delete=models.SET_NULL, related_name='current_file')
     previous_file = models.ForeignKey(
@@ -123,7 +131,8 @@ class Creation(models.Model):
     profit = models.FloatField()
 
     def __str__(self):
-        return self.id
+        crtor = self.creator.fname+" "+self.creator.lname
+        return "-".join([self.name, self.album_id.name, crtor])
 
 
 class Resource(models.Model):
@@ -132,19 +141,20 @@ class Resource(models.Model):
     unit_cost = models.FloatField()
 
     def __str__(self):
-        return self.id
+        return self.name
 
 
 class Phase(models.Model):
     id = models.AutoField(primary_key=True)
     creation_id = models.ForeignKey(Creation, on_delete=models.CASCADE)
-    status = models.ForeignKey(Status, on_delete=models.CASCADE)
+    status = models.ForeignKey(Status, on_delete=models.CASCADE,default=1)
     placement = models.IntegerField()
     name = models.CharField(max_length=100)
-    resources = models.ManyToManyField(Resource,null=False, blank=True, through='Phase_Resources')
+    resources = models.ManyToManyField(
+        Resource, null=False, blank=True, through='Phase_Resources')
 
     def __str__(self):
-        return self.id
+        return "-".join([self.name, str(self.placement), self.status.desc, self.creation_id.name])
 
 
 class Phase_Resources(models.Model):
@@ -153,7 +163,7 @@ class Phase_Resources(models.Model):
     resource_quantity = models.FloatField()
 
     def __str__(self):
-        return "-".join([self.phase, self.resource, self.resource_quantity])
+        return "-".join([str(self.phase.id), self.resource.name, str(self.resource_quantity)])
 
 
 class Meeting(models.Model):
@@ -164,16 +174,22 @@ class Meeting(models.Model):
     end_date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
-    topic=models.CharField(max_length=100)
-    location=models.CharField(max_length=100,blank=True)
+    topic = models.CharField(max_length=100)
+    location = models.CharField(max_length=100, blank=True)
     # https://djangotricks.blogspot.com/2019/10/working-with-dates-and-times-in-forms.html
 
     def __str__(self):
-        return self.id
+        attendees_number = str(len(list(self.attendees.all())))
+        return "-".join([self.topic, self.start_date, self.start_time, attendees_number])
 
 
 class File_Deletion_History(models.Model):
     id = models.AutoField(primary_key=True)
     creation_id = models.ForeignKey(Creation, on_delete=models.CASCADE)
     phase_id = models.ForeignKey(Phase, on_delete=models.CASCADE)
-    deletion_date = models.DateField()
+    url = models.URLField(max_length=300, blank=True, null=False)
+    deletion_date = models.DateField(
+        auto_now=True, editable=False, null=False, blank=True)
+
+    def __str__(self):
+        return "-".join([str(self.id), str(self.creation_id.name), str(self.phase_id.name)])
