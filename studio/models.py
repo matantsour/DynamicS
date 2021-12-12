@@ -102,7 +102,7 @@ class File(models.Model):
         null=False, blank=True, editable=False, auto_now=True)
 
     def __str__(self):
-        return str(self.file_creation_date)+"-"+self.url
+        return str(self.file_creation_date)+"|"+self.url
 
 
 class Album(models.Model):
