@@ -95,14 +95,7 @@ class Status(models.Model):
         return self.desc
 
 
-class File(models.Model):
-    id = models.AutoField(primary_key=True)
-    url = models.URLField(max_length=300)
-    file_creation_date = models.DateField(
-        null=False, blank=True, editable=False, auto_now=True)
 
-    def __str__(self):
-        return str(self.file_creation_date)+"|"+self.url
 
 
 class Album(models.Model):
@@ -124,15 +117,21 @@ class Creation(models.Model):
     creation_date = models.DateField(blank=True, null=False, auto_now_add=True)
     album_id = models.ForeignKey(
         Album, null=True, blank=True, on_delete=models.SET_NULL)
-    current_file = models.ForeignKey(
-        File, null=True, blank=True, on_delete=models.SET_NULL, related_name='current_file')
-    previous_file = models.ForeignKey(
-        File, null=True, blank=True, on_delete=models.SET_NULL, related_name='previous_file')
     profit = models.FloatField()
-
     def __str__(self):
         crtor = self.creator.fname+" "+self.creator.lname
         return "-".join([self.name, self.album_id.name, crtor])
+
+class File(models.Model):
+    id = models.AutoField(primary_key=True)
+    url = models.URLField(max_length=300)
+    file_creation_date = models.DateField(
+        null=False, blank=True, editable=False, auto_now=True)
+    creation = models.ForeignKey(
+        Creation, null=True, blank=True, on_delete=models.SET_NULL)
+    def __str__(self):
+        return str(self.file_creation_date)+"|"+self.url
+
 
 
 class Resource(models.Model):
