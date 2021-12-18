@@ -78,13 +78,13 @@ class Login_Details(models.Model):
 
 class WorkingHour(models.Model):
     id = models.AutoField(primary_key=True)
-    w_id = models.ForeignKey(Employee, on_delete=CASCADE)
+    e_id = models.ForeignKey(Employee, on_delete=CASCADE)
     working_date = models.DateField()
     stime = models.TimeField()
     etime = models.TimeField()
 
     def __str__(self):
-        return " | ".join([str(i) for i in [self.w_id, self.working_date, self.stime, self.etime]])
+        return " | ".join([str(i) for i in [self.e_id, self.working_date, self.stime, self.etime]])
 
 
 class Status(models.Model):
