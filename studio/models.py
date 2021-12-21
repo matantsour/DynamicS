@@ -120,7 +120,7 @@ class Creation(models.Model):
     profit = models.FloatField()
     def __str__(self):
         crtor = self.creator.fname+" "+self.creator.lname
-        return "-".join([self.name, self.album_id.name, crtor])
+        return "-".join([self.name, crtor])
 
     def get_last_phase(self):
         try:
@@ -131,6 +131,7 @@ class Creation(models.Model):
             return last_phase_placement
         except:
             return 0
+
 
 class File(models.Model):
     id = models.AutoField(primary_key=True)
@@ -154,11 +155,12 @@ class Resource(models.Model):
 
 
 class Phase(models.Model):
-    phase_id=models.CharField(max_length=10,null=True,blank=True)
-    id = models.AutoField(blank=True,primary_key=True)
+    phase_id=models.CharField(db_column='phase_id',max_length=10,blank=True,primary_key=True,editable=False)
+    #id = models.AutoField(blank=True)
+    #id = models.IntegerField(blank=True,null=True)
     creation_id = models.ForeignKey(Creation, on_delete=models.CASCADE)
     status = models.ForeignKey(Status, on_delete=models.CASCADE,default=1)
-    placement = models.IntegerField(blank=True)
+    placement = models.IntegerField(blank=True,editable=False)
     name = models.CharField(max_length=100)
     resources = models.ManyToManyField(
         Resource, null=False, blank=True, through='Phase_Resources')
@@ -171,20 +173,23 @@ class Phase(models.Model):
         self.phase_id = str(self.creation_id.id)+"_"+str(self.placement)
         super(Phase,self).save(*args, **kwargs)
 
+        class Meta:
+            managed = False
+            db_table = 'phase_id'
 
 
 class Phase_Resources(models.Model):
-    phase = models.ForeignKey(Phase, on_delete=CASCADE)
+    phase = models.ForeignKey(Phase,to_field='phase_id', on_delete=CASCADE)
     resource = models.ForeignKey(Resource, on_delete=CASCADE)
     resource_quantity = models.FloatField()
 
     def __str__(self):
-        return "-".join([str(self.phase.id), self.resource.name, str(self.resource_quantity)])
+        return "-".join([str(self.phase.phase_id), self.resource.name, str(self.resource_quantity)])
 
 
 class Meeting(models.Model):
     id = models.AutoField(primary_key=True)
-    phase_id = models.ForeignKey(Phase, on_delete=CASCADE)
+    phase_id = models.ForeignKey(Phase,to_field='phase_id', on_delete=CASCADE)
     attendees = models.ManyToManyField(User)
     start_date = models.DateField()
     end_date = models.DateField()
@@ -202,7 +207,7 @@ class Meeting(models.Model):
 class File_Deletion_History(models.Model):
     id = models.AutoField(primary_key=True)
     creation_id = models.ForeignKey(Creation, on_delete=models.CASCADE)
-    phase_id = models.ForeignKey(Phase, on_delete=models.CASCADE)
+    phase_id = models.ForeignKey(Phase,to_field="phase_id", on_delete=models.CASCADE)
     url = models.URLField(max_length=300, blank=True, null=False)
     deletion_date = models.DateField(
         auto_now=True, editable=False, null=False, blank=True)
