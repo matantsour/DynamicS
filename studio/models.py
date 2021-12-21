@@ -144,7 +144,8 @@ class Resource(models.Model):
 
 
 class Phase(models.Model):
-    id = models.AutoField(primary_key=True)
+    phase_id=models.CharField(max_length=10,null=True,blank=True)
+    id = models.AutoField(blank=True,primary_key=True)
     creation_id = models.ForeignKey(Creation, on_delete=models.CASCADE)
     status = models.ForeignKey(Status, on_delete=models.CASCADE,default=1)
     placement = models.IntegerField()
@@ -154,6 +155,10 @@ class Phase(models.Model):
 
     def __str__(self):
         return "-".join([self.name, str(self.placement), self.status.desc, self.creation_id.name])
+    
+    def save(self, *args, **kwargs):
+        self.phase_id = str(self.creation_id)+"_"+str(self.placement)
+        super().save(*args, **kwargs)
 
 
 class Phase_Resources(models.Model):
