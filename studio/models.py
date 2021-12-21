@@ -122,6 +122,16 @@ class Creation(models.Model):
         crtor = self.creator.fname+" "+self.creator.lname
         return "-".join([self.name, self.album_id.name, crtor])
 
+    def get_last_phase(self):
+        try:
+            inner_qs=Creation.objects.filter(id=self.id)
+            phases=list(Phase.objects.filter(creation_id__in=inner_qs))
+            last_phase=phases[-1]
+            last_phase_placement=last_phase.placement
+            return last_phase_placement
+        except:
+            return 0
+
 class File(models.Model):
     id = models.AutoField(primary_key=True)
     url = models.URLField(max_length=300)
@@ -148,7 +158,7 @@ class Phase(models.Model):
     id = models.AutoField(blank=True,primary_key=True)
     creation_id = models.ForeignKey(Creation, on_delete=models.CASCADE)
     status = models.ForeignKey(Status, on_delete=models.CASCADE,default=1)
-    placement = models.IntegerField()
+    placement = models.IntegerField(blank=True)
     name = models.CharField(max_length=100)
     resources = models.ManyToManyField(
         Resource, null=False, blank=True, through='Phase_Resources')
@@ -157,8 +167,10 @@ class Phase(models.Model):
         return "-".join([self.name, str(self.placement), self.status.desc, self.creation_id.name])
     
     def save(self, *args, **kwargs):
-        self.phase_id = str(self.creation_id)+"_"+str(self.placement)
-        super().save(*args, **kwargs)
+        self.placement=int(self.creation_id.get_last_phase())+1
+        self.phase_id = str(self.creation_id.id)+"_"+str(self.placement)
+        super(Phase,self).save(*args, **kwargs)
+
 
 
 class Phase_Resources(models.Model):
