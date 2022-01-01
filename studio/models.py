@@ -20,7 +20,7 @@ class User_Type(models.Model):
 
 class User(models.Model):
     id = models.AutoField(primary_key=True)
-    user_type = models.ForeignKey(User_Type, on_delete=models.CASCADE)
+    user_type = models.ForeignKey(User_Type, on_delete=models.CASCADE,related_name='users')
     fname = models.CharField(max_length=100)
     lname = models.CharField(max_length=100)
     city = models.CharField(max_length=100, blank=True)
@@ -38,7 +38,7 @@ class Employee(models.Model):
     u_id = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        primary_key=True,
+        primary_key=True,related_name="employee"
     )
     title = models.CharField(max_length=100)
     WAGE_METHOD_CHOICES = [
@@ -64,7 +64,7 @@ class Login_Details(models.Model):
     u_id = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        primary_key=True,
+        primary_key=True,related_name="login_details"
     )
     email = models.EmailField(max_length=254)
     # read more how to apply as a password in forms.py
@@ -78,7 +78,7 @@ class Login_Details(models.Model):
 
 class WorkingHour(models.Model):
     id = models.AutoField(primary_key=True)
-    e_id = models.ForeignKey(Employee, on_delete=CASCADE)
+    e_id = models.ForeignKey(Employee, on_delete=CASCADE,related_name="working_hours")
     working_date = models.DateField()
     stime = models.TimeField()
     etime = models.TimeField()
@@ -113,10 +113,10 @@ class Creation(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200,default='')
     creator = models.ForeignKey(
-        User, null=True, blank=True, on_delete=models.SET_NULL)
+        User, null=True, blank=True, on_delete=models.SET_NULL,related_name="creations")
     creation_date = models.DateField(blank=True, null=False, auto_now_add=True)
     album_id = models.ForeignKey(
-        Album, null=True, blank=True, on_delete=models.SET_NULL)
+        Album, null=True, blank=True, on_delete=models.SET_NULL,related_name="creations")
     profit = models.FloatField()
     def __str__(self):
         crtor = self.creator.fname+" "+self.creator.lname
@@ -150,12 +150,12 @@ class Phase(models.Model):
     phase_id=models.CharField(db_column='phase_id',max_length=10,blank=True,primary_key=True,editable=False)
     #id = models.AutoField(blank=True)
     #id = models.IntegerField(blank=True,null=True)
-    creation_id = models.ForeignKey(Creation, on_delete=models.CASCADE)
-    status = models.ForeignKey(Status, on_delete=models.CASCADE,default=1)
+    creation_id = models.ForeignKey(Creation, on_delete=models.CASCADE,related_name="phases")
+    status = models.ForeignKey(Status, on_delete=models.CASCADE,default=1,related_name="phases")
     placement = models.IntegerField(blank=True,editable=False)
     name = models.CharField(max_length=100)
     resources = models.ManyToManyField(
-        Resource, null=False, blank=True, through='Phase_Resources')
+        Resource, null=False, blank=True, through='Phase_Resources') #no related name yet
 
     def __str__(self):
         return "-".join([self.name, str(self.placement), self.status.desc, self.creation_id.name])
@@ -184,14 +184,14 @@ class File(models.Model):
     file_creation_date = models.DateField(
         null=False, blank=True, editable=False, auto_now=True)
     creation = models.ForeignKey(
-        Creation, null=True, blank=True, on_delete=models.SET_NULL)
+        Creation, null=True, blank=True, on_delete=models.SET_NULL,related_name="files")
     def __str__(self):
         return str(self.file_creation_date)+"|"+self.url
 
 class Meeting(models.Model):
     id = models.AutoField(primary_key=True)
-    phase_id = models.ForeignKey(Phase,to_field='phase_id', on_delete=CASCADE)
-    attendees = models.ManyToManyField(User)
+    phase_id = models.ForeignKey(Phase,to_field='phase_id', on_delete=CASCADE,related_name="meetings")
+    attendees = models.ManyToManyField(User) #no related name yet
     start_date = models.DateField()
     end_date = models.DateField()
     start_time = models.TimeField()
@@ -207,7 +207,7 @@ class Meeting(models.Model):
 
 class File_Deletion_History(models.Model):
     id = models.AutoField(primary_key=True)
-    creation_id = models.ForeignKey(Creation, on_delete=models.CASCADE)
+    creation_id = models.ForeignKey(Creation, on_delete=models.CASCADE,related_name="deleted_files")
     url = models.URLField(max_length=300, blank=True, null=False)
     deletion_date = models.DateField(
         auto_now=True, editable=False, null=False, blank=True)
