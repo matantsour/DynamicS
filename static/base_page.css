@@ -3,6 +3,44 @@
     font-family: "Assistant"
 }
 
+body,
+html {
+    height: 100%;
+}
+
+table.side_menu {
+    background-color: rgba(0, 0, 0, 0.9);
+    border: 3px #CE233C solid;
+    border-radius: 0px 0px 30px 30px;
+}
+
+td.side_menu {
+    color: white;
+    text-align: center;
+    height: 35px;
+    font-weight: 900;
+}
+
+td.first_td {
+    color: white;
+    text-align: center;
+    border-bottom: thick gray solid;
+    height: 50px;
+    font-weight: 900;
+}
+
+table.content_table {
+    background-color: rgba(0, 0, 0, 0.9);
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+td.content_table {
+    color: white;
+}
+
 table.headers {
     border-collapse: separate;
     width: 100%;
