@@ -10,7 +10,7 @@ info=dict()
 # Create your views here.
 class indexView(View):
     def get(self, request):
-        #form = ReviewForm()
+        
         if request.session.get('is_logged_in', False)==False:
             request.session["user_type"]="guest"
         else:
