@@ -11,13 +11,14 @@
    </head>
    <body>
 	{% include "studio/includes/mainframe/top_headers.html" %}
-   <table class="content_table" width="100%" dir="rtl" >
+   <table class="content_table" width="100%" dir="rtl" cellspacing="0" cellpadding="0">
        <tr>
-          <td class="content_table" width="16.5%" valign="top">
+          <td class="content_table" width="15%" valign="top">
              {% include "studio/includes/mainframe/side_menu_main.html" %}
           </td>
-          <td class="content_table" width="83.5%" valign="top"> 
-             {% include "blank.html"%}
+          <td %%class="content_table" width="85%" valign="top"> 
+             {% block content%}
+             {% endblock content%}
           </td>
        </tr>
     </table> 
