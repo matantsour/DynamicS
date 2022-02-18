@@ -11,7 +11,7 @@ from django.urls import reverse
 
 
 class User_Type(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     type = models.CharField(max_length=100)
 
     def __str__(self):
@@ -100,7 +100,7 @@ class Status(models.Model):
 
 class Album(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100,unique=True)
     release_date = models.DateField(blank=True, null=True)
     size = models.IntegerField(blank=True, null=True, editable=False)
     length = models.FloatField(blank=True, null=True, editable=False)
@@ -131,6 +131,8 @@ class Creation(models.Model):
             return last_phase_placement
         except:
             return 0
+    class Meta:
+        unique_together = ('name', 'creator',)
 
 
 
@@ -158,7 +160,7 @@ class Phase(models.Model):
         Resource, null=False, blank=True, through='Phase_Resources') #no related name yet
 
     def __str__(self):
-        return "-".join([self.name, str(self.placement), self.status.desc, self.creation_id.name])
+        return "-".join([self.creation_id.name,str(self.placement),self.name, self.status.desc])
     
     def save(self, *args, **kwargs):
         self.placement=int(self.creation_id.get_last_phase())+1
