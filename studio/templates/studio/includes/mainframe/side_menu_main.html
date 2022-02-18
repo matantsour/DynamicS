@@ -1,0 +1,11 @@
+
+
+{% if  'customer' in request.session.user_type %}
+{% include "studio/includes/mainframe/side_menus/side_menu_customer.html" %}
+{% elif  'worker' in request.session.user_type %}
+{% include "studio/includes/mainframe/side_menus/side_menu_worker.html" %}
+{% elif 'manager' in request.session.user_type %}
+{% include "studio/includes/mainframe/side_menus/side_menu_manager.html" %}
+{% else %}
+{% include "studio/includes/mainframe/side_menus/side_menu_guest.html" %}
+{% endif %}

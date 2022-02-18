@@ -1,6 +1,25 @@
 from django.shortcuts import render
+from django.views import View
+from django.http import HttpResponseRedirect
+from importlib import import_module
+from django.conf import settings
+from .models import *
+
+info=dict()
 
 # Create your views here.
+class indexView(View):
+    def get(self, request):
+        #form = ReviewForm()
+        if request.session.get('is_logged_in', False)==False:
+            request.session["user_type"]="guest"
+        else:
+            request.session["is_logged_in"]=True
+        return render(request,"studio/index.html")
+
+def after_log_in(request,user):
+    request.session["is_logged_in"]=True
+    request.session["user_type"]=user.user_type.type
 
 def index(request):
     return render(request,"studio/index.html")
