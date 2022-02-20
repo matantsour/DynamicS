@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Assistant&display=swap');
 * {
     font-family: "Assistant"
 }
@@ -6,6 +5,10 @@
 body,
 html {
     height: 100%;
+}
+
+td.form_table {
+    color: white;
 }
 
 table.side_menu {

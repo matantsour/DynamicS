@@ -1,7 +1,17 @@
 {% extends 'base.html' %}
 
+
 {% block title %}
 Dynamic Studio
-{% endblock  %}
+{% endblock title %}
+
+{% block content%}
+
+{% if not request.session.is_logged_in%}
+<div class="form_div" dir="rtl">
+{% include "studio/includes/login_form.html" %}
+</div>
+{% endif %}
 
 
+{%endblock%}

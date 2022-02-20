@@ -16,6 +16,8 @@ class indexView(View):
         else:
             request.session["is_logged_in"]=True
         return render(request,"studio/index.html")
+    def post(self,request):
+        return render(request,"studio/index.html")
 
 def after_log_in(request,user):
     request.session["is_logged_in"]=True

@@ -1,0 +1,23 @@
+<form action="/" method="POST">
+    {% csrf_token %}
+
+<table class="form_table" dir="rtl" >
+<tr class="form_errors" style="visibility:hidden">
+<td class="form_errors" style="visibility:hidden"></td></tr>
+<tr>
+<td class="form_table"> אימייל/שם משתמש</td>
+<td> 
+  <input name="Text1" type="text" />
+    
+</td></tr>
+<tr><td class="form_table"> סיסמה</td>
+<td>
+<input name="Password1" type="password" /></td>
+</tr>
+<tr>
+<td colspan="2" align="center">
+<input name="submit" type="submit" value="כניסה לסטודיו" />
+</td>
+</tr>
+</table>
+   </form>
