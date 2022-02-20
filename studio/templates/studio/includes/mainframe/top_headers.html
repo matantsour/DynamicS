@@ -20,7 +20,12 @@
     <td class="headers" style="width: 12%">
     &nbsp;</td>
     <td class="headers" style="width: 15%">
-    אזור אישי</td>
+    אזור אישי
+    {% if request.session.is_logged_in%}
+    <br>
+    <a href="{% url "logout_link"  %}">התנתק</a>
+    {%endif%}
+</td>
 
     </tr>
 </table>

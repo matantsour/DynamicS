@@ -7,46 +7,73 @@ from .models import *
 from django.db.models import Q
 from .forms import LoginForm
 
-
-info = dict()
+SESSIONS_DEFALUTS = {"is_logged_in":False,
+                     "user_logged_in":False,
+                     "user_type":"guest",
+                     }
 
 # Create your util functions here.
 
+def reset_sessions_to_default(request):
+    for key,default_val in SESSIONS_DEFALUTS.items():
+        request.session[key]=default_val
+
+def logoutFunc(request):
+    reset_sessions_to_default(request)
+    login_form = LoginForm()
+    return render(request, "studio/index.html", {"login_form": login_form})
+
+
+def all_unexpired_sessions_for_user(user):
+    user_sessions = []
+    all_sessions = Session.objects.filter(
+        expire_date__gte=datetime.datetime.now())
+    for session in all_sessions:
+        session_data = session.get_decoded()
+        if user.pk == session_data.get('_auth_user_id'):
+            user_sessions.append(session.pk)
+    return Session.objects.filter(pk__in=user_sessions)
+
+
+def delete_all_unexpired_sessions_for_user(user, session_to_omit=None):
+    session_list = all_unexpired_sessions_for_user(user)
+    if session_to_omit is not None:
+        session_list.exclude(session_key=session_to_omit.session_key)
+    session_list.delete()
+
 
 def getUser(email, passcode):
-    query_results=Login_Details.objects.filter(email=email,password=passcode)
+    query_results = Login_Details.objects.filter(
+        email=email, password=passcode)
     if not query_results:
         return None
     else:
-        fetched_user=query_results[100].u_id
-        print(fetched_user)
+        fetched_user = query_results[0].u_id
         return fetched_user
 
 
 # create your class views here
 class indexView(View):
     def get(self, request):
-        print("you are in get request")
+
         login_form = LoginForm()
-        print(request.session["user_type"])
-        if request.session.get('is_logged_in', False) == False:
-            request.session["user_type"] = "guest"
-        else:
-            request.session["is_logged_in"] = True
+        request.session["is_logged_in"] = False
+        request.session["user_type"] = "guest"
         return render(request, "studio/index.html", {"login_form": login_form})
 
     def post(self, request):
         login_form = LoginForm(request.POST)
-        if login_form.is_valid(): #form is valid
-            email=login_form.cleaned_data['user_name']
-            passcode=login_form.cleaned_data['passcode']
-            fetched_user=user=getUser(email,passcode) #getting the user object or None
-            if fetched_user!=None:
+        if login_form.is_valid():  # form is valid
+            email = login_form.cleaned_data['user_name']
+            passcode = login_form.cleaned_data['passcode']
+            # getting the user object or None
+            fetched_user = user = getUser(email, passcode)
+            if fetched_user != None:
                 request.session["is_logged_in"] = True
                 request.session["user_type"] = user.user_type.type
             else:
                 request.session["is_logged_in"] = False
-        return render(request, "studio/index.html",{"login_form": login_form})
+        return render(request, "studio/index.html", {"login_form": login_form})
 
 
 # previous views functions

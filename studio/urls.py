@@ -4,8 +4,8 @@ from . import views
 
 
 urlpatterns = [
-    path("",views.indexView.as_view()),
-
+    path("",views.indexView.as_view(),name="index-page"),
+    path("logout/",views.logoutFunc,name="logout_link"),
     #Admin
     path("admin/",views.admin_page),
     path("admin/add-client",views.admin_new_client),
