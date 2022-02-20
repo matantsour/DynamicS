@@ -7,12 +7,13 @@
 <tr>
 <td class="form_table"> אימייל/שם משתמש</td>
 <td> 
-  <input name="Text1" type="text" />
+  {{ login_form.user_name }}
     
 </td></tr>
 <tr><td class="form_table"> סיסמה</td>
 <td>
-<input name="Password1" type="password" /></td>
+  {{ login_form.passcode }}
+</td>
 </tr>
 <tr>
 <td colspan="2" align="center">

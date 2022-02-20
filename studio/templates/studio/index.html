@@ -7,10 +7,12 @@ Dynamic Studio
 
 {% block content%}
 
-{% if not request.session.is_logged_in%}
+{% if not request.session.is_logged_in%} <!-- if is_logged_in== False-->
 <div class="form_div" dir="rtl">
 {% include "studio/includes/login_form.html" %}
 </div>
+{% else%}
+{% include "studio/includes/welcome_user.html" %}
 {% endif %}
 
 
