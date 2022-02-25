@@ -7,6 +7,9 @@ from .models import *
 from django.db.models import Q
 from .forms import LoginForm
 from .utils import *
+from django.urls import reverse
+
+
 
 
 
@@ -34,6 +37,7 @@ class indexView(View):
             if fetched_user != None:
                 request.session["is_logged_in"] = True
                 request.session["user_type"] = user.user_type.type
+                request.session["user_logged_in_fname"] = user.fname
             else:
                 request.session["is_logged_in"] = False
         return render(request, "studio/index.html", {"login_form": login_form})
@@ -44,10 +48,10 @@ class indexView(View):
 def logoutFunc(request):
     reset_sessions_to_default(request)
     login_form = LoginForm()
-    return render(request, "studio/index.html", {"login_form": login_form})
+    return HttpResponseRedirect(reverse("index-page"))
+
 
 # old views functions
-
 def index(request):
     return render(request, "studio/index.html")
 

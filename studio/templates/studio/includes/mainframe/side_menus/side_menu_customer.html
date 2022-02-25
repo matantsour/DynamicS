@@ -1,6 +1,9 @@
 <table class="side_menu" style="width: 80%" align="center" >
     <tr class="first_row">
-       <td class="first_td">ברוכים הבאים עובד! <br> במה נוכל לעזור?</td>
+       <td class="first_td">ברוכים הבאים 
+       {{ request.session.user_logged_in_fname }}
+         ! <br> במה נוכל לעזור?</td>
+      
     </tr>
     <tr class="side_menu">
        <td class="side_menu">יצירות שלי</td>
