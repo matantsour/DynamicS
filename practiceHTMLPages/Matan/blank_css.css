@@ -8,8 +8,14 @@
     margin-right: auto;
 }
 
+
 .creations_td {
     text-align: center;
-    border:thin aqua solid
+    font-size:10px;
+}
+
+.creations_td_status {
+    text-align: center;
+    border:thin aqua solid;
     font-size:10px;
 }

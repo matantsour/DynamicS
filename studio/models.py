@@ -163,7 +163,8 @@ class Phase(models.Model):
         return "-".join([self.creation_id.name,str(self.placement),self.name, self.status.desc])
     
     def save(self, *args, **kwargs):
-        self.placement=int(self.creation_id.get_last_phase())+1
+        if self.placement==None:
+            self.placement=int(self.creation_id.get_last_phase())+1
         self.phase_id = str(self.creation_id.id)+"_"+str(self.placement)
         super(Phase,self).save(*args, **kwargs)
 
