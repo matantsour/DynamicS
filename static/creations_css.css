@@ -1,0 +1,14 @@
+.creations_table {
+    width: 80%;
+    background-color: black;
+    font-size: 24px;
+    color: white;
+    border: thin aliceblue solid;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.creations_td {
+    text-align: center;
+    font-size: 10px;
+}

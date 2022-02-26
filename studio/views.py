@@ -14,8 +14,6 @@ from django.urls import reverse
 # Create your util functions here, then move them to utils.
 
 
-
-
 # create your class views here
 class indexView(View):
     def get(self, request):
@@ -44,21 +42,31 @@ class indexView(View):
 
 class creationsView(View):
     def get(self, request):
-        user_ob=User.objects.filter(id=request.session["user_logged_in_id"])[0]
-        return render(request, "studio/pages/creations_page/creations_main.html", {"user_name": user_ob.lname})
+        user_ob = User.objects.filter(
+            id=request.session["user_logged_in_id"])[0]
+        list_of_creations= user_ob.creations.all()
+        creations_phases={c:c.phases.all() for c in list_of_creations}
+        return render(request, "studio/pages/creations_page/creations_main.html",
+         {"user_name": user_ob.lname,
+         "list_of_creations":list_of_creations,
+         "creations_phases":creations_phases})
+
     def post(self, request):
         pass
+
 
 class userMeetingView(View):
     def get(self, request):
-        user_ob=User.objects.filter(id=request.session["user_logged_in_id"])[0]
-        user_list_of_meetings = Meeting.
+        user_ob = User.objects.filter(
+            id=request.session["user_logged_in_id"])[0]
+        user_list_of_meetings = 1
         return render(request, "studio/pages/meetings_page/meetings_main.html", {"user_name": user_ob.lname})
+
     def post(self, request):
         pass
 
 
-#functional views
+# functional views
 
 def logoutFunc(request):
     reset_sessions_to_default(request)
