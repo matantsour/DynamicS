@@ -82,3 +82,12 @@ tr.headers:last-child td:first-child {
 tr.headers:last-child td:last-child {
     border-bottom-left-radius: 5px;
 }
+
+.side_menu_link {
+    color: white;
+    text-decoration: none;
+}
+
+.side_menu_link:hover {
+    text-decoration: underline;
+}

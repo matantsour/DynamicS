@@ -1,4 +1,10 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static "creations_css.css" %}">
+
+{% endblock css_files %} 
 
 
 {% block title %}
@@ -6,5 +12,23 @@ Artwork
 {% endblock title %}
 
 {% block content%}
-{{ user_name }}
+<br>
+    {% for creation,phases in creations_phases.items %}
+        <table class="creations_table" width="100%" align="center" dir="rtl" >
+            <tr>
+                {% for p in phases %}
+                    <td  width="10%" class="creations_td" >{{p.status.desc}}</td>
+                {%endfor%}
+                <td width="20%" class="creations_td" rowspan="2">buttons</td>
+            </tr>
+            <tr>
+                {% for p in phases %}
+                <td  width="10%" class="creations_td" >{{p.name}}</td>
+                    {%endfor%}
+            </tr>
+        </table>
+    {%endfor%}
+
 {%endblock%}
+
+

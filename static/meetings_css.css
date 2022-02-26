@@ -1,4 +1,4 @@
-﻿.creations_table {
+.customer_meeting_table {
     width: 80%;
     background-color: black;
     font-size: 24px;
@@ -8,8 +8,10 @@
     margin-right: auto;
 }
 
-.creations_td {
+.customer_meeting_table {
     text-align: center;
-    border:thin aqua solid
-    font-size:10px;
+}
+
+.side_menu_link {
+    color: white;
 }

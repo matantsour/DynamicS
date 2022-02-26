@@ -1,3 +1,8 @@
+{% load static %}
+{% block css_files %}
+<link rel="stylesheet" href="{% static "base_page.css" %}">
+{% endblock css_files %} 
+
 <table class="side_menu" style="width: 80%" align="center" >
     <tr class="first_row">
        <td class="first_td">ברוכים הבאים 
@@ -9,7 +14,7 @@
        <td class="side_menu">יצירות שלי</td>
     </tr>
     <tr class="side_menu">
-       <td class="side_menu">פגישות</td>
+       <td class="side_menu"><a class="side_menu_link" href="{% url "meetings" %}"> פגישות</a></td>
     </tr>
     <tr class="side_menu">
        <td class="side_menu" ><a href="{% url "update_personal_details"  %}">

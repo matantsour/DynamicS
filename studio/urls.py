@@ -11,6 +11,9 @@ urlpatterns = [
     #creations
     path("creations/",views.creationsView.as_view(),name="artwork"),
 
+    #Meetings
+    path("meetings/",views.userMeetingView.as_view(),name="meetings"),
+
 
 
     #edit_user_details

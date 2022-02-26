@@ -1,11 +1,50 @@
 {% extends 'base.html' %}
+{% load static %}
 
 
 {% block title %}
 Meetings
 {% endblock title %}
 
+{% block css_files %}
+<link rel="stylesheet" href="{% static "meetings_css.css" %}">
+{% endblock css_files %} 
+
 {% block content%}
+<br>
+<table class="customer_meeting_table">
+    
+	<tr class ="meetings_table_rows">
+		<td colspan="5" style="font-size:40px;text-decoration: underline;">פגישות</td>   
+	</tr>
+    <tr>
+		<td colspan="5"><br></td>   
+	</tr>
+	<tr class ="meetings_table_rows" style="text-decoration: underline;">
+        
+		<td style="height: 24px">שם היצירה</td>
+        <td style="height: 24px">שלב ביצירה</td>
+		<td style="height: 24px"> תאריך הפגישה</td>
+		<td style="height: 24px">שעות</td>
+		<td style="height: 24px">נושא</td>
+	</tr>
+    <tr>
+		<td colspan="5"><br></td>   
+	</tr>
+    {% for m  in  list_of_meetings %}
+	<tr class ="meetings_table_rows">
+		<td>{{m.phase_id.creation_id.name}}</td>
+        <td>{{m.phase_id.phase_id}}</td>
+		<td>{{m.start_date}}</td>
+		<td>from {{m.start_time}} to {{m.end_time}}</td>
+		<td>{{m.topic}}</td>
+	</tr>
+    {% endfor %}
+    <tr>
+		<td colspan="5"><br></td>   
+	</tr>
+
+</table>
 
 
 {%endblock%}
