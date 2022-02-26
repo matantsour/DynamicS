@@ -1,11 +1,38 @@
 {% extends 'base.html' %}
+{% load static %}
 
 
 {% block title %}
 Meetings
 {% endblock title %}
 
+{% block css_files %}
+<link rel="stylesheet" href="{% static "meetings_css.css" %}">
+{% endblock css_files %} 
+
 {% block content%}
+<table class="customer_meeting_table">
+	<tr>
+		<td colspan="5">פגישות</td>
+	</tr>
+	<tr class ="table_rows">
+		<td style="height: 24px">שם היצירה</td>
+		<td style="height: 24px">סוג</td>
+		<td style="height: 24px">פגישה הבאה</td>
+		<td style="height: 24px">שעות</td>
+		<td style="height: 24px">נושא</td>
+	</tr>
+    {% for  in  %}
+	<tr class ="table_rows">
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+    {% endfor %}
+
+</table>
 
 
 {%endblock%}
