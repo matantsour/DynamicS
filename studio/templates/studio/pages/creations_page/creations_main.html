@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 
+{% block css_files %}
+<link rel="stylesheet" href="{% static "creations_css.css" %}">
+
+{% endblock css_files %} 
+
 
 {% block title %}
 Artwork
@@ -8,3 +13,5 @@ Artwork
 {% block content%}
 {{ user_name }}
 {%endblock%}
+
+

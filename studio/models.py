@@ -193,7 +193,7 @@ class File(models.Model):
 class Meeting(models.Model):
     id = models.AutoField(primary_key=True)
     phase_id = models.ForeignKey(Phase,to_field='phase_id', on_delete=CASCADE,related_name="meetings")
-    attendees = models.ManyToManyField(User) #no related name yet
+    attendees = models.ManyToManyField(User,related_name="meetings") #no related name yet
     start_date = models.DateField()
     end_date = models.DateField()
     start_time = models.TimeField()
