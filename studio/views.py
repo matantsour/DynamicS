@@ -44,9 +44,7 @@ class creationsView(View):
     def get(self, request):
         user_ob = User.objects.filter(
             id=request.session["user_logged_in_id"])[0]
-<<<<<<< HEAD
         return render(request, "studio/pages/creations_page/creations_main.html", {"user_name": user_ob.lname})
-=======
         list_of_creations= user_ob.creations.all()
         creations_phases={c:c.phases.all() for c in list_of_creations}
         return render(request, "studio/pages/creations_page/creations_main.html",
@@ -64,13 +62,11 @@ class userMeetingView(View):
             id=request.session["user_logged_in_id"])[0]
         user_list_of_meetings = 1
         return render(request, "studio/pages/meetings_page/meetings_main.html", {"user_name": user_ob.lname})
->>>>>>> 2f898d31d740528897f098c26bdd9d1e61690594
 
     def post(self, request):
         pass
 
 
-<<<<<<< HEAD
 class Update_user_details(View):
     def get(self, request):
         user = User.objects.filter(id=request.session["user_logged_in_id"])[0]
@@ -108,8 +104,6 @@ class Update_user_details(View):
         
         
 
-=======
->>>>>>> 2f898d31d740528897f098c26bdd9d1e61690594
 # functional views
 
 def logoutFunc(request):
