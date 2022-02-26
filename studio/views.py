@@ -33,8 +33,8 @@ class indexView(View):
             email = login_form.cleaned_data['user_name']
             passcode = login_form.cleaned_data['passcode']
             # getting the user object or None
-            fetched_user = user = getUser(email, passcode)
-            if fetched_user != None:
+            user = getUser(email, passcode)
+            if user != None:
                 request.session["is_logged_in"] = True
                 request.session["user_type"] = user.user_type.type
                 request.session["user_logged_in_fname"] = user.fname
