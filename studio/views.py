@@ -10,8 +10,6 @@ from .utils import *
 from django.urls import reverse
 
 
-
-
 ##
 # Create your util functions here, then move them to utils.
 
@@ -38,16 +36,24 @@ class indexView(View):
                 request.session["is_logged_in"] = True
                 request.session["user_type"] = user.user_type.type
                 request.session["user_logged_in_fname"] = user.fname
+                request.session["user_logged_in_id"] = user.id
             else:
                 request.session["is_logged_in"] = False
         return render(request, "studio/index.html", {"login_form": login_form})
+
+
+class creationsView(View):
+    def get(self, request):
+        user_ob=User.objects.filter(id=request.session["user_logged_in_id"])[0]
+        return render(request, "studio/pages/creations_page/creations_main.html", {"user_name": user_ob.lname})
+    def post(self, request):
+        pass
 
 
 #functional views
 
 def logoutFunc(request):
     reset_sessions_to_default(request)
-    login_form = LoginForm()
     return HttpResponseRedirect(reverse("index-page"))
 
 
