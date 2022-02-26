@@ -6,6 +6,12 @@ from . import views
 urlpatterns = [
     path("",views.indexView.as_view(),name="index-page"),
     path("logout/",views.logoutFunc,name="logout_link"),
+
+
+    #creations
+    path("creations/",views.creationsView.as_view(),name="artwork"),
+
+
     #Admin
     path("admin/",views.admin_page),
     path("admin/add-client",views.admin_new_client),
