@@ -8,6 +8,10 @@
     margin-right: auto;
 }
 
-.table_rows {
+.customer_meeting_table {
     text-align: center;
+}
+
+.side_menu_link {
+    color: white;
 }

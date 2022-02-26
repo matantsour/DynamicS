@@ -11,26 +11,38 @@ Meetings
 {% endblock css_files %} 
 
 {% block content%}
+<br>
 <table class="customer_meeting_table">
-	<tr>
-		<td colspan="5">פגישות</td>
+    
+	<tr class ="meetings_table_rows">
+		<td colspan="5" style="font-size:40px;text-decoration: underline;">פגישות</td>   
 	</tr>
-	<tr class ="table_rows">
+    <tr>
+		<td colspan="5"><br></td>   
+	</tr>
+	<tr class ="meetings_table_rows" style="text-decoration: underline;">
+        
 		<td style="height: 24px">שם היצירה</td>
-		<td style="height: 24px">סוג</td>
-		<td style="height: 24px">פגישה הבאה</td>
+        <td style="height: 24px">שלב ביצירה</td>
+		<td style="height: 24px"> תאריך הפגישה</td>
 		<td style="height: 24px">שעות</td>
 		<td style="height: 24px">נושא</td>
 	</tr>
-    {% for  in  %}
-	<tr class ="table_rows">
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
-		<td>&nbsp;</td>
+    <tr>
+		<td colspan="5"><br></td>   
+	</tr>
+    {% for m  in  list_of_meetings %}
+	<tr class ="meetings_table_rows">
+		<td>{{m.phase_id.creation_id.name}}</td>
+        <td>{{m.phase_id.phase_id}}</td>
+		<td>{{m.start_date}}</td>
+		<td>from {{m.start_time}} to {{m.end_time}}</td>
+		<td>{{m.topic}}</td>
 	</tr>
     {% endfor %}
+    <tr>
+		<td colspan="5"><br></td>   
+	</tr>
 
 </table>
 
