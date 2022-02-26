@@ -1,0 +1,61 @@
+.arrow {
+    border: solid rgb(255, 255, 255);
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+}
+
+.customer_not_done {
+    height: 25px;
+    width: 25px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.customer_pending_approval {
+    height: 25px;
+    width: 25px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.customer_approved {
+    height: 25px;
+    width: 25px;
+    background-color: rgb(43, 155, 71);
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.customer_not_approved {
+    height: 25px;
+    width: 25px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.creations_table {
+    width: 80%;
+    background-color: black;
+    font-size: 24px;
+    color: white;
+    border: thin aliceblue solid;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.creations_td {
+    text-align: center;
+    font-size: 10px;
+}
+
+.creations_td_status {
+    text-align: center;
+    border: thin aqua solid;
+    font-size: 10px;
+}

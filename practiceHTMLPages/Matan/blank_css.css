@@ -1,20 +1,21 @@
-﻿table.side_menu {
-    background-color: rgba(0, 0, 0, 0.9);
-    border: 5px #CE233C solid;
-    border-radius: 0px 0px 30px 30px;
-    border-spacing: 0 0 0 0 ;
-
+﻿.creations_table {
+    width: 80%;
+    background-color: black;
+    font-size: 24px;
+    color: white;
+    border: thin aliceblue solid;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-td.side_menu {
-    color: white;
-    text-align:center;
-    height:35px;
+
+.creations_td {
+    text-align: center;
+    font-size:10px;
 }
 
-td.first_td {
-    color: white;
-    text-align:center;
-    border-bottom:thick gray solid;
-    height:50px;
+.creations_td_status {
+    text-align: center;
+    border:thin aqua solid;
+    font-size:10px;
 }

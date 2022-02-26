@@ -1,11 +1,67 @@
 {% extends 'base.html' %}
+{% load static %}
 
 
 {% block title %}
 Edit Details
 {% endblock title %}
 
+
+{% block css_files %}
+<link rel="stylesheet"  href="{% static  "user_details_css.css"  %}">
+{% endblock css_files %} 
+
+
 {% block content%}
+
+
+<table class = user_detail_table >
+    <tr>
+       <td>שם פרטי :
+         {{ update_form.fname1 }}
+       </td>
+    </tr>
+    <tr>
+       <td>שם משפחה :
+         {{ update_form.lname1 }}
+       </td>
+    </tr>
+    <tr>
+       <td>עיר :
+         {{ update_form.city1 }}
+       </td>
+    </tr>
+    <tr>
+       <td> טלפון:
+         {{ update_form.phone1 }}
+       </td>
+    </tr>
+    <tr>
+       <td> תאריך לידה:
+         {{ update_form.dob1 }}
+       </td>
+    </tr>
+    <tr>
+       <td> סיסמא נוכחית:
+         {{ update_form.current_password1 }}
+       </td>
+    </tr>
+    <tr>
+       <td> סיסמא חדשה:
+         {{ update_form.current_password1 }}
+       </td>
+    </tr>
+    <tr>
+       <td> חזור על סיסמא חדשה:
+         {{ update_form.current_password1 }}
+       </td>
+    </tr>
+
+    <tr> 
+       <td>   <input type="submit" value="Submit"></input> 
+       </td>
+    </tr>
+    </table>
 
 
 {%endblock%}
