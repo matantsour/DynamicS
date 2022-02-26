@@ -1,4 +1,7 @@
-
+{% load static %}
+{% block css_files %}
+<link rel="stylesheet" href="{% static "base_page.css" %}">
+{% endblock css_files %} 
 
 <table class="side_menu" style="width: 80%" align="center" >
    <tr class="first_row">
@@ -14,6 +17,9 @@
       <td class="side_menu">לוח זמנים ומשימות</td>
    </tr>
    <tr class="side_menu">
+      <td class="side_menu" ><a class="side_menu_link" href="{% url "meetings" %}"> פגישות</a></td>
+   </tr>
+   <tr class="side_menu">
       <td class="side_menu" >פגישה ראשונה</td>
    </tr>
    <tr class="side_menu" >
@@ -24,12 +30,6 @@
    </tr>
    <tr class="side_menu" >
       <td class="side_menu">עדכון פרטים אישיים</td>
-   </tr>
-   <tr class="side_menu" >
-      <td class="side_menu">8</td>
-   </tr>
-   <tr class="side_menu" >
-      <td class="side_menu">9</td>
    </tr>
    <tr class="side_menu" >
       <td class="side_menu">התנתק מהמערכת</td>
