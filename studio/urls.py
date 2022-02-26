@@ -12,6 +12,17 @@ urlpatterns = [
     path("creations/",views.creationsView.as_view(),name="artwork"),
 
 
+
+    #edit_user_details
+     path("update_personal_details/",views.Update_user_details.as_view(),name="update_personal_details"),
+
+
+
+
+
+
+
+
     #Admin
     path("admin/",views.admin_page),
     path("admin/add-client",views.admin_new_client),
