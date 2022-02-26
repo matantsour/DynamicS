@@ -1,0 +1,20 @@
+﻿table.side_menu {
+    background-color: rgba(0, 0, 0, 0.9);
+    border: 5px #CE233C solid;
+    border-radius: 0px 0px 30px 30px;
+    border-spacing: 0 0 0 0 ;
+
+}
+
+td.side_menu {
+    color: white;
+    text-align:center;
+    height:35px;
+}
+
+td.first_td {
+    color: white;
+    text-align:center;
+    border-bottom:thick gray solid;
+    height:50px;
+}
