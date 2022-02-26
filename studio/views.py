@@ -52,9 +52,6 @@ def logoutFunc(request):
 
 
 # old views functions
-def index(request):
-    return render(request, "studio/index.html")
-
 
 def admin_page(request):
     pass
