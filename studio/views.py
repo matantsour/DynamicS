@@ -97,10 +97,8 @@ class Update_user_details(View):
             current_password1 = update_form.cleaned_data['current_password']
             new_password1    = update_form.cleaned_data['new_password']
             repeat_new_password1 = update_form.cleaned_data['repeat_new_password']
-        
-        if new_password1 == repeat_new_password1 and new_password1 != current_password1:
-            user = User(fname=fname1, lname=lname1, city = city1 , phone = phone1, dob = dob1,organization = organization1,current_password = new_password1 )
-            user.save()
+            
+            print(fname1,lname1)
         
         
         
