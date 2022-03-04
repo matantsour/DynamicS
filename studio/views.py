@@ -1,3 +1,4 @@
+import re
 from django.shortcuts import render
 from django.views import View
 from django.http import HttpResponseRedirect
@@ -71,7 +72,8 @@ class userMeetingView(View):
 class Update_user_details(View):
     def get(self, request):
         user = User.objects.filter(id=request.session["user_logged_in_id"])[0]
-        initial_dict = {'fname1': user.fname,
+        initial_dict = {
+        'fname1': user.fname,
         'lname1': user.lname,
         'city1': user.city,
         'phone1': user.phone,
@@ -87,22 +89,21 @@ class Update_user_details(View):
     def post(self, request):
         user = User.objects.filter(id=request.session["user_logged_in_id"])[0]
         update_form = UpdateUserDetailsForm(request.POST)
-        if update_form.is_valid():  # form is valid with all fields (Not empty)
-            fname1 = update_form.cleaned_data['fname']
-            lname1 = update_form.cleaned_data['lname']
-            city1 = update_form.cleaned_data['city']
-            phone1 = update_form.cleaned_data['phone']
-            dob1 = update_form.cleaned_data['dob']
-            organization1 = update_form.cleaned_data['organization']
-            current_password1 = update_form.cleaned_data['current_password']
-            new_password1    = update_form.cleaned_data['new_password']
-            repeat_new_password1 = update_form.cleaned_data['repeat_new_password']
-        
-        if new_password1 == repeat_new_password1 and new_password1 != current_password1:
-            user = User(fname=fname1, lname=lname1, city = city1 , phone = phone1, dob = dob1,organization = organization1,current_password = new_password1 )
-            user.save()
-        
-        
+       # if update_form.is_valid():  # form is valid with all fields (Not empty)
+       #     fname1 = update_form.cleaned_data['fname']
+       #     lname1 = update_form.cleaned_data['lname']
+       #     city1 = update_form.cleaned_data['city']
+       #     phone1 = update_form.cleaned_data['phone']
+       #     dob1 = update_form.cleaned_data['dob']
+       #     organization1 = update_form.cleaned_data['organization']
+       #     current_password1 = update_form.cleaned_data['current_password']
+       #     new_password1    = update_form.cleaned_data['new_password']
+       #     repeat_new_password1 = update_form.cleaned_data['repeat_new_password']
+            
+        print(update_form.cleaned_data)
+        return render(request, "studio/pages/user_details_page/user_details_main.html",
+         {"update_form": update_form})
+
         
 
 # functional views
