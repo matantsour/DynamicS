@@ -14,46 +14,55 @@ Edit Details
 
 {% block content%}
 
+{{message}}
+
+<form action="{% url 'update_personal_details' %}" method="POST">
+   {% csrf_token %}
 
 <table class = user_detail_table >
     <tr>
        <td>שם פרטי :
-         {{ update_form.fname1 }}
+         {{ update_form.fname }}
        </td>
     </tr>
     <tr>
        <td>שם משפחה :
-         {{ update_form.lname1 }}
+         {{ update_form.lname }}
        </td>
     </tr>
     <tr>
        <td>עיר :
-         {{ update_form.city1 }}
+         {{ update_form.city }}
        </td>
     </tr>
     <tr>
-       <td> טלפון:
-         {{ update_form.phone1 }}
+       <td> ארגון:
+         {{ update_form.organization }}
        </td>
     </tr>
-    <tr>
+    <tr> 
        <td> תאריך לידה:
-         {{ update_form.dob1 }}
+         {{ update_form.dob }}
        </td>
     </tr>
+    <tr>
+      <td> טלפון:
+        {{ update_form.phone }}
+      </td>
+   </tr>
     <tr>
        <td> סיסמא נוכחית:
-         {{ update_form.current_password1 }}
+         {{ update_form.current_password }}
        </td>
     </tr>
     <tr>
        <td> סיסמא חדשה:
-         {{ update_form.current_password1 }}
+         {{ update_form.new_password }}
        </td>
     </tr>
     <tr>
        <td> חזור על סיסמא חדשה:
-         {{ update_form.current_password1 }}
+         {{ update_form.repeat_new_password }}
        </td>
     </tr>
 

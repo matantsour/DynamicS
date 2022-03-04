@@ -11,6 +11,8 @@ def reset_sessions_to_default(request):
     for key,default_val in SESSIONS_DEFALUTS.items():
         request.session[key]=default_val
 
+
+
 def getUser(email, passcode):
     passcode=rotationalCipher(passcode)
     query_results = Login_Details.objects.filter(
@@ -20,6 +22,23 @@ def getUser(email, passcode):
     else:
         fetched_user = query_results[0].u_id
         return fetched_user
+
+
+def get_password_update_details_form(user,dets):
+    ##password validation:
+    #old password validation - password should match what is in the DB already
+    #new password validation - both new passcode boxes should be itentical and != current password
+    is_password_okay=True
+    current_pass=dets['current_password'] # we got this from the form
+    new_pass=dets['new_password']
+    repeat_new_pass=dets['repeat_new_password']
+    cond1=user.is_password_okay(rotationalCipher(current_pass))
+    cond2=current_pass!=new_pass
+    cond3=new_pass==repeat_new_pass
+    is_password_okay=(cond1 and cond2 and cond3)
+    if is_password_okay:
+        return rotationalCipher(new_pass)
+    return rotationalCipher(current_pass)
 
 
 
@@ -33,6 +52,7 @@ def circular_k(arr,starting_idx,steps):
     while new_idx>max_index:
         new_idx-=max_index+1
     return arr[new_idx]
+
 
 def rotationalCipher(input, rotation_factor=3):
     output=""

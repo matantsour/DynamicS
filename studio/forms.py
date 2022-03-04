@@ -1,4 +1,5 @@
 from django import forms
+from .widgets import DatePickerInput, TimePickerInput, DateTimePickerInput
 
 
 class LoginForm(forms.Form):
@@ -14,12 +15,16 @@ class LoginForm(forms.Form):
 
 
 class UpdateUserDetailsForm(forms.Form):
-    fname1 = forms.CharField(max_length=100)
-    lname1 = forms.CharField(max_length=100)
-    city1 = forms.CharField(max_length=100)
-    phone1 = forms.CharField(max_length=12)
-    dob1 = forms.DateField()
-    organization1 = forms.CharField(max_length=100)
-    current_password1 = forms.CharField(widget=forms.PasswordInput())
-    new_password1 = forms.CharField(widget=forms.PasswordInput())
-    repeat_new_password1 = forms.CharField(widget=forms.PasswordInput())
+    fname = forms.CharField(max_length=100,min_length=2)
+    lname=forms.CharField(max_length = 100,min_length=2)
+    city=forms.CharField(max_length=100,min_length=2)
+    phone=forms.CharField(max_length=100,min_length=2)
+    dob = forms.DateField(
+        #widget=forms.DateInput(format='%d-%m-%Y'),
+        widget=DatePickerInput,        
+    )
+
+    organization=forms.CharField(max_length=100,required=False)
+    current_password=forms.CharField(widget=forms.PasswordInput())
+    new_password=forms.CharField(widget=forms.PasswordInput())
+    repeat_new_password=forms.CharField(widget=forms.PasswordInput(), required=False)
