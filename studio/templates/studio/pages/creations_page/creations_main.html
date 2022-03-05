@@ -1,40 +1,36 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block css_files %}
 <link rel="stylesheet" href="{% static "creations_css.css" %}">
 {% endblock css_files %} 
+
+{% block js_files %}
+<script src="{% static "js/utils.js" %}"></script>
+
+{% endblock js_files %} 
+
 {% block title %}
 Artwork
 {% endblock title %}
 {% block content%}
 <br>
-{% for creation,phases in creations_phases.items %}
-<table class="creations_table" width="100%" align="center" dir="rtl" >
-   {% for p in phases %}
-   <td   class="creations_td" align="center" >
-      <span id="{{p.phase_id}}" class="customer_{{p.status.desc}}"></span>
-   </td>
-   <td rowspan="2"  align="center">
-    {% if not forloop.last %}
-        <i class="arrow"></i>
-    {% else %}
-        <td rowspan="2"></td>
-    {% endif %}
-    
-   </td>
-   {%endfor%}
-   <td rowspan="2">buttons</td>
-   </tr>
-   <tr>
-      {% for p in phases %}
-      <td   class="creations_td" >{{p.name}}</td>
-      {%endfor%}
-   </tr>
-</table>
+<div class="creation_table_div"> 
+
+    {% if  'customer' in request.session.user_type %}
+    {% include "studio/pages/creations_page/mods/creations_customer.html" %}
+    {% elif  'worker' in request.session.user_type %}
+    {% include "studio/pages/creations_page/mods/creations_worker.html" %}
+    {% elif 'manager' in request.session.user_type %}
+    {% include "studio/pages/creations_page/mods/creations_customer.html" %}
+    {%endif%}
+
+</div>
+
 <div>
     <br>
     <br>
     <br>
 </div>
-{%endfor%}
+
 {%endblock%}

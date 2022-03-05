@@ -1,4 +1,65 @@
-﻿.creations_table {
+﻿
+.button {
+  background-color:rgba(40, 44, 43, 0.90);
+  border: none;
+  color: white;
+  padding: 6px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  font-weight:bold;
+  margin: 4px 2px;
+  width: 125px;
+  border-radius: 12px;
+}
+
+.button_highlighted {color: #E65656}
+
+
+
+.arrow {
+    border: solid rgb(255, 255, 255);
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+}
+
+.not_done {
+    height: 25px;
+    width: 25px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.pending_approval {
+    height: 25px;
+    width: 25px;
+    background-color: #DD7900;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.approved {
+    height: 25px;
+    width: 25px;
+    background-color: rgb(43, 155, 71);
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.not_approved {
+    height: 25px;
+    width: 25px;
+    background-color: #990000;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.creations_table {
     width: 80%;
     background-color: black;
     font-size: 24px;
@@ -8,14 +69,13 @@
     margin-right: auto;
 }
 
-
 .creations_td {
     text-align: center;
-    font-size:10px;
+    font-size: 10px;
 }
 
 .creations_td_status {
     text-align: center;
-    border:thin aqua solid;
-    font-size:10px;
+    border: thin aqua solid;
+    font-size: 10px;
 }

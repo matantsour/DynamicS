@@ -55,6 +55,9 @@ class creationsView(View):
     def post(self, request):
         pass
 
+def last_version(request, creation_id):
+    return render(request, "studio/index.html") #need to complete the last version view
+
 
 class userMeetingView(View):
     def get(self, request):
