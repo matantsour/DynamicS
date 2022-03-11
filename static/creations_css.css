@@ -59,3 +59,72 @@
     border: thin aqua solid;
     font-size: 10px;
 }
+
+.bg-modal {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    display: none;
+}
+
+.modal-content {
+    position: absolute;
+    left: 400px;
+    width: 400px;
+    height: 300px;
+    background-color: white;
+    opacity: 0.95;
+    border-radius: 5px;
+    padding: 20px;
+    color: black;
+    justify-content: center;
+    text-align: center;
+}
+
+.close {
+    position: absolute;
+    top: 0;
+    right: 5%;
+    font-size: 42;
+    transform: rotate(45deg);
+    cursor: pointer;
+}
+
+.comment_button {
+    background: #FF4742;
+    border: 1px solid #FF4742;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: nunito, roboto, proxima-nova, "proxima nova", sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 16px;
+    min-height: 40px;
+    outline: 0;
+    padding: 12px 14px;
+    text-align: center;
+    text-rendering: geometricprecision;
+    text-transform: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+}
+
+.comment_button:hover,
+.comment_button:active {
+    background-color: initial;
+    background-position: 0 0;
+    color: #FF4742;
+}
+
+.comment_buttonactive {
+    opacity: .5;
+}
