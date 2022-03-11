@@ -45,15 +45,18 @@ class creationsView(View):
     def get(self, request):
         user_ob = User.objects.filter(
             id=request.session["user_logged_in_id"])[0]
-        list_of_creations= user_ob.creations.all()
-        creations_phases={c:c.phases.all() for c in list_of_creations}
+        list_of_creations = user_ob.creations.all()
+        creations_phases = {c: c.phases.all() for c in list_of_creations}
         return render(request, "studio/pages/creations_page/creations_main.html",
-         {"user_name": user_ob.lname,
-         "list_of_creations":list_of_creations,
-         "creations_phases":creations_phases})
+                      {"user_name": user_ob.lname,
+                       "list_of_creations": list_of_creations,
+                       "creations_phases": creations_phases})
 
     def post(self, request):
         pass
+
+def last_version(request, creation_id):
+    return render(request, "studio/index.html") #need to complete the last version view
 
 
 class userMeetingView(View):
@@ -61,7 +64,8 @@ class userMeetingView(View):
         user_ob = User.objects.filter(
             id=request.session["user_logged_in_id"])[0]
         user_list_of_meetings = user_ob.meetings.all()
-        return render(request, "studio/pages/meetings_page/meetings_main.html", {"user_name": user_ob.lname,"list_of_meetings":user_list_of_meetings})
+        return render(request, "studio/pages/meetings_page/meetings_main.html", {"user_name": user_ob.lname, "list_of_meetings": user_list_of_meetings})
+
     def post(self, request):
         pass
 
@@ -73,38 +77,43 @@ class Update_user_details(View):
     def get(self, request):
         user = User.objects.filter(id=request.session["user_logged_in_id"])[0]
         initial_dict = {
-        'fname1': user.fname,
-        'lname1': user.lname,
-        'city1': user.city,
-        'phone1': user.phone,
-        'dob1': user.dob,
-        'organization1': user.organization,
-        'current_password1': user.login_details.password,
-        'new_password1': user.login_details.password,
-        'repeat_new_password1': user.login_details.password}
+            'fname': user.fname,
+            'lname': user.lname,
+            'city': user.city,
+            'phone': user.phone,
+            'dob': user.dob,
+            'organization': user.organization,
+            'current_password': user.login_details.password,
+            'new_password': user.login_details.password,
+            'repeat_new_password': user.login_details.password}
         update_form = UpdateUserDetailsForm(initial=initial_dict)
         return render(request, "studio/pages/user_details_page/user_details_main.html",
-         {"update_form": update_form})
+                      {"update_form": update_form})
 
     def post(self, request):
         user = User.objects.filter(id=request.session["user_logged_in_id"])[0]
         update_form = UpdateUserDetailsForm(request.POST)
-       # if update_form.is_valid():  # form is valid with all fields (Not empty)
-       #     fname1 = update_form.cleaned_data['fname']
-       #     lname1 = update_form.cleaned_data['lname']
-       #     city1 = update_form.cleaned_data['city']
-       #     phone1 = update_form.cleaned_data['phone']
-       #     dob1 = update_form.cleaned_data['dob']
-       #     organization1 = update_form.cleaned_data['organization']
-       #     current_password1 = update_form.cleaned_data['current_password']
-       #     new_password1    = update_form.cleaned_data['new_password']
-       #     repeat_new_password1 = update_form.cleaned_data['repeat_new_password']
-            
-        print(update_form.cleaned_data)
-        return render(request, "studio/pages/user_details_page/user_details_main.html",
-         {"update_form": update_form})
+        params = dict()
+        form_fields = ['fname', 'lname', 'city',
+                       'phone', 'dob', 'organization']
+        print(update_form.is_valid())
+        print(update_form.errors)
+        if update_form.is_valid():
+            for c in form_fields:
+                params[c] = update_form.cleaned_data[c]
+            params['password'] = get_password_update_details_form(
+                user, update_form.cleaned_data)
+        flag = user.update_user_details(params)
+        if flag:
+            message = 'עדכון הפרטים הצליח'
+            request.session["user_logged_in_fname"] = user.fname
+        else:
+            message = 'עלייך להשתמש בסיסמה אחרת'
 
-        
+        return render(request, "studio/pages/user_details_page/user_details_main.html",
+                      {"update_form": update_form,
+                       "message": message})
+
 
 # functional views
 
