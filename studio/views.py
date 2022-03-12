@@ -114,6 +114,12 @@ class Update_user_details(View):
                       {"update_form": update_form,
                        "message": message})
 
+class admin_update_details(View):
+    def get(self, request):
+        pass
+
+    def post(self, request):
+        pass
 
 # functional views
 

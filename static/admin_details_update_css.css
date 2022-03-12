@@ -1,0 +1,8 @@
+table {
+    width: 100%;
+    
+    border-collapse: collapse;
+  }
+  td {
+    color: rgb(255, 255, 255);
+  }

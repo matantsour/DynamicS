@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+Edit Details of Client/Worker
+{% endblock title %}
+
+
+{% block css_files %}
+<link rel="stylesheet"  href="{% static  "admin_details_update_css"  %}">
+{% endblock css_files %} 
+
+
+{% block content%}
+
+{{message}}
+
+<form action="{% url 'update_personal_details' %}" method="POST">
+   {% csrf_token %}
+
+<table>
+    <tr> 
+        <td>
+            :בחר לקוח או עובד
+        </td>
+    </tr>
+    <tr> 
+        <td>   <button type="submit"> אישור </button>
+        </td>
+     </tr>
+
+
+{%endblock%}
