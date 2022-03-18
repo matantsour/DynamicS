@@ -43,7 +43,7 @@ class User(models.Model):
             return True
         except:
             return False
-            
+
     def update_user_details(self, params):
         try:
             self.fname = params['fname']
@@ -267,3 +267,13 @@ class File_Deletion_History(models.Model):
         return "-".join([str(self.id), str(self.creation_id.name), str(self.phase_id.name)])
 
 
+class Log(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE, related_name="logs")
+    creation = models.ForeignKey(Creation, null=False, blank=False,on_delete=models.CASCADE, related_name="logs")
+    action =  models.CharField(max_length=300)
+    time = models.DateField(blank=True, null=False, auto_now_add=True)
+
+
+    def __str__(self):
+        return "|".join([str(self.time),str(self.creation.id),str(self.user.id),self.action])
