@@ -9,21 +9,39 @@
 {% block content%}
 <h1> {{creation_name}} </h1><br>
 {%if notes %} 
+<table style="width: 100%;table-layout: fixed;color:white">
 {% for note in notes %}
-<table style="width: 100%;table-layout: fixed;">
-	<tr>
-		<td style="text-align: center">שליחה מישהו אחר</td>
-		<td style="text-align: center">&nbsp;</td>
-		<td style="text-align: center">שליחה שלי</td>
-		<td style="text-align: center">תאריך</td>
-	</tr>
-</table>
-    {{note.text}}<br>
+    {% if 'customer' in request.session.user_type %}
+        {%if note.user.user_type='customer'%}
+        <tr>
+            <td style="text-align: center">{{note.time_sent}}</td>
+            <td style="text-align: center">{{note.text}}</td>
+            <td style="text-align: center"></td>
+        </tr>
+        {% endif %}
+    {% endif %}
+    {%else%}
+        {%if note.user.user_type='customer'%}
+        <tr>
+            <td style="text-align: center">{{note.time_sent}}</td>
+            <td style="text-align: center">{{note.text}}</td>
+            <td style="text-align: center"></td>
+        </tr>
+        {% else note.user.user_type!='customer'%}
+        <tr>
+            <td style="text-align: center">{{note.time_sent}}</td>
+            <td style="text-align: center"></td>
+            <td style="text-align: center">{{note.text}}</td>
+        </tr>
 
+        {% endif %} 
+    {% endif %}
 {% endfor %}
+</table>
+<br>
+
 {%else%}
 אין הערות הקשורות ליצירה
-
 {%endif%}
 
 {%endblock%}
