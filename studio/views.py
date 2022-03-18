@@ -10,7 +10,7 @@ from django.db.models import Q
 from .forms import LoginForm, UpdateUserDetailsForm
 from .utils import *
 from django.urls import reverse
-
+from django.utils import timezone
 
 ##
 # Create your util functions here, then move them to utils.
@@ -37,8 +37,10 @@ class indexView(View):
                 request.session["user_type"] = user.user_type.type
                 request.session["user_logged_in_fname"] = user.fname
                 request.session["user_logged_in_id"] = user.id
+                user.update_login_time(timezone.now())
             else:
                 request.session["is_logged_in"] = False
+                
         return render(request, "studio/index.html", {"login_form": login_form})
 
 

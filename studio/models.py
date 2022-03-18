@@ -30,10 +30,20 @@ class User(models.Model):
     dor = models.DateField(max_length=8, blank=True, null=True,
                            editable=False, auto_now_add=True)  # date of registration
     organization = models.CharField(max_length=100, blank=True)
+    last_login = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return "-".join([self.fname, self.lname, self.user_type.type])
 
+
+    def update_login_time(self,time1):
+        try:
+            self.last_login=time1
+            self.save()
+            return True
+        except:
+            return False
+            
     def update_user_details(self, params):
         try:
             self.fname = params['fname']
@@ -88,9 +98,12 @@ class Login_Details(models.Model):
     email = models.EmailField(max_length=254)
     # read more how to apply as a password in forms.py
     password = models.CharField(max_length=50)
+    
 
     def __str__(self):
         return "-".join([self.u_id.fname, self.u_id.lname, self.email])
+
+    
 
 ##
 
@@ -252,3 +265,5 @@ class File_Deletion_History(models.Model):
 
     def __str__(self):
         return "-".join([str(self.id), str(self.creation_id.name), str(self.phase_id.name)])
+
+
