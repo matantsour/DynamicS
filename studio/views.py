@@ -55,12 +55,14 @@ class creationsView(View):
             c: c.phases.all() for c in list_of_creations if c.completion_percent() != 1}
         creations_phases_done = {
             c: c.phases.all() for c in list_of_creations if c.completion_percent() == 1}
-
+        exists_completed_creations=True if creations_phases_done else False
+        print(exists_completed_creations)
         return render(request, "studio/pages/creations_page/creations_main.html",
                       {"user_name": user_ob.lname,
                        "list_of_creations": list_of_creations,
                        "creations_phases_not_done": creations_phases_not_done,
-                       "creations_phases_done": creations_phases_done})
+                       "creations_phases_done": creations_phases_done,
+                       "exists_completed_creations":exists_completed_creations})
 
     def post(self, request):
         pass

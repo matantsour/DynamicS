@@ -36,6 +36,7 @@
 <br>
 
 <!-- Toggle button -->
+{% if exists_completed_creations %}
 <div name="toggle_button">
     <table class="creations_table creations_table_header" width="100%" align="center" dir="rtl">
     <tr>
@@ -45,7 +46,7 @@
     </tr>
     </table>
 </div>
-
+{% endif %}
 <!-- CREATIONS <> NOT DONE-->
 
 <div id='creations_not_done' >
