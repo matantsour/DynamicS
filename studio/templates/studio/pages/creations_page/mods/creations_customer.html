@@ -1,5 +1,22 @@
 {% load static %}
+<script src="{% static 'js/utils.js' %}"></script> 
+
 {% block content%}
+
+<div  class="bg-modal" >
+    <div class="modal-content">
+        <h1>הוסף הערה</h1>
+        <form>
+            <textarea name="TextArea1" cols="40" rows="8" placeholder="הזינו את ההערה כאן"></textarea><br>
+            <input type="submit">
+        </form>
+        <div class="close">+
+        </div>
+    </div>
+</div>
+
+
+
 <br>
 {% for creation,phases in creations_phases.items %}
 
@@ -13,6 +30,9 @@
         </td>
     </tr>
 </table>
+
+
+
 <table class="creations_table" width="100%" align="center" dir="rtl" >
    <tr> 
         {% for p in phases %}
@@ -38,5 +58,18 @@
 </table>
 <br>
 
+
+
+
 {%endfor%}
+
+<div id='special_notes'>
+    <td rowspan="2"><button class="comment_button" onclick='open_notes_windows()'>  הוסף הערה חלון קטן</button></td>
+    </tr>
+    <tr>
+       {% for p in phases %}
+       <td   class="creations_td" >{{p.name}}</td>
+       {%endfor%}
+    </tr>
+</div>
 {%endblock%}

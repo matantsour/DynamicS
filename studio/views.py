@@ -59,6 +59,15 @@ def last_version(request, creation_id):
     return render(request, "studio/index.html") #need to complete the last version view
 
 
+class notesView(View):
+    def get(self, request,creation_id):
+        return render(request, "studio/index.html")
+
+    def post(self, request,creation_id):
+        return render(request, "studio/index.html")
+
+
+
 class userMeetingView(View):
     def get(self, request):
         user_ob = User.objects.filter(
@@ -69,8 +78,6 @@ class userMeetingView(View):
     def post(self, request):
         pass
 
-    def post(self, request):
-        pass
 
 
 class Update_user_details(View):

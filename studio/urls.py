@@ -11,6 +11,7 @@ urlpatterns = [
     #creations
     path("creations/",views.creationsView.as_view(),name="artwork"),
     path("creations/last_version/<int:creation_id>",views.last_version,name="last_version"),
+    path("creations/notes/<int:creation_id>",views.notesView.as_view(),name="notes"),
 
     #Meetings
     path("meetings/",views.userMeetingView.as_view(),name="meetings"),

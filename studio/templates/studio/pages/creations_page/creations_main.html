@@ -1,64 +1,24 @@
 {% extends 'base.html' %}
 {% load static %}
+<script src="{% static 'js/utils.js' %}"></script> 
 {% block css_files %}
-<script>
-    window.onload=function(){
-        document.querySelector('.comment_button').addEventListener("click",
-        function() { document.querySelector(".bg-modal").style.display = 'block' });
-        document.querySelector('.close').addEventListener("click",
-        function() { document.querySelector(".bg-modal").style.display = 'none' });
-      }
-    
-</script>
-
 <link rel="stylesheet" href="{% static "creations_css.css" %}">
 {% endblock css_files %} 
 {% block title %}
 Artwork
 {% endblock title %}
 {% block content%}
-<div  class="bg-modal" >
-    <div class="modal-content">
-        <h1>הוסף הערה</h1>
-        <form>
-            <textarea name="TextArea1" cols="40" rows="8" placeholder="הזינו את ההערה כאן"></textarea><br>
-            <input type="submit">
-        </form>
-        <div class="close">+
-        </div>
-    </div>
-</div>
 
-<br>
-{% for creation,phases in creations_phases.items %}
-<table class="creations_table" width="100%" align="center" dir="rtl" >
-   {% for p in phases %}
-   <td   class="creations_td" align="center" >
-      <span id="{{p.phase_id}}" class="customer_{{p.status.desc}}"></span>
-   </td>
-   <td rowspan="2"  align="center">
-    {% if not forloop.last %}
-        <i class="arrow"></i>
-    {% else %}
-        <td rowspan="2"></td>
-    {% endif %}
-    
-   </td>
-   {%endfor%}
-   <td rowspan="2"><button class="comment_button"> הוספת הערה</button></td>
-   </tr>
-   <tr>
-      {% for p in phases %}
-      <td   class="creations_td" >{{p.name}}</td>
-      {%endfor%}
-   </tr>
-</table>
-<div>
-    <br>
-    <br>
-    <br>
-</div>
-{%endfor%}
+{% if  'customer' in request.session.user_type %}
+{% include "studio/pages/creations_page/mods/creations_customer.html" %}
 
+<!--
+{% elif  'worker' in request.session.user_type %}
+{% include "studio/includes/mainframe/side_menus/side_menu_worker.html" %}
+{% elif 'manager' in request.session.user_type %}
+{% include "studio/includes/mainframe/side_menus/side_menu_manager.html" %}
+{% else %}
+{% include "studio/includes/mainframe/side_menus/side_menu_guest.html" %}
+{% endif %}-->
 
 {%endblock%}
