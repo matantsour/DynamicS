@@ -1,4 +1,5 @@
 import re
+from unicodedata import name
 from django.shortcuts import render
 from django.views import View
 from django.http import HttpResponseRedirect
@@ -61,10 +62,17 @@ def last_version(request, creation_id):
 
 class notesView(View):
     def get(self, request,creation_id):
-        return render(request, "studio/index.html")
+        find_creation = Creation.objects.filter(id=creation_id)
+        if find_creation:
+            creation_name = find_creation[0].name
+            notes = find_creation[0].notes.all()
+            
+        return render(request, "studio/pages/notes_page/notes_main.html",
+        {'creation_name':creation_name,
+        "notes":notes})
 
     def post(self, request,creation_id):
-        return render(request, "studio/index.html")
+        return render(request, "studio/pages/notes_page/notes_main.html")
 
 
 

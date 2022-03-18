@@ -136,7 +136,7 @@ class Creation(models.Model):
         Album, null=True, blank=True, on_delete=models.SET_NULL, related_name="creations")
     profit = models.FloatField()
 
-    def __str__(self):
+    def __str__(self): 
         crtor = self.creator.fname+" "+self.creator.lname
         return "-".join([self.name, crtor])
 
@@ -198,6 +198,17 @@ class Phase_Resources(models.Model):
 
     def __str__(self):
         return "-".join([str(self.phase.phase_id), self.resource.name, str(self.resource_quantity)])
+
+
+class Note(models.Model):
+    id = models.AutoField(primary_key=True)
+    creation = models.ForeignKey(Creation, on_delete=models.CASCADE, related_name="notes")
+    user = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE, related_name="notes")
+    time_sent = models.DateField(blank=True, null=False, auto_now_add=True)
+    text = models.CharField(max_length=300)
+
+    def __str__(self):
+        return "|".join([str(self.creation.id),str(self.time_sent),str(self.user.id)])
 
 
 class File(models.Model):
