@@ -30,7 +30,6 @@ urlpatterns = [
 
 
 
-
     #Admin
     path("admin/",views.admin_page),
     path("admin/add-client",views.admin_new_client),
