@@ -123,7 +123,9 @@ class Update_user_details(View):
 
 class admin_update_details(View):
     def get(self, request):
-        pass
+        users = User.objects.all()
+        return render(request, "studio/pages/admin_update_details_page/admin_update_details.html", 
+        {"users": users})
 
     def post(self, request):
         pass
