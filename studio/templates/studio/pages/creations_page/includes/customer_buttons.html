@@ -11,7 +11,9 @@
         <td><button class="button" onclick="openInNewTab('{% url "notes" creation_id=creation.id%}')">שלח הערה</button> </td>
     </tr>
     <tr>
-        <td><button class="button button_highlighted">אשר סיום</button> </td>
+        {% if creation.is_pending_client_approval %}
+        <td><button class="button button_highlighted" onclick="location.href='{% url "client_approved_click" creation_id=creation.id%}'">אשר סיום</button> </td>
+        {% endif %}
     </tr>
     
 </table>

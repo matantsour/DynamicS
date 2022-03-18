@@ -1,6 +1,6 @@
 import re
 from unicodedata import name
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.views import View
 from django.http import HttpResponseRedirect
 from importlib import import_module
@@ -11,6 +11,7 @@ from .forms import LoginForm, UpdateUserDetailsForm
 from .utils import *
 from django.urls import reverse
 from django.utils import timezone
+
 
 ##
 # Create your util functions here, then move them to utils.
@@ -40,7 +41,7 @@ class indexView(View):
                 user.update_login_time(timezone.now())
             else:
                 request.session["is_logged_in"] = False
-                
+
         return render(request, "studio/index.html", {"login_form": login_form})
 
 
@@ -48,34 +49,44 @@ class creationsView(View):
     def get(self, request):
         user_ob = User.objects.filter(
             id=request.session["user_logged_in_id"])[0]
-        list_of_creations = user_ob.creations.all()
-        creations_phases = {c: c.phases.all() for c in list_of_creations}
+        list_of_creations = sorted(user_ob.creations.all(
+        ), key=lambda c: c.completion_percent(), reverse=True)
+        creations_phases_not_done = {
+            c: c.phases.all() for c in list_of_creations if c.completion_percent() != 1}
+        creations_phases_done = {
+            c: c.phases.all() for c in list_of_creations if c.completion_percent() == 1}
+
         return render(request, "studio/pages/creations_page/creations_main.html",
                       {"user_name": user_ob.lname,
                        "list_of_creations": list_of_creations,
-                       "creations_phases": creations_phases})
+                       "creations_phases_not_done": creations_phases_not_done,
+                       "creations_phases_done": creations_phases_done})
 
     def post(self, request):
         pass
 
+
 def last_version(request, creation_id):
-    return render(request, "studio/index.html") #need to complete the last version view
+    return render(request, "studio/index.html")
+
+def client_approved_click(request, creation_id):
+    creation=Creation.objects.get(id=creation_id).client_approved()
+    return redirect('artwork')
 
 
 class notesView(View):
-    def get(self, request,creation_id):
+    def get(self, request, creation_id):
         find_creation = Creation.objects.filter(id=creation_id)
         if find_creation:
             creation_name = find_creation[0].name
             notes = find_creation[0].notes.all()
-            
+
         return render(request, "studio/pages/notes_page/notes_main.html",
-        {'creation_name':creation_name,
-        "notes":notes})
+                      {'creation_name': creation_name,
+                       "notes": notes})
 
-    def post(self, request,creation_id):
+    def post(self, request, creation_id):
         return render(request, "studio/pages/notes_page/notes_main.html")
-
 
 
 class userMeetingView(View):
@@ -87,7 +98,6 @@ class userMeetingView(View):
 
     def post(self, request):
         pass
-
 
 
 class Update_user_details(View):
@@ -131,16 +141,18 @@ class Update_user_details(View):
                       {"update_form": update_form,
                        "message": message})
 
+
 class admin_update_details(View):
     def get(self, request):
         users = User.objects.all()
-        return render(request, "studio/pages/admin_update_details_page/admin_update_details.html", 
-        {"users": users})
+        return render(request, "studio/pages/admin_update_details_page/admin_update_details.html",
+                      {"users": users})
 
     def post(self, request):
         pass
 
 # functional views
+
 
 def logoutFunc(request):
     reset_sessions_to_default(request)

@@ -1,8 +1,26 @@
 {% load static %}
 <script src="{% static 'js/utils.js' %}"></script> 
 
+
+<!--  toggle button setup-->
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('input[type="checkbox"]').click(function() {
+                var inputValue = $(this).attr("value");
+                $("." + inputValue).toggle();
+            });
+        });
+    </script>
+<!-- end of toggle button setup -->
+
+
+
 {% block content%}
 
+
+
+<!-- SPECIAL NOTES TEST P1-->
 <div  class="bg-modal" >
     <div class="modal-content">
         <h1>הוסף הערה</h1>
@@ -15,10 +33,23 @@
     </div>
 </div>
 
-
-
 <br>
-{% for creation,phases in creations_phases.items %}
+
+<!-- Toggle button -->
+<div name="toggle_button">
+    <table class="creations_table creations_table_header" width="100%" align="center" dir="rtl">
+    <tr>
+    <td>
+        <label> <input type="checkbox" name="colorCheckbox"  value="creations_done"> הצג יצירות שהושלמו</label>
+    </td>
+    </tr>
+    </table>
+</div>
+
+<!-- CREATIONS <> NOT DONE-->
+
+<div id='creations_not_done' >
+{% for creation,phases in creations_phases_not_done.items %}
 
 <br>
 
@@ -30,8 +61,6 @@
         </td>
     </tr>
 </table>
-
-
 
 <table class="creations_table" width="100%" align="center" dir="rtl" >
    <tr> 
@@ -48,8 +77,8 @@
         
     </td>
          {%endfor%}
-   <td rowspan="2">{% include "studio/includes/creations_page_includes/customer_buttons.html"%}</td>
-   </tr>
+         <td rowspan="2">{% include "studio/pages/creations_page/includes/customer_buttons.html"%}</td>
+        </tr>
    <tr>
       {% for p in phases %}
       <td   class="creations_td" valign="top" >{{p.name}}</td>
@@ -58,10 +87,58 @@
 </table>
 <br>
 
-
-
-
 {%endfor%}
+</div>
+
+<!-- CREATIONS <> DONE-->
+
+<div class='creations_done' style="display:none;"> <!-- controlled by toggle button-->
+    {% for creation,phases in creations_phases_done.items %}
+    
+    <br>
+    
+    <table class="creations_table creations_table_header" width="100%" align="center" dir="rtl">
+        <tr>
+            <td width="15%">שם היצירה: 
+            </td>
+            <td width="85%" class="creations_td_header">{{creation.name}}
+            </td>
+        </tr>
+    </table>
+    
+    <table class="creations_table" width="100%" align="center" dir="rtl" >
+       <tr> 
+            {% for p in phases %}
+        <td   class="creations_td" align="center" valign="bottom" >
+            <span id="{{p.phase_id}}" class="customer_{{p.status.desc}}"></span>
+        </td>
+        <td rowspan="2"  align="center">
+            {% if not forloop.last %}
+                <i class="arrow"></i>
+            {% else %}
+                <td rowspan="2"></td>
+            {% endif %}
+            
+        </td>
+             {%endfor%}
+       <td rowspan="2">{% include "studio/pages/creations_page/includes/customer_buttons.html"%}</td>
+       </tr>
+       <tr>
+          {% for p in phases %}
+          <td   class="creations_td" valign="top" >{{p.name}}</td>
+          {%endfor%}
+       </tr>
+    </table>
+    <br>
+    
+    {%endfor%}
+    </div>
+
+
+
+
+
+<!-- SPECIAL NOTES TEST P2-->
 
 <div id='special_notes'>
     <td rowspan="2"><button class="comment_button" onclick='open_notes_windows()'>  הוסף הערה חלון קטן</button></td>

@@ -124,6 +124,9 @@ class Status(models.Model):
     id = models.AutoField(primary_key=True)
     desc = models.CharField(max_length=100)
 
+    def is_approved(self):
+        return self.desc=='approved'
+
     def __str__(self):
         return self.desc
 
@@ -162,6 +165,34 @@ class Creation(models.Model):
             return last_phase_placement
         except:
             return 0
+    
+    def is_pending_client_approval(self):
+        phases=self.phases.all()
+        if not phases:
+            return False
+        are_phases_statuses_approved=[p.status.is_approved() for p in phases]
+        flag=True
+        if are_phases_statuses_approved[-1]:
+            return False #the creation is already approved already approved
+        for s in are_phases_statuses_approved[:-1]:
+            if not s:
+                return False #one phase has not been approved yet, so the creation is not pending client approval yet.
+        return True
+
+    def completion_percent(self):
+        phases=self.phases.all()
+        if not phases:
+            return 0
+        n=len(phases)
+        is_completed=[int(p.status.is_approved()) for p in phases]
+        return sum(is_completed)/n
+
+    def client_approved(self):
+        phases=list(self.phases.all())
+        last_phase=phases[-1]
+        last_phase.status=Status.objects.get(desc='approved')
+        last_phase.save()
+        self.save()
 
     class Meta:
         unique_together = ('name', 'creator',)
