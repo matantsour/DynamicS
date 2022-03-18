@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+Admin Update User Details
+{% endblock title %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static "admin_details_update_css.css" %}">
+{% endblock css_files %} 
+
+{% block content%}
+<br>
+<table>
+
+	<tr  style="text-decoration: underline;">
+        
+		<td style="height: 24px" class="auto-style1">סוג משתמש</td>
+        <td style="height: 24px" class="auto-style1">ת.ז.</td>
+		<td style="height: 24px" class="auto-style1"> ת. הרשמה</td>
+		<td style="height: 24px" class="auto-style1">שם פרטי</td>
+		<td style="height: 24px" class="auto-style1">שם משפחה</td>
+		<td style="height: 24px" class="auto-style1">כניסה אחרונה</td>
+		<td style="height: 24px" class="auto-style1">פעולה אחרונה</td>
+		<td style="height: 24px" class="auto-style1">יצירה אחרונה</td>
+
+	</tr>
+    <tr>
+		<td colspan="5"><br></td>   
+	</tr>
+    {% for u  in  users %}
+	<tr>
+        <td>{{u.user_type}}</td>
+        <td>{{u.id}}</td>
+        <td>{{u.dor}}</td>
+		<td>{{u.fname}}</td>
+        <td>{{u.lname}}</td>
+<!--   
+        <td>{{u.creation.creation_date}}</td>
+
+        <td>{{u.user_type}}</td>
+
+        <td>{{u.user_type}}</td>
+    -->
+	</tr>
+    {% endfor %}
+    <tr>
+		<td colspan="5"><br></td>   
+	</tr>
+
+</table>
+
+
+{%endblock%}
