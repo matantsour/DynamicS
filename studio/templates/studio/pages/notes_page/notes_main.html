@@ -2,6 +2,7 @@
 {% load static %}
 <script src="{% static 'js/utils.js' %}"></script> 
 {% block css_files %}
+<link rel="stylesheet" href="{% static "notes_css.css" %}">
 {% endblock css_files %} 
 {% block title %}
 {{creation_name}}
@@ -10,33 +11,16 @@
 <h1> {{creation_name}} </h1><br>
 {%if notes %} 
 <table style="width: 100%;table-layout: fixed;color:white">
-{% for note in notes %}
     {% if 'customer' in request.session.user_type %}
-        {%if note.user.user_type='customer'%}
-        <tr>
-            <td style="text-align: center">{{note.time_sent}}</td>
-            <td style="text-align: center">{{note.text}}</td>
-            <td style="text-align: center"></td>
-        </tr>
-        {% endif %}
-    {% endif %}
+    {% for note in customer_notes %}
+    {% include "studio/pages/notes_page/mods/notes_client.html" %}
+    {% endfor %}
     {%else%}
-        {%if note.user.user_type='customer'%}
-        <tr>
-            <td style="text-align: center">{{note.time_sent}}</td>
-            <td style="text-align: center">{{note.text}}</td>
-            <td style="text-align: center"></td>
-        </tr>
-        {% else note.user.user_type!='customer'%}
-        <tr>
-            <td style="text-align: center">{{note.time_sent}}</td>
-            <td style="text-align: center"></td>
-            <td style="text-align: center">{{note.text}}</td>
-        </tr>
-
-        {% endif %} 
+    {% for note in all_notes %}
+    {% include "studio/pages/notes_page/mods/notes_noclient.html" %}
+    {% endfor %}
     {% endif %}
-{% endfor %}
+    
 </table>
 <br>
 

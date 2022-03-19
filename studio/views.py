@@ -82,10 +82,24 @@ class notesView(View):
         if find_creation:
             creation_name = find_creation[0].name
             notes = find_creation[0].notes.all()
+            customer_notes = []
+            other_notes = []
+            all_notes = []
+            for i in notes:
+                if str(i.user.user_type) =='customer':
+                    customer_notes.append((i,'customer'))
+            for i in notes:
+                if str(i.user.user_type) != 'customer':
+                    other_notes.append((i,'nocustomer'))
+            all_notes = customer_notes+other_notes
+            all_notes.sort(key=lambda y:y[1])
 
         return render(request, "studio/pages/notes_page/notes_main.html",
                       {'creation_name': creation_name,
-                       "notes": notes})
+                      "notes":notes,
+                       "other_notes": other_notes,
+                       "customer_notes":customer_notes,
+                       "all_notes":all_notes})
 
     def post(self, request, creation_id):
         return render(request, "studio/pages/notes_page/notes_main.html")
