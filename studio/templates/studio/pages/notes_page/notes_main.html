@@ -23,6 +23,15 @@
     
 </table>
 <br>
+<form action="{% url 'notes' creation_id=creation_id %}" method="POST">
+    {% csrf_token %}
+    <ul>
+        {{new_note.as_ul}}
+    </ul>
+    <div id="add_new_note">
+        <button>הוספת הערה</button>
+    </div>
+</form>
 
 {%else%}
 אין הערות הקשורות ליצירה

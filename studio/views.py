@@ -1,3 +1,4 @@
+from hashlib import new
 import re
 from unicodedata import name
 from django.shortcuts import render,redirect
@@ -7,7 +8,7 @@ from importlib import import_module
 from django.conf import settings
 from .models import *
 from django.db.models import Q
-from .forms import LoginForm, UpdateUserDetailsForm
+from .forms import LoginForm, UpdateUserDetailsForm , AddNote
 from .utils import *
 from django.urls import reverse
 from django.utils import timezone
@@ -85,6 +86,7 @@ class notesView(View):
             customer_notes = []
             other_notes = []
             all_notes = []
+            new_note = AddNote()
             for i in notes:
                 if str(i.user.user_type) =='customer':
                     customer_notes.append((i,'customer'))
@@ -95,14 +97,45 @@ class notesView(View):
             all_notes.sort(key=lambda y:y[1])
 
         return render(request, "studio/pages/notes_page/notes_main.html",
-                      {'creation_name': creation_name,
-                      "notes":notes,
-                       "other_notes": other_notes,
-                       "customer_notes":customer_notes,
-                       "all_notes":all_notes})
+                    {'creation_name': creation_name,
+                    'creation_id':creation_id,
+                    "notes":notes,
+                    "other_notes": other_notes,
+                    "customer_notes":customer_notes,
+                    "all_notes":all_notes,
+                    'new_note':new_note})
+        
+                
+    def post(self, request, creation_id): 
+        find_creation = Creation.objects.filter(id=creation_id)
+        if find_creation:
+            note_form = AddNote(request.POST)
+            if note_form.is_valid():
+                new_note = Note(creation=find_creation[0],user=User.objects.filter(id=request.session["user_logged_in_id"])[0],text=note_form.cleaned_data['text'])
+                new_note.save()
+            creation_name = find_creation[0].name
+            notes = find_creation[0].notes.all()
+            customer_notes = []
+            other_notes = []
+            all_notes = []
+            new_note = AddNote()
+            for i in notes:
+                if str(i.user.user_type) =='customer':
+                    customer_notes.append((i,'customer'))
+            for i in notes:
+                if str(i.user.user_type) != 'customer':
+                    other_notes.append((i,'nocustomer'))
+            all_notes = customer_notes+other_notes
+            all_notes.sort(key=lambda y:y[1])
 
-    def post(self, request, creation_id):
-        return render(request, "studio/pages/notes_page/notes_main.html")
+        return render(request, "studio/pages/notes_page/notes_main.html",
+                    {'creation_name': creation_name,
+                    'creation_id':creation_id,
+                    "notes":notes,
+                    "other_notes": other_notes,
+                    "customer_notes":customer_notes,
+                    "all_notes":all_notes,
+                    'new_note':new_note})
 
 
 class userMeetingView(View):
