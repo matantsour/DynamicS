@@ -1,14 +1,14 @@
 {%if 'customer' in note.1 %}
 <tr>
-    <td style="text-align: center">{{note.0.time_sent}}</td>
-    <td class='customer_note' style="text-align: center">{{note.0.text}}</td>
-    <td style="text-align: center"></td>
+    <td  width="30%" style="text-align: center">{{note.0.time_sent}}</td>
+    <td width="70%" class='customer_note' style="text-align: center">{{note.0.text}}</td>
 </tr>
 {% else %}
 <tr>
-    <td style="text-align: center">{{note.0.time_sent}}</td>
-    <td style="text-align: center"></td>
-    <td class='nocustomer_note' style="text-align: center">{{note.0.text}}</td>
+    <td  width="30%" style="text-align: center">{{note.0.time_sent}}</td>
+    <td width="70%" class='nocustomer_note' style="text-align: center">{{note.0.text}}</td>
 </tr>
 
 {% endif %} 
+
+

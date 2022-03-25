@@ -1,16 +1,13 @@
-{% extends 'base.html' %}
 {% load static %}
 <script src="{% static 'js/utils.js' %}"></script> 
 {% block css_files %}
 <link rel="stylesheet" href="{% static "notes_css.css" %}">
 {% endblock css_files %} 
 {% block title %}
-{{creation_name}}
 {% endblock title %}
 {% block content%}
-<h1> {{creation_name}} </h1><br>
 {%if notes %} 
-<table  style="width: 100%;table-layout: fixed;color:white">
+<table class="notes_table" >
     {% if 'customer' in request.session.user_type %}
         {% for note in customer_notes %}
         {% include "studio/pages/notes_page/mods/notes_client.html" %}
@@ -26,11 +23,19 @@
 <br>
 <form action="{% url 'notes' creation_id=creation_id %}" method="POST">
     {% csrf_token %}
-        {{new_note.text}}
+    <table width='100%' dir='rtl' class="add_note_form_table">
+        <tr>
+            <td width="70%" align='right'>
+                {{new_note.text}}
+            </td>
+            <td width="30%" align='left' >
+                <button id="send_button">הוספת הערה</button>
+            </div></td>
+        </tr>
+        
     
-    <div id="add_new_note">
-        <button>הוספת הערה</button>
-    </div>
+
+</table>
 </form>
 
 {%endblock%}

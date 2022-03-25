@@ -2,7 +2,7 @@
 from django import urls
 from django.core import validators
 from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator,MaxLengthValidator
 from django.db.models.deletion import CASCADE
 
 
@@ -266,7 +266,7 @@ class Note(models.Model):
     creation = models.ForeignKey(Creation, on_delete=models.CASCADE, related_name="notes")
     user = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE, related_name="notes")
     time_sent = models.DateField(blank=True, null=False, auto_now_add=True)
-    text = models.CharField(max_length=300)
+    text = models.CharField(max_length=60,validators=[MaxLengthValidator(60)])
 
     def __str__(self):
         return "|".join([str(self.creation.id),str(self.time_sent),str(self.user.id)])

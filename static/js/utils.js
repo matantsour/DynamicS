@@ -2,14 +2,6 @@ function openInNewTab(url) {
     window.open(url, '_blank').focus();
 }
 
-function open_notes_windows() {
-    window.onload = function() {
-        document.querySelector('.comment_button').addEventListener("click",
-            function() { document.querySelector(".bg-modal").style.display = 'block' });
-        document.querySelector('.close').addEventListener("click",
-            function() { document.querySelector(".bg-modal").style.display = 'none' });
-    }
-}
 
 function get_current_status_cleaned(ob_id) {
     current_class = document.getElementById(ob_id).className;

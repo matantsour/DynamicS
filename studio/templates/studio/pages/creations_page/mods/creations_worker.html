@@ -18,22 +18,25 @@
 
 <!-- end of status_changed -->
 
+<!-- enabling popup-->    
+<script type="text/javascript">
+    function windowpop(url,width, height) {
+        //var url = "{% url 'notes' creation_id=5 %}"
+        var leftPosition, topPosition;
+        //Allow for borders.
+        leftPosition = (window.screen.width / 7) - ((width / 2) + 10);
+        //Allow for title and status bars.
+        topPosition = (window.screen.height / 2) - ((height / 2) + 200);
+        //Open the window.
+        window.open(url, "Window2", "status=no,height=" + height + ",width=" + width + ",resizable=yes,left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ",toolbar=no,menubar=no,scrollbars=no,location=no,directories=no");
+    }
+</script>
+
+<!-- end of enabling popup-->    
+
 {% block content%}
 
 
-
-<!-- SPECIAL NOTES TEST P1-->
-<div  class="bg-modal" >
-    <div class="modal-content">
-        <h1>הוסף הערה</h1>
-        <form>
-            <textarea name="TextArea1" cols="40" rows="8" placeholder="הזינו את ההערה כאן"></textarea><br>
-            <input type="submit">
-        </form>
-        <div class="close">+
-        </div>
-    </div>
-</div>
 
 <br>
 
@@ -147,18 +150,4 @@
     </div>
 
 
-
-
-
-<!-- SPECIAL NOTES TEST P2-->
-
-<div id='special_notes'>
-    <td rowspan="2"><button class="comment_button" onclick='open_notes_windows()'>  הוסף הערה חלון קטן</button></td>
-    </tr>
-    <tr>
-       {% for p in phases %}
-       <td   class="creations_td" >{{p.name}}</td>
-       {%endfor%}
-    </tr>
-</div>
 {%endblock%}
