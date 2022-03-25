@@ -10,31 +10,27 @@
 {% block content%}
 <h1> {{creation_name}} </h1><br>
 {%if notes %} 
-<table style="width: 100%;table-layout: fixed;color:white">
+<table  style="width: 100%;table-layout: fixed;color:white">
     {% if 'customer' in request.session.user_type %}
-    {% for note in customer_notes %}
-    {% include "studio/pages/notes_page/mods/notes_client.html" %}
-    {% endfor %}
+        {% for note in customer_notes %}
+        {% include "studio/pages/notes_page/mods/notes_client.html" %}
+        {% endfor %}
     {%else%}
-    {% for note in all_notes %}
-    {% include "studio/pages/notes_page/mods/notes_noclient.html" %}
-    {% endfor %}
+        {% for note in all_notes %}
+            {% include "studio/pages/notes_page/mods/notes_noclient.html" %}
+        {% endfor %}
     {% endif %}
-    
 </table>
+{% endif %}
+
 <br>
 <form action="{% url 'notes' creation_id=creation_id %}" method="POST">
     {% csrf_token %}
-    <ul>
-        {{new_note.as_ul}}
-    </ul>
+        {{new_note.text}}
+    
     <div id="add_new_note">
         <button>הוספת הערה</button>
     </div>
 </form>
-
-{%else%}
-אין הערות הקשורות ליצירה
-{%endif%}
 
 {%endblock%}

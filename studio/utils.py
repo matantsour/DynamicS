@@ -7,6 +7,19 @@ SESSIONS_DEFALUTS = {"is_logged_in":False,
                      }
 
 #Views Utils
+
+def permitted_creations_list(user_id):
+    fetched_user=User.objects.filter(id=user_id)[0]
+    if fetched_user==None:
+        return []
+    else:
+        user_type=fetched_user.user_type.type
+        if user_type=='customer':
+            creations=fetched_user.creations.all()
+        else: #it's a manager or worker
+            creations=Employee.objects.filter(u_id=fetched_user)[0].creations.all()
+    return [c.id for c in creations]
+
 def reset_sessions_to_default(request):
     for key,default_val in SESSIONS_DEFALUTS.items():
         request.session[key]=default_val

@@ -49,29 +49,32 @@ class indexView(View):
 
 class creationsView(View):
     def get(self, request):
-        #get creations based on which user is logged in
-        user_ob = User.objects.filter(
-            id=request.session["user_logged_in_id"])[0]
-        if request.session["user_type"]=='customer':
-            extract_creations=user_ob.creations.all()
+        if request.session["user_type"] != "guest":
+            #get creations based on which user is logged in
+            user_ob = User.objects.filter(
+                id=request.session["user_logged_in_id"])[0]
+            if request.session["user_type"]=='customer':
+                extract_creations=user_ob.creations.all()
+            else:
+                extract_creations=Employee.objects.filter(u_id=user_ob)[0].creations.all()
+            list_of_creations = sorted(extract_creations,key=lambda c: c.completion_percent(), reverse=True)
+            #sort creations
+            creations_phases_not_done = {
+                c: c.phases.all() for c in list_of_creations if c.completion_percent() != 1}
+            creations_phases_done = {
+                c: c.phases.all() for c in list_of_creations if c.completion_percent() == 1}
+            exists_completed_creations=True if creations_phases_done else False
+            #creation_phases_update_form
+            update_phases_form=phaseStatusForm()
+            return render(request, "studio/pages/creations_page/creations_main.html",
+                        {"user_name": user_ob.lname,
+                        "list_of_creations": list_of_creations,
+                        "creations_phases_not_done": creations_phases_not_done,
+                        "creations_phases_done": creations_phases_done,
+                        "exists_completed_creations":exists_completed_creations,
+                        "update_phases_form":update_phases_form})
         else:
-            extract_creations=Employee.objects.filter(u_id=user_ob)[0].creations.all()
-        list_of_creations = sorted(extract_creations,key=lambda c: c.completion_percent(), reverse=True)
-        #sort creations
-        creations_phases_not_done = {
-            c: c.phases.all() for c in list_of_creations if c.completion_percent() != 1}
-        creations_phases_done = {
-            c: c.phases.all() for c in list_of_creations if c.completion_percent() == 1}
-        exists_completed_creations=True if creations_phases_done else False
-        #creation_phases_update_form
-        update_phases_form=phaseStatusForm()
-        return render(request, "studio/pages/creations_page/creations_main.html",
-                      {"user_name": user_ob.lname,
-                       "list_of_creations": list_of_creations,
-                       "creations_phases_not_done": creations_phases_not_done,
-                       "creations_phases_done": creations_phases_done,
-                       "exists_completed_creations":exists_completed_creations,
-                       "update_phases_form":update_phases_form})
+            return HttpResponseRedirect(reverse("index-page"))
 
     def post(self, request):
         form=phaseStatusForm(request.POST)
@@ -94,6 +97,10 @@ def client_approved_click(request, creation_id):
 
 class notesView(View):
     def get(self, request, creation_id):
+        u_id=request.session["user_logged_in_id"]
+        ok_list=permitted_creations_list(u_id)
+        if creation_id not in ok_list:
+            return HttpResponseRedirect(reverse("index-page"))
         find_creation = Creation.objects.filter(id=creation_id)
         if find_creation:
             creation_name = find_creation[0].name

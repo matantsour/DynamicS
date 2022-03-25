@@ -1,3 +1,11 @@
+#id_text {
+    width: 250px;
+}
+
+#add_new_note {
+    margin-top: 10px;
+}
+
 .customer_note {
     color: black;
     width: 240px;
