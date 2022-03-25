@@ -233,6 +233,14 @@ class Phase(models.Model):
     def __str__(self):
         return "-".join([self.creation_id.name, str(self.placement), self.name, self.status.desc])
 
+    def update_phase_status(self,status_desc):
+        try:
+            self.status=Status.objects.get(desc=status_desc)
+            self.save()
+            return True
+        except:
+            return False
+
     def save(self, *args, **kwargs):
         if self.placement == None:
             self.placement = int(self.creation_id.get_last_phase())+1

@@ -12,9 +12,10 @@ Artwork
 {% if  'customer' in request.session.user_type %}
 {% include "studio/pages/creations_page/mods/creations_customer.html" %}
 
-<!--
+
 {% elif  'worker' in request.session.user_type %}
-{% include "studio/includes/mainframe/side_menus/side_menu_worker.html" %}
+{% include "studio/pages/creations_page/mods/creations_worker.html" %}
+<!--
 {% elif 'manager' in request.session.user_type %}
 {% include "studio/includes/mainframe/side_menus/side_menu_manager.html" %}
 {% else %}

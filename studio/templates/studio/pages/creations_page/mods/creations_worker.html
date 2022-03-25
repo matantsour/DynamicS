@@ -1,0 +1,164 @@
+{% load static %}
+<script src="{% static 'js/utils.js' %}"></script> 
+
+
+<!--  toggle button setup-->
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('input[type="checkbox"]').click(function() {
+                var inputValue = $(this).attr("value");
+                $("." + inputValue).toggle();
+            });
+        });
+    </script>
+<!-- end of toggle button setup -->
+
+<!--  status_changed-->
+
+<!-- end of status_changed -->
+
+{% block content%}
+
+
+
+<!-- SPECIAL NOTES TEST P1-->
+<div  class="bg-modal" >
+    <div class="modal-content">
+        <h1>הוסף הערה</h1>
+        <form>
+            <textarea name="TextArea1" cols="40" rows="8" placeholder="הזינו את ההערה כאן"></textarea><br>
+            <input type="submit">
+        </form>
+        <div class="close">+
+        </div>
+    </div>
+</div>
+
+<br>
+
+<!-- Toggle button -->
+{% if exists_completed_creations %}
+<div name="toggle_button">
+    <table class="creations_table creations_table_header" width="100%" align="center" dir="rtl">
+    <tr>
+    <td>
+        <label> <input type="checkbox" name="colorCheckbox"  value="creations_done"> הצג יצירות שהושלמו</label>
+    </td>
+    </tr>
+    </table>
+</div>
+{% endif %}
+<!-- CREATIONS <> NOT DONE-->
+
+<div id='creations_not_done' >
+{% for creation,phases in creations_phases_not_done.items %}
+
+<br>
+
+<table class="creations_table creations_table_header" width="100%" align="center" dir="rtl">
+    <tr>
+        <td width="15%">שם היצירה: 
+        </td>
+        <td width="85%" class="creations_td_header">{{creation.name}}
+        </td>
+    </tr>
+</table>
+
+<table class="creations_table" width="100%" align="center" dir="rtl" >
+   <tr> 
+        {% for p in phases %}
+    <td   class="creations_td" align="center" valign="bottom" >
+        <span id="{{p.phase_id}}" class="employee_{{p.status.desc}}" onclick="clicked_on_circle_worker('{{p.phase_id}}')"></span>
+    </td>
+    <td rowspan="2"  align="center">
+        {% if not forloop.last %}
+            <i class="arrow"></i>
+        {% else %}
+            <td rowspan="2"></td>
+        {% endif %}
+        
+    </td>
+         {%endfor%}
+         <td rowspan="2">{% include "studio/pages/creations_page/includes/worker_buttons.html"%}</td>
+        </tr>
+   <tr>
+      {% for p in phases %}
+      <td   class="creations_td" valign="top" >{{p.name}}</td>
+      {%endfor%}
+   </tr>
+</table>
+<br>
+
+{%endfor%}
+</div>
+
+<!-- documenting_changes_to_phases -->
+<form action="" method="post">
+    {% csrf_token %}
+    <table>
+    <div id="changes_regis" style="display: none;"> {{ update_phases_form.changes }} </div>
+    </table>
+    <input id='approve_changes_button' name="submit" type="submit" style="display: none;" value="שמור שינויים" />
+  </form>
+
+
+<!-- CREATIONS <> DONE-->
+
+<div class='creations_done' style="display:none;"> <!-- controlled by toggle button-->
+    {% for creation,phases in creations_phases_done.items %}
+    
+    <br>
+    
+    <table class="creations_table creations_table_header" width="100%" align="center" dir="rtl">
+        <tr>
+            <td width="15%">שם היצירה: 
+            </td>
+            <td width="85%" class="creations_td_header">{{creation.name}}
+            </td>
+        </tr>
+    </table>
+    
+    <table class="creations_table" width="100%" align="center" dir="rtl" >
+       <tr> 
+            {% for p in phases %}
+        <td   class="creations_td" align="center" valign="bottom" >
+            <span id="{{p.phase_id}}" class="employee_{{p.status.desc}}" onclick="clicked_on_circle_worker('{{p.phase_id}}')"></span>        </td>
+        <td rowspan="2"  align="center">
+            {% if not forloop.last %}
+                <i class="arrow"></i>
+            {% else %}
+                <td rowspan="2"></td>
+            {% endif %}
+            
+        </td>
+             {%endfor%}
+       <td rowspan="2">{% include "studio/pages/creations_page/includes/worker_buttons.html"%}</td>
+       </tr>
+       <tr>
+          {% for p in phases %}
+          <td  class="creations_td" valign="top" >{{p.name}}</td>
+          {%endfor%}
+       </tr>
+    </table>
+    <br>
+    
+    {%endfor%}
+    </div>
+
+
+
+
+
+<!-- SPECIAL NOTES TEST P2-->
+
+<div id='special_notes'>
+    <td rowspan="2"><button class="comment_button" onclick='open_notes_windows()'>  הוסף הערה חלון קטן</button></td>
+    </tr>
+    <tr>
+       {% for p in phases %}
+       <td   class="creations_td" >{{p.name}}</td>
+       {%endfor%}
+    </tr>
+</div>
+{%endblock%}

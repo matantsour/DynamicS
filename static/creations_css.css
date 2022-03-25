@@ -25,6 +25,38 @@
     -webkit-transform: rotate(135deg);
 }
 
+.employee_not_done {
+    height: 25px;
+    width: 25px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.employee_pending_approval {
+    height: 25px;
+    width: 25px;
+    background-color: rgb(228, 146, 23);
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.employee_approved {
+    height: 25px;
+    width: 25px;
+    background-color: rgb(43, 155, 71);
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.employee_not_approved {
+    height: 25px;
+    width: 25px;
+    background-color: #FF4742;
+    border-radius: 50%;
+    display: inline-block;
+}
+
 .customer_not_done {
     height: 25px;
     width: 25px;

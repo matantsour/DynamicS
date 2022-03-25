@@ -2,6 +2,9 @@ from django import forms
 from .widgets import DatePickerInput, TimePickerInput, DateTimePickerInput
 
 
+class phaseStatusForm(forms.Form):
+    changes = forms.CharField(widget=forms.Textarea(attrs={'dir': 'ltr'}))
+
 class LoginForm(forms.Form):
     user_name = forms.CharField(max_length=200,
                                 error_messages={

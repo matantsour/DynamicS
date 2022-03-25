@@ -7,10 +7,11 @@ from importlib import import_module
 from django.conf import settings
 from .models import *
 from django.db.models import Q
-from .forms import LoginForm, UpdateUserDetailsForm
+from .forms import LoginForm, UpdateUserDetailsForm,phaseStatusForm
 from .utils import *
 from django.urls import reverse
 from django.utils import timezone
+import ast #from string to dict easy convert
 
 
 ##
@@ -47,25 +48,39 @@ class indexView(View):
 
 class creationsView(View):
     def get(self, request):
+        #get creations based on which user is logged in
         user_ob = User.objects.filter(
             id=request.session["user_logged_in_id"])[0]
-        list_of_creations = sorted(user_ob.creations.all(
-        ), key=lambda c: c.completion_percent(), reverse=True)
+        if request.session["user_type"]=='customer':
+            extract_creations=user_ob.creations.all()
+        else:
+            extract_creations=Employee.objects.filter(u_id=user_ob)[0].creations.all()
+        list_of_creations = sorted(extract_creations,key=lambda c: c.completion_percent(), reverse=True)
+        #sort creations
         creations_phases_not_done = {
             c: c.phases.all() for c in list_of_creations if c.completion_percent() != 1}
         creations_phases_done = {
             c: c.phases.all() for c in list_of_creations if c.completion_percent() == 1}
         exists_completed_creations=True if creations_phases_done else False
-        print(exists_completed_creations)
+        #creation_phases_update_form
+        update_phases_form=phaseStatusForm()
         return render(request, "studio/pages/creations_page/creations_main.html",
                       {"user_name": user_ob.lname,
                        "list_of_creations": list_of_creations,
                        "creations_phases_not_done": creations_phases_not_done,
                        "creations_phases_done": creations_phases_done,
-                       "exists_completed_creations":exists_completed_creations})
+                       "exists_completed_creations":exists_completed_creations,
+                       "update_phases_form":update_phases_form})
 
     def post(self, request):
-        pass
+        form=phaseStatusForm(request.POST)
+        if form.is_valid():
+            #transform changes to dict {phase_id:new_status}
+            changes=ast.literal_eval("{"+form.cleaned_data["changes"][:-1]+"}")
+            for p_id,new_status_desc in changes.items():
+                extract_phase=Phase.objects.filter(phase_id=p_id)[0]
+                extract_phase.update_phase_status(new_status_desc)
+        return HttpResponseRedirect(reverse("artwork"))
 
 
 def last_version(request, creation_id):
@@ -139,8 +154,6 @@ class Update_user_details(View):
         params = dict()
         form_fields = ['fname', 'lname', 'city',
                        'phone', 'dob', 'organization']
-        print(update_form.is_valid())
-        print(update_form.errors)
         if update_form.is_valid():
             for c in form_fields:
                 params[c] = update_form.cleaned_data[c]
