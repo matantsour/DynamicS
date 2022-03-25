@@ -16,7 +16,7 @@ Edit Details
 
 {{message}}
 
-<form action="{% url 'update_personal_details' %}" method="POST">
+<form action="{% url 'update_personal_details' user_id=u.id%}" method="POST">
    {% csrf_token %}
 
 <table class = user_detail_table >

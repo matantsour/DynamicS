@@ -1,5 +1,6 @@
 from django import forms
 from .widgets import DatePickerInput, TimePickerInput, DateTimePickerInput
+from .models import Note
 
 
 class phaseStatusForm(forms.Form):
@@ -31,3 +32,9 @@ class UpdateUserDetailsForm(forms.Form):
     current_password=forms.CharField(widget=forms.PasswordInput())
     new_password=forms.CharField(widget=forms.PasswordInput())
     repeat_new_password=forms.CharField(widget=forms.PasswordInput(), required=False)
+
+
+class AddNote(forms.ModelForm):
+    class Meta:
+        model = Note
+        fields = ['text']

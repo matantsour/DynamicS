@@ -20,11 +20,12 @@ urlpatterns = [
 
 
     #edit_user_details
-    path("update_personal_details/",views.Update_user_details.as_view(),name="update_personal_details"),
+    path("update_personal_details/<int:user_id>",views.Update_user_details.as_view(),name="update_personal_details"),
+    path("update_personal_details/delete/",views.delete_user.as_view(),name="delete_confirmation"),
 
     #edit_user_details_by_admin
     path("admin_update_details/",views.admin_update_details.as_view(),name="admin_update_details"),
-
+    
 
 
 
