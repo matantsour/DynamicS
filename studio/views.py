@@ -1,3 +1,4 @@
+from hashlib import new
 import re
 from unicodedata import name
 from django.shortcuts import render,redirect
@@ -7,11 +8,10 @@ from importlib import import_module
 from django.conf import settings
 from .models import *
 from django.db.models import Q
-from .forms import LoginForm, UpdateUserDetailsForm,phaseStatusForm
+from .forms import LoginForm, UpdateUserDetailsForm , AddNote,phaseStatusForm
 from .utils import *
 from django.urls import reverse
 from django.utils import timezone
-import ast #from string to dict easy convert
 
 
 ##
@@ -100,6 +100,7 @@ class notesView(View):
             customer_notes = []
             other_notes = []
             all_notes = []
+            new_note = AddNote()
             for i in notes:
                 if str(i.user.user_type) =='customer':
                     customer_notes.append((i,'customer'))
@@ -110,14 +111,45 @@ class notesView(View):
             all_notes.sort(key=lambda y:y[1])
 
         return render(request, "studio/pages/notes_page/notes_main.html",
-                      {'creation_name': creation_name,
-                      "notes":notes,
-                       "other_notes": other_notes,
-                       "customer_notes":customer_notes,
-                       "all_notes":all_notes})
+                    {'creation_name': creation_name,
+                    'creation_id':creation_id,
+                    "notes":notes,
+                    "other_notes": other_notes,
+                    "customer_notes":customer_notes,
+                    "all_notes":all_notes,
+                    'new_note':new_note})
+        
+                
+    def post(self, request, creation_id): 
+        find_creation = Creation.objects.filter(id=creation_id)
+        if find_creation:
+            note_form = AddNote(request.POST)
+            if note_form.is_valid():
+                new_note = Note(creation=find_creation[0],user=User.objects.filter(id=request.session["user_logged_in_id"])[0],text=note_form.cleaned_data['text'])
+                new_note.save()
+            creation_name = find_creation[0].name
+            notes = find_creation[0].notes.all()
+            customer_notes = []
+            other_notes = []
+            all_notes = []
+            new_note = AddNote()
+            for i in notes:
+                if str(i.user.user_type) =='customer':
+                    customer_notes.append((i,'customer'))
+            for i in notes:
+                if str(i.user.user_type) != 'customer':
+                    other_notes.append((i,'nocustomer'))
+            all_notes = customer_notes+other_notes
+            all_notes.sort(key=lambda y:y[1])
 
-    def post(self, request, creation_id):
-        return render(request, "studio/pages/notes_page/notes_main.html")
+        return render(request, "studio/pages/notes_page/notes_main.html",
+                    {'creation_name': creation_name,
+                    'creation_id':creation_id,
+                    "notes":notes,
+                    "other_notes": other_notes,
+                    "customer_notes":customer_notes,
+                    "all_notes":all_notes,
+                    'new_note':new_note})
 
 
 class userMeetingView(View):
@@ -132,8 +164,12 @@ class userMeetingView(View):
 
 
 class Update_user_details(View):
-    def get(self, request):
-        user = User.objects.filter(id=request.session["user_logged_in_id"])[0]
+    def get(self, request, user_id):
+        if request.session["user_type"] == 'manager':
+            search_id=user_id
+        else:
+            search_id=request.session["user_logged_in_id"]
+        user = User.objects.filter(id=search_id)[0]
         initial_dict = {
             'fname': user.fname,
             'lname': user.lname,
@@ -146,14 +182,21 @@ class Update_user_details(View):
             'repeat_new_password': user.login_details.password}
         update_form = UpdateUserDetailsForm(initial=initial_dict)
         return render(request, "studio/pages/user_details_page/user_details_main.html",
-                      {"update_form": update_form})
+                      {"update_form": update_form,
+                      "u":user})
 
-    def post(self, request):
-        user = User.objects.filter(id=request.session["user_logged_in_id"])[0]
+    def post(self, request,user_id):
+        if request.session["user_type"] == 'manager':
+            search_id=user_id
+        else:
+            search_id=request.session["user_logged_in_id"]
+        user = User.objects.filter(id=search_id)[0]
         update_form = UpdateUserDetailsForm(request.POST)
         params = dict()
         form_fields = ['fname', 'lname', 'city',
                        'phone', 'dob', 'organization']
+        print(update_form.is_valid())
+        print(update_form.errors)
         if update_form.is_valid():
             for c in form_fields:
                 params[c] = update_form.cleaned_data[c]
@@ -164,11 +207,12 @@ class Update_user_details(View):
             message = 'עדכון הפרטים הצליח'
             request.session["user_logged_in_fname"] = user.fname
         else:
-            message = 'עלייך להשתמש בסיסמה אחרת'
+            message = 'עלייך להשתמש בס  יסמה אחרת'
 
         return render(request, "studio/pages/user_details_page/user_details_main.html",
                       {"update_form": update_form,
-                       "message": message})
+                       "message": message,
+                       "u":user})
 
 
 class admin_update_details(View):
@@ -180,12 +224,19 @@ class admin_update_details(View):
     def post(self, request):
         pass
 
+class delete_user(View):
+    def get (self,request):
+        return render(request, "studio/pages/admin_update_details_page/delete_confirmation_page.html")
+    def post(self,request,user_id):
+        pass
+
 # functional views
 
 
 def logoutFunc(request):
     reset_sessions_to_default(request)
     return HttpResponseRedirect(reverse("index-page"))
+    
 
 
 # old views functions

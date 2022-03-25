@@ -19,7 +19,7 @@
        <td class="side_menu"><a class="side_menu_link" href="{% url "meetings" %}"> פגישות</a></td>
     </tr>
     <tr class="side_menu">
-       <td class="side_menu" ><a  class="side_menu_link" href="{% url "update_personal_details"  %}">
+       <td class="side_menu" ><a  class="side_menu_link" href="{% url 'update_personal_details' user_id=request.session.user_logged_in_id%}">
           עדכון פרטים אישיים</a></td>
     </tr>
 
