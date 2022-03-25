@@ -24,6 +24,9 @@ Admin Update User Details
 		<td style="height: 24px" class="auto-style1">כניסה אחרונה</td>
 		<td style="height: 24px" class="auto-style1">פעולה אחרונה</td>
 		<td style="height: 24px" class="auto-style1">יצירה אחרונה</td>
+		<td style="height: 24px" class="auto-style1">מחק משתמש</td>
+		<td style="height: 24px" class="auto-style1">עדכן משתמש</td>
+
 
 	</tr>
     <tr>
@@ -36,22 +39,21 @@ Admin Update User Details
         <td>{{u.dor}}</td>
 		<td>{{u.fname}}</td>
         <td>{{u.lname}}</td>
-<!--   
-        <td>{{u.creation.creation_date}}</td>
+        <td>{{u.last_login}}</td>
 
+<!--
         <td>{{u.user_type}}</td>
-
         <td>{{u.user_type}}</td>
     -->
+		{% include "studio/pages/admin_update_details_page/includes/admin_update_details_buttons.html"%}   
+
 	</tr>
     {% endfor %}
     
 	<tr>
 		<td colspan="5"><br></td>   
 	</tr>
-	<tr>
-		{% include "studio/pages/admin_update_details_page/includes/admin_update_details_buttons.html"%}   
-	</tr>
+
 
 </table>
 

@@ -117,8 +117,12 @@ class userMeetingView(View):
 
 
 class Update_user_details(View):
-    def get(self, request):
-        user = User.objects.filter(id=request.session["user_logged_in_id"])[0]
+    def get(self, request, user_id):
+        if request.session["user_type"] == 'manager':
+            search_id=user_id
+        else:
+            search_id=request.session["user_logged_in_id"]
+        user = User.objects.filter(id=search_id)[0]
         initial_dict = {
             'fname': user.fname,
             'lname': user.lname,
@@ -131,10 +135,15 @@ class Update_user_details(View):
             'repeat_new_password': user.login_details.password}
         update_form = UpdateUserDetailsForm(initial=initial_dict)
         return render(request, "studio/pages/user_details_page/user_details_main.html",
-                      {"update_form": update_form})
+                      {"update_form": update_form,
+                      "u":user})
 
-    def post(self, request):
-        user = User.objects.filter(id=request.session["user_logged_in_id"])[0]
+    def post(self, request,user_id):
+        if request.session["user_type"] == 'manager':
+            search_id=user_id
+        else:
+            search_id=request.session["user_logged_in_id"]
+        user = User.objects.filter(id=search_id)[0]
         update_form = UpdateUserDetailsForm(request.POST)
         params = dict()
         form_fields = ['fname', 'lname', 'city',
@@ -151,11 +160,12 @@ class Update_user_details(View):
             message = 'עדכון הפרטים הצליח'
             request.session["user_logged_in_fname"] = user.fname
         else:
-            message = 'עלייך להשתמש בסיסמה אחרת'
+            message = 'עלייך להשתמש בס  יסמה אחרת'
 
         return render(request, "studio/pages/user_details_page/user_details_main.html",
                       {"update_form": update_form,
-                       "message": message})
+                       "message": message,
+                       "u":user})
 
 
 class admin_update_details(View):
@@ -167,12 +177,19 @@ class admin_update_details(View):
     def post(self, request):
         pass
 
+class delete_user(View):
+    def get (self,request):
+        return render(request, "studio/pages/admin_update_details_page/delete_confirmation_page.html")
+    def post(self,request,user_id):
+        pass
+
 # functional views
 
 
 def logoutFunc(request):
     reset_sessions_to_default(request)
     return HttpResponseRedirect(reverse("index-page"))
+    
 
 
 # old views functions
