@@ -147,6 +147,8 @@ class Creation(models.Model):
     name = models.CharField(max_length=200, default='')
     creator = models.ForeignKey(
         User, null=True, blank=True, on_delete=models.SET_NULL, related_name="creations")
+    supervisors = models.ManyToManyField(
+        Employee, null=False, blank=True, through='Creations_Supervisors',related_name="creations")  
     creation_date = models.DateField(blank=True, null=False, auto_now_add=True)
     album_id = models.ForeignKey(
         Album, null=True, blank=True, on_delete=models.SET_NULL, related_name="creations")
@@ -196,6 +198,13 @@ class Creation(models.Model):
 
     class Meta:
         unique_together = ('name', 'creator',)
+
+class Creations_Supervisors(models.Model):
+    creation = models.ForeignKey(Creation, to_field='id', on_delete=CASCADE)
+    supervisor = models.ForeignKey(Employee,to_field='u_id', on_delete=CASCADE)
+
+    def __str__(self):
+        return "-".join([str(self.creation.id), self.creation.name,str(self.supervisor.u_id.id),str(self.supervisor.u_id)])
 
 
 class Resource(models.Model):
@@ -272,7 +281,7 @@ class Meeting(models.Model):
     phase_id = models.ForeignKey(
         Phase, to_field='phase_id', on_delete=CASCADE, related_name="meetings")
     attendees = models.ManyToManyField(
-        User, related_name="meetings")  # no related name yet
+        User, related_name="meetings")
     start_date = models.DateField()
     end_date = models.DateField()
     start_time = models.TimeField()
