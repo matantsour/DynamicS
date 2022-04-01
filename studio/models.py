@@ -4,7 +4,8 @@ from django.core import validators
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator,MaxLengthValidator
 from django.db.models.deletion import CASCADE
-
+from .storage import OverwriteStorage
+import os
 
 from django.urls import reverse
 # Create your models here.
@@ -325,3 +326,12 @@ class Log(models.Model):
 
     def __str__(self):
         return "|".join([str(self.time),str(self.creation.id),str(self.user.id),self.action])
+
+def content_file_name(instance, filename):
+    file_name_i_want = "123.jpg"
+    saving_name = '/'.join(['images', file_name_i_want])
+    return saving_name
+
+
+class CreationFile(models.Model):
+    image = models.ImageField(storage=OverwriteStorage(),upload_to=content_file_name)

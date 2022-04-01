@@ -1,0 +1,10 @@
+{% load static %}
+
+{% block css_files %}
+<link rel="stylesheet"  href="{% static  "last_version_css.css"  %}">
+{% endblock css_files %} 
+
+
+{% block content%}
+<img src="{{ creationfile.image.url }}">
+{% endblock content %} 

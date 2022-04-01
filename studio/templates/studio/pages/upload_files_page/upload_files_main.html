@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+Files Upload
+{% endblock title %}
+
+
+{% block css_files %}
+<link rel="stylesheet"  href="{% static  "files_upload_css.css"  %}">
+{% endblock css_files %} 
+
+
+{% block content%}
+<form action="{% url 'files_upload' %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table>{{ form }}
+        <button>Upload!</button></table>
+    
+  </form>
+
+{%endblock%}

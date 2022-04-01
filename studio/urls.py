@@ -11,9 +11,11 @@ urlpatterns = [
     #creations
     path("creations/",views.creationsView.as_view(),name="artwork"),
     path("creations/client_approval/<int:creation_id>",views.client_approved_click,name="client_approved_click"),
-    path("creations/last_version/<int:creation_id>",views.last_version,name="last_version"),
+    path("creations/last_version/<int:creation_id>",views.last_version.as_view(),name="last_version"),
     path("creations/notes/<int:creation_id>",views.notesView.as_view(),name="notes"),
     
+    #files
+    path("files_upload/",views.CreateFileView.as_view(),name="files_upload"),
 
     #Meetings
     path("meetings/",views.userMeetingView.as_view(),name="meetings"),

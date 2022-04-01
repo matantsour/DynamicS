@@ -8,11 +8,13 @@ from importlib import import_module
 from django.conf import settings
 from .models import *
 from django.db.models import Q
-from .forms import LoginForm, UpdateUserDetailsForm , AddNote,phaseStatusForm
+from .forms import LoginForm, UpdateUserDetailsForm , AddNote,phaseStatusForm,CreationFileForm
 from .utils import *
 from django.urls import reverse
 from django.utils import timezone
 import ast
+from django.views.generic.edit import CreateView
+
 
 
 ##
@@ -86,9 +88,31 @@ class creationsView(View):
                 extract_phase.update_phase_status(new_status_desc)
         return HttpResponseRedirect(reverse("artwork"))
 
+class CreateFileView(View):
+    def get(self, request):
+        form = CreationFileForm()
+        return render(request, "studio/pages//upload_files_page/upload_files_main.html", {
+            "form": form
+        })
 
-def last_version(request, creation_id):
-    return render(request, "studio/index.html")
+    def post(self, request):
+        submitted_form = CreationFileForm(request.POST, request.FILES)
+
+        if submitted_form.is_valid():
+            profile = CreationFile(image=request.FILES["creationFile_image"])
+            profile.save()
+            return render(request,"studio/includes/welcome_user.html")
+        
+        return render(request, "studio/pages/upload_files_page/upload_files_main.html", {
+            "form": form
+        })
+
+class last_version(View):
+    def get(self,request, creation_id):
+        creationfile=CreationFile.objects.all()[0]
+        return render(request, "studio/pages/last_version_page/last_version_main.html",{"creationfile":creationfile})
+
+
 
 def client_approved_click(request, creation_id):
     creation=Creation.objects.get(id=creation_id).client_approved()

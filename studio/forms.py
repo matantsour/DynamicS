@@ -2,6 +2,8 @@ from django import forms
 from .widgets import DatePickerInput, TimePickerInput, DateTimePickerInput
 from .models import Note
 
+class CreationFileForm(forms.Form):
+    creationFile_image = forms.ImageField()
 
 class phaseStatusForm(forms.Form):
     changes = forms.CharField(widget=forms.Textarea(attrs={'dir': 'ltr'}))
