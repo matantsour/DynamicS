@@ -2,6 +2,7 @@
 {% load static %}
 
 
+
 {% block title %}
 Admin Update User Details
 {% endblock title %}
@@ -10,8 +11,26 @@ Admin Update User Details
 <link rel="stylesheet" href="{% static "admin_details_update_css.css" %}">
 {% endblock css_files %} 
 
+{% block js_files %} 
+<script type="text/javascript">
+	function delete_user(url) {
+		var txt;
+		if (confirm("Are you sure you want to delete the user?")) {
+			txt = "User getting deleted!";
+			location.replace(url)
+		} else {
+			txt = "You pressed Cancel!";
+		}
+		document.getElementById("confirmation_message").innerHTML = txt
+	
+	}
+</script>	
+	
+{% endblock js_files %}
+
 {% block content%}
 <br>
+<p id="confirmation_message"> </p>
 <table>
 
 	<tr  style="text-decoration: underline;">
@@ -56,6 +75,6 @@ Admin Update User Details
 
 
 </table>
-
-
 {%endblock%}
+
+

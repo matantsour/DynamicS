@@ -3,7 +3,7 @@
 
 
 
-        <td><button class="button" onclick="openInNewTab('{% url "delete_confirmation"%}')">מחק משתמש</button> </td>
+        <td><button class="button" onclick="return delete_user('{% url 'delete_user' user_id=u.id  %}') ">מחק משתמש</button> </td>
         <td><button class="button" onclick="openInNewTab('{% url "update_personal_details" user_id=u.id%}')">ערוך פרטים</button> </td>
     
 

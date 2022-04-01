@@ -215,7 +215,7 @@ class Update_user_details(View):
             message = 'עדכון הפרטים הצליח'
             request.session["user_logged_in_fname"] = user.fname
         else:
-            message = 'עלייך להשתמש בס  יסמה אחרת'
+            message = 'עלייך להשתמש בסיסמה אחרת'
 
         return render(request, "studio/pages/user_details_page/user_details_main.html",
                       {"update_form": update_form,
@@ -234,12 +234,16 @@ class admin_update_details(View):
 
 class delete_user(View):
     def get (self,request):
-        return render(request, "studio/pages/admin_update_details_page/delete_confirmation_page.html")
+        pass
     def post(self,request,user_id):
         pass
 
 # functional views
 
+def delete_user(request,user_id):
+    User.objects.get(id = user_id).delete()
+    return HttpResponseRedirect(reverse("admin_update_details"))
+ 
 
 def logoutFunc(request):
     reset_sessions_to_default(request)
