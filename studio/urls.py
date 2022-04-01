@@ -17,6 +17,7 @@ urlpatterns = [
 
     #Meetings
     path("meetings/",views.userMeetingView.as_view(),name="meetings"),
+    path("first_meeting/",views.firstMeeting.as_view(),name="first_meeting"),
 
 
     #edit_user_details

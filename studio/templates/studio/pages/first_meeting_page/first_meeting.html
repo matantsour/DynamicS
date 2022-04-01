@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+פגישה ראשונה
+{% endblock title %}
+
+
+{% block css_files %}
+{% endblock css_files %} 
+
+
+{% block content%}
+{%for i in all_customers%}
+{{i}}
+{%endfor%}
+{%endblock%}

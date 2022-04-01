@@ -171,6 +171,19 @@ class userMeetingView(View):
         pass
 
 
+class firstMeeting(View):
+    def get(self, request):
+        user_ob = User.objects.filter(
+            id=request.session["user_logged_in_id"])[0]
+        customer_user_type = User_Type.objects.filter(type = "customer")
+        all_customers = User.objects.filter(user_type__in = customer_user_type)
+
+        return render(request, "studio/pages/first_meeting_page/first_meeting.html", {"user_name": user_ob.lname,'all_customers':all_customers})
+
+    def post(self, request):
+        pass
+
+
 class Update_user_details(View):
     def get(self, request, user_id):
         if request.session["user_type"] == 'manager':
