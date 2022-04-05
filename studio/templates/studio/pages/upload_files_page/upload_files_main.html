@@ -20,4 +20,13 @@ Files Upload
     
   </form>
 
+
+  <ul>
+    {% for f in files%}
+    <li> <audio controls id="player">
+      <source src="{{f.audioFile.url}}" type="audio/mp3"> </li>
+    {% endfor%}
+
+
+  </ul>
 {%endblock%}

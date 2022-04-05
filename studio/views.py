@@ -91,15 +91,18 @@ class creationsView(View):
 class CreateFileView(View):
     def get(self, request):
         form = CreationFileForm()
+        all_files=CreationFile.objects.all()
+        print(all_files)
         return render(request, "studio/pages//upload_files_page/upload_files_main.html", {
-            "form": form
+            "form": form,
+            "files":all_files
         })
 
     def post(self, request):
         submitted_form = CreationFileForm(request.POST, request.FILES)
 
         if submitted_form.is_valid():
-            profile = CreationFile(image=request.FILES["creationFile_image"])
+            profile = CreationFile(audioFile=request.FILES["audioFile"])
             profile.save()
             return render(request,"studio/includes/welcome_user.html")
         

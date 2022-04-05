@@ -334,4 +334,5 @@ def content_file_name(instance, filename):
 
 
 class CreationFile(models.Model):
-    image = models.ImageField(storage=OverwriteStorage(),upload_to=content_file_name)
+    #image = models.ImageField(storage=OverwriteStorage(),upload_to=content_file_name)
+    audioFile = models.FileField(upload_to='audios/')

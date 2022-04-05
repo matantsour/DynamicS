@@ -1,9 +1,15 @@
 from django import forms
 from .widgets import DatePickerInput, TimePickerInput, DateTimePickerInput
-from .models import Note
+from .models import Note,CreationFile
 
-class CreationFileForm(forms.Form):
-    creationFile_image = forms.ImageField()
+class CreationFileForm(forms.ModelForm):
+    class Meta:
+        model=CreationFile
+        fields=['audioFile']
+        widgets = {
+            'audioFile': forms.FileInput(attrs={'accept': 'audio/*'}),
+        }
+
 
 class phaseStatusForm(forms.Form):
     changes = forms.CharField(widget=forms.Textarea(attrs={'dir': 'ltr'}))
