@@ -15,7 +15,7 @@ urlpatterns = [
     path("creations/notes/<int:creation_id>",views.notesView.as_view(),name="notes"),
     
     #files
-    path("files_upload/",views.CreateFileView.as_view(),name="files_upload"),
+    path("files_upload/<int:creation_id>",views.CreateFileView.as_view(),name="files_upload"),
 
     #Meetings
     path("meetings/",views.userMeetingView.as_view(),name="meetings"),

@@ -11,6 +11,7 @@ from django.urls import reverse
 # Create your models here.
 
 
+
 class User_Type(models.Model):
     id = models.AutoField(primary_key=True)
     type = models.CharField(max_length=100)
@@ -304,18 +305,18 @@ class Log(models.Model):
     def __str__(self):
         return "|".join([str(self.time),str(self.creation.id),str(self.user.id),self.action])
 
-def content_file_name(instance, filename):
-    file_name_i_want = "123.jpg"
-    saving_name = '/'.join(['images', file_name_i_want])
+def content_Audio_file_name(instance, filename):
+    file_name_i_want = instance.fname
+    saving_name = '/'.join(['audios', file_name_i_want])
     return saving_name
 
-
 class CreationFile(models.Model):
-    #image = models.ImageField(storage=OverwriteStorage(),upload_to=content_file_name)
-    audioFile = models.FileField(upload_to='audios/')
+    id = models.AutoField(primary_key=True)
     creation = models.ForeignKey(
         Creation, null=True, blank=True, on_delete=models.SET_NULL, related_name="files")
     file_creation_date = models.DateField(
         null=False, blank=True, editable=False, auto_now=True)
+    fname=models.CharField(max_length=300,null=True, blank=True,editable=False)
+    audioFile = models.FileField(upload_to=content_Audio_file_name,storage=OverwriteStorage())
     def __str__(self):
-        return "fileFor"+str(self.creation.name)+"|"+self.file_creation_date
+        return "fileFor_"+str(self.creation.name)

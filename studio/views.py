@@ -89,25 +89,39 @@ class creationsView(View):
         return HttpResponseRedirect(reverse("artwork"))
 
 class CreateFileView(View):
-    def get(self, request):
+    def get(self, request,creation_id):
+        u_id=request.session["user_logged_in_id"]
+        ok_list=permitted_creations_list(u_id)
+        if creation_id not in ok_list:
+            return HttpResponseRedirect(reverse("index-page"))
         form = CreationFileForm()
         all_files=CreationFile.objects.all()
         print(all_files)
-        return render(request, "studio/pages//upload_files_page/upload_files_main.html", {
+        return render(request, "studio/pages/upload_files_page/upload_files_main.html", {
             "form": form,
-            "files":all_files
+            "files":all_files,
+            "creation_id":creation_id
         })
 
-    def post(self, request):
+    def post(self, request,creation_id):
         submitted_form = CreationFileForm(request.POST, request.FILES)
-
+        u_id=request.session["user_logged_in_id"]
+        ok_list=permitted_creations_list(u_id)
+        if creation_id not in ok_list:
+            return HttpResponseRedirect(reverse("index-page"))
+        creation = Creation.objects.filter(id=creation_id)[0]
+        nowdate=str(timezone.localdate()).replace("-","_")
+        fname=creation.name[:3]+"_"+nowdate+"."+str(request.FILES["audioFile"]).split(".")[-1]
+        print(fname)
         if submitted_form.is_valid():
-            profile = CreationFile(audioFile=request.FILES["audioFile"])
-            profile.save()
+            newfile = CreationFile(audioFile=request.FILES["audioFile"],
+                                    creation=creation,fname=fname)
+            newfile.save()
             return render(request,"studio/includes/welcome_user.html")
         
         return render(request, "studio/pages/upload_files_page/upload_files_main.html", {
-            "form": form
+            "form": form,
+            "creation":find_creation
         })
 
 class last_version(View):
