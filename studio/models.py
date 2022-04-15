@@ -168,7 +168,7 @@ class Creation(models.Model):
             return last_phase_placement
         except:
             return 0
-    
+
     def is_pending_client_approval(self):
         phases=self.phases.all()
         if not phases:
@@ -273,17 +273,6 @@ class Note(models.Model):
         return "|".join([str(self.creation.id),str(self.time_sent),str(self.user.id)])
 
 
-class File(models.Model):
-    id = models.AutoField(primary_key=True)
-    url = models.URLField(max_length=300)
-    file_creation_date = models.DateField(
-        null=False, blank=True, editable=False, auto_now=True)
-    creation = models.ForeignKey(
-        Creation, null=True, blank=True, on_delete=models.SET_NULL, related_name="files")
-
-    def __str__(self):
-        return str(self.file_creation_date)+"|"+self.url
-
 
 class Meeting(models.Model):
     id = models.AutoField(primary_key=True)
@@ -302,18 +291,6 @@ class Meeting(models.Model):
     def __str__(self):
         attendees_number = str(len(list(self.attendees.all())))+" attendees"
         return "-".join([str(i) for i in [self.topic, self.start_date, self.start_time, attendees_number]])
-
-
-class File_Deletion_History(models.Model):
-    id = models.AutoField(primary_key=True)
-    creation_id = models.ForeignKey(
-        Creation, on_delete=models.CASCADE, related_name="deleted_files")
-    url = models.URLField(max_length=300, blank=True, null=False)
-    deletion_date = models.DateField(
-        auto_now=True, editable=False, null=False, blank=True)
-
-    def __str__(self):
-        return "-".join([str(self.id), str(self.creation_id.name), str(self.phase_id.name)])
 
 
 class Log(models.Model):
@@ -336,3 +313,9 @@ def content_file_name(instance, filename):
 class CreationFile(models.Model):
     #image = models.ImageField(storage=OverwriteStorage(),upload_to=content_file_name)
     audioFile = models.FileField(upload_to='audios/')
+    creation = models.ForeignKey(
+        Creation, null=True, blank=True, on_delete=models.SET_NULL, related_name="files")
+    file_creation_date = models.DateField(
+        null=False, blank=True, editable=False, auto_now=True)
+    def __str__(self):
+        return "fileFor"+str(self.creation.name)+"|"+self.file_creation_date
