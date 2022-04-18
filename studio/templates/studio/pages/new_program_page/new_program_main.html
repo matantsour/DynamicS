@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+New Program
+{% endblock title %}
+
+
+{% block css_files %}
+{% endblock css_files %} 
+
+
+{% block content%}
+
+
+<button onclick="location.href ={% url 'newProgramSingle' %}" >יצירה בודדת</button>
+<button onclick="location.href ={% url 'newProgramMultiple' %}" >אלבום</button>
+
+
+
+
+{%endblock%}

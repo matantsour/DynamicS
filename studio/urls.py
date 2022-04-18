@@ -19,7 +19,11 @@ urlpatterns = [
 
     #Meetings
     path("meetings/",views.userMeetingView.as_view(),name="meetings"),
-    path("first_meeting/",views.firstMeeting.as_view(),name="first_meeting"),
+    
+    #new program
+    path("newProgram/",views.newProgram.as_view(),name="newProgram"),
+    path("newProgramSingle/",views.newProgramSingle.as_view(),name="newProgramSingle"),
+    path("newProgramMultiple/",views.newProgramMultiple.as_view(),name="newProgramMultiple"),
 
 
     #edit_user_details

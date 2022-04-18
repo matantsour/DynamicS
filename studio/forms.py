@@ -1,6 +1,16 @@
 from django import forms
 from .widgets import DatePickerInput, TimePickerInput, DateTimePickerInput
 from .models import Note,CreationFile
+from django.forms.formsets import BaseFormSet
+
+
+
+class phaseForm(forms.Form):
+    phaseName=forms.CharField(max_length=100, required=True)
+
+class newProgramSingleForm(forms.Form):
+    customer_id=forms.CharField(max_length=100, required=True)
+
 
 class CreationFileForm(forms.ModelForm):
     class Meta:

@@ -8,7 +8,7 @@ from importlib import import_module
 from django.conf import settings
 from .models import *
 from django.db.models import Q
-from .forms import LoginForm, UpdateUserDetailsForm , AddNote,phaseStatusForm,CreationFileForm
+from .forms import LoginForm, UpdateUserDetailsForm , AddNote,phaseStatusForm,CreationFileForm,newProgramSingleForm
 from .utils import *
 from django.urls import reverse
 from django.utils import timezone
@@ -212,17 +212,48 @@ class userMeetingView(View):
         pass
 
 
-class firstMeeting(View):
+class newProgram(View):
     def get(self, request):
         user_ob = User.objects.filter(
             id=request.session["user_logged_in_id"])[0]
         customer_user_type = User_Type.objects.filter(type = "customer")
         all_customers = User.objects.filter(user_type__in = customer_user_type)
-
-        return render(request, "studio/pages/first_meeting_page/first_meeting.html", {"user_name": user_ob.lname,'all_customers':all_customers})
+        return render(request, "studio/pages/new_program_page/new_program_main.html", {"user_name": user_ob.lname,'all_customers':all_customers})
+        
 
     def post(self, request):
         pass
+
+class newProgramSingle(View):
+    def get(self, request):
+        user_ob = User.objects.filter(
+            id=request.session["user_logged_in_id"])[0]
+        customer_user_type = User_Type.objects.filter(type = "customer")
+        all_customers = User.objects.filter(user_type__in = customer_user_type)
+        return render(request, "studio/pages/new_program_page/pages/new_program_single.html", {"user_name": user_ob.lname,'all_customers':all_customers})
+
+    def post(self, request):
+        customer_user_type = User_Type.objects.filter(type = "customer")
+        all_customers = User.objects.filter(user_type__in = customer_user_type)        
+        form=newProgramSingleForm(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+        return render(request, "studio/pages/new_program_page/pages/new_program_single.html", {'all_customers':all_customers})
+
+        
+
+class newProgramMultiple(View):
+    def get(self, request):
+        user_ob = User.objects.filter(
+            id=request.session["user_logged_in_id"])[0]
+        customer_user_type = User_Type.objects.filter(type = "customer")
+        all_customers = User.objects.filter(user_type__in = customer_user_type)
+        return render(request, "studio/pages/new_program_page/pages/new_program_multiple.html", {"user_name": user_ob.lname,'all_customers':all_customers})
+
+
+    def post(self, request):
+        pass
+
 
 
 class Update_user_details(View):

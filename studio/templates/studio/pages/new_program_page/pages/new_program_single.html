@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+New Creation
+{% endblock title %}
+
+
+{% block css_files %}
+{% endblock css_files %} 
+
+
+{% block content%}
+
+
+<form action="{% url 'newProgramSingle' %}" method="POST">
+    {% csrf_token %}
+<select name="customer_id" id="customersnameid">
+{%for customer in all_customers%}
+    <option value={{customer.id}}>{{customer.fname}} {{customer.lname}}</option>
+{%endfor%}
+
+</select>
+
+<input type="submit">
+</form>
+
+
+{%endblock%}
