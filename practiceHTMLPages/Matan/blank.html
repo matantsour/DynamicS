@@ -1,24 +1,104 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
+<link rel="stylesheet" type="text/css" href="blank_css.css" />
 <script type="text/javascript" src='script.js'"></script> 
+
 
 
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <title>Untitled</title>
+<style type="text/css">
+</style>
 </head>
 
 <body>
 <form name="form">
-<input name="o1" type="text" onchange="single_creation_update_phases(6);"/><br></br>
-<input name="o2" type="text" onchange="single_creation_update_phases(6);"/><br></br>
-<input name="o3" type="text" onchange="single_creation_update_phases(6);"/><br></br>
-<input name="o4" type="text" onchange="single_creation_update_phases(6);"/><br></br>
-<input name="o5" type="text" onchange="single_creation_update_phases(6)"/><br></br>
-<input name="o6" type="text" onchange="single_creation_update_phases(6);"/><br></br>
-<br></br><br></br><br></br>
-<input id="phases_names" type="text" onchange="update_phases();"/><br></br>
+<table id="phasesEditTable"> 
+<tr id="0">
+	<td>
+		<input name="o0" type="text" onchange="single_creation_update_phases(6);"/>
+	</td>
+	<td>
+		<label class="phaseTableOptionsLabel" name="add_o0" onclick="addRow('0',6)">add</label>
+	</td>
+	<td>
+		<label class="phaseTableOptionsLabel" name="delete_o0" onclick="deleteRow('0',6)">delete</label>
+	</td>
+
+</tr>
+<tr id="1">
+	<td>
+		<input name="o1" type="text" onchange="single_creation_update_phases(6);"/>
+	</td>
+	
+	<td>
+		<label class="phaseTableOptionsLabel" name="add_o1" onclick="addRow('1',6)">add</label>
+	</td>
+	<td>
+		<label class="phaseTableOptionsLabel" name="delete_o1" onclick="deleteRow('1',6)">delete</label>
+	</td>
+
+</tr>
+<tr id="2">
+	<td>
+		<input name="o2" type="text" onchange="single_creation_update_phases(6);"/>
+	</td>
+	<td>
+		<label class="phaseTableOptionsLabel" name="add_o2" onclick="addRow('2',6)">add</label>
+	</td>
+	<td>
+		<label class="phaseTableOptionsLabel" name="delete_o2" onclick="deleteRow('2',6)">delete</label>
+	</td>
+
+</tr>
+<tr id="3">
+	<td>
+		<input name="o3" type="text" onchange="single_creation_update_phases(6);"/>
+	</td>
+	<td>
+		<label class="phaseTableOptionsLabel" name="add_o3" onclick="addRow('3',6)">add</label>
+	</td>
+	<td>
+		<label class="phaseTableOptionsLabel" name="delete_o3" onclick="deleteRow('3',6)">delete</label>
+	</td>
+
+</tr>
+
+<tr id="4">
+	<td>
+		<input name="o4" type="text" onchange="single_creation_update_phases(6);"/>
+	</td>
+	<td>
+		<label class="phaseTableOptionsLabel" name="add_o4" onclick="addRow('4',6)">add</label>
+	</td>
+	<td>
+		<label class="phaseTableOptionsLabel" name="delete_o4" onclick="deleteRow('4',6)">delete</label>
+	</td>
+
+</tr>
+<tr id="5">
+	<td>
+		<input name="o5" type="text" onchange="single_creation_update_phases(6);"/>
+	</td>
+	<td>
+		<label class="phaseTableOptionsLabel" name="add_o5" onclick="addRow('5',6)">add</label>
+	</td>
+	
+	<td>
+		<label class="phaseTableOptionsLabel" name="delete_o5" onclick="deleteRow('5',6)">delete</label>
+	</td>
+
+</tr>
+<tr>
+	<td>
+		<input id="phases_names" type="text" onchange="update_phases();"/>
+	</td>
+</tr>
+
+</table>
+
 
 </form>
 
