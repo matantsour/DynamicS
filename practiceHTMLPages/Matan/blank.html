@@ -1,50 +1,29 @@
-﻿<!DOCTYPE html>
-<html>
-  
-  
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<script type="text/javascript" src='script.js'"></script> 
+
 
 <head>
-    <title>
-      Show and Hide div elements using checkbox
-    </title>
-    <link rel="stylesheet" href="blank_css.css">
-   <script>
-   function change_status_visibility(ob_id)
-{
-	
-	current_class=document.getElementById(ob_id).className
-	
-	if (current_class=='not_done')
-	{
-		set_new_class='pending_approval';
-	}
-	
-	else if (current_class=='pending_approval')
-	{
-		set_new_class='approved';
-	}
-	
-	else if (current_class=='approved')
-	{
-		set_new_class='not_approved';
-	}
-	
-		else if (current_class=='not_approved')
-	{
-		set_new_class='pending_approval';
-	}
-
-	document.getElementById(ob_id).className = set_new_class
-
-}
-
-   </script>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>Untitled</title>
 </head>
-  
+
 <body>
- 
-<span id="11" class="not_done" onclick="change_status_visibility('11')"></span>
- 
- </body>
- 
-</html>  
+<form name="form">
+<input name="o1" type="text" onchange="single_creation_update_phases(6);"/><br></br>
+<input name="o2" type="text" onchange="single_creation_update_phases(6);"/><br></br>
+<input name="o3" type="text" onchange="single_creation_update_phases(6);"/><br></br>
+<input name="o4" type="text" onchange="single_creation_update_phases(6);"/><br></br>
+<input name="o5" type="text" onchange="single_creation_update_phases(6)"/><br></br>
+<input name="o6" type="text" onchange="single_creation_update_phases(6);"/><br></br>
+<br></br><br></br><br></br>
+<input id="phases_names" type="text" onchange="update_phases();"/><br></br>
+
+</form>
+
+
+</body>
+
+</html>
+

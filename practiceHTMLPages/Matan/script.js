@@ -1,31 +1,24 @@
 ﻿
 
-function change_status_visibility(ob_id)
+function single_creation_update_phases(number_of_phases)
 {
-	
-	current_class=document.getElementById(ob_id).className
-	
-	if (current_class=='not_done')
+	var txt="";
+	for (let i = 1; i <=number_of_phases; i++) 
 	{
-		set_new_class='pending_approval';
+	fieldName="o"+i.toString();	
+	fieldVal=document.forms["form"][fieldName].value;
+	if (fieldVal!= null && fieldVal!= "")
+		{
+			if (i!=number_of_phases)
+				txt+="'"+fieldName+"'"+":"+"'"+fieldVal+"'"+",";
+			else
+				txt+="'"+fieldName+"'"+":"+"'"+fieldVal+"'";
+		}
 	}
-	
-	else if (current_class=='pending_approval')
-	{
-		set_new_class='approved';
-	}
-	
-	else if (current_class=='approved')
-	{
-		set_new_class='not_approved';
-	}
-	
-		else if (current_class=='not_approved')
-	{
-		set_new_class='pending_approval';
-	}
-
-	document.getElementById(ob_id).className = set_new_class
-
+	document.forms["form"]["phases_names"].value=txt;
 }
+	
+
+
+
 

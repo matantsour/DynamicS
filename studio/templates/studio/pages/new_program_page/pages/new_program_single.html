@@ -1,30 +1,90 @@
 {% extends 'base.html' %}
 {% load static %}
 
-
 {% block title %}
 New Creation
 {% endblock title %}
 
 
+
 {% block css_files %}
+<link rel="stylesheet" href="{% static "new_program_single_css.css" %}">
+
 {% endblock css_files %} 
 
+{% block js_files %}
+<script type="text/javascript">
+    function func(number_of_phases) 
+    {
+        var txt = "";
+        var fieldName;
+        var fieldVal;
+        for (let i = 1; i <= number_of_phases; i++) 
+        {
+            fieldName = "o" + i.toString();
+            fieldVal = document.forms["form"][fieldName].value;
+            if (fieldVal != null && fieldVal != "") {
+                if (i != number_of_phases)
+                    txt += "'" + fieldName + "'" + ":" + "'" + fieldVal + "'" + ",";
+                else
+                    txt += "'" + fieldName + "'" + ":" + "'" + fieldVal + "'";
+            }
+        }
+        document.forms["form"]["phases_names"].value = txt;
+    }
+</script>
+{% endblock js_files %} 
 
 {% block content%}
 
 
-<form action="{% url 'newProgramSingle' %}" method="POST">
-    {% csrf_token %}
-<select name="customer_id" id="customersnameid">
-{%for customer in all_customers%}
-    <option value={{customer.id}}>{{customer.fname}} {{customer.lname}}</option>
-{%endfor%}
-
-</select>
-
+<form name ="form" action="{% url 'newProgramSingle' %}" method="POST" onsubmit="func({{dict_of_lenghts.song}});">
+{% csrf_token %}
+<table name="newCreationForm">
+<tr>
+    <td class='label'>
+        יוצר:
+    </td>
+    <td>
+        <div name="selectCustomer">
+            <select name="customer_id" id="customersnameid">
+                {%for customer in all_customers%}
+                    <option value={{customer.id}}>{{customer.fname}} {{customer.lname}}</option>
+                {%endfor%}
+            </select>
+            
+            
+        </div>
+    </td>
+</tr>    
+<tr>
+    <td class='label'>שם היצירה:
+    </td>
+    <td>{{form.creation_name}}
+    </td>
+</tr>
+<tr>
+    <td class='label'>
+        שלבים:
+    </td>
+    <td>
+        {%for defualt_phase in dict_of_defaults.song%}
+        <input name="o{{ forloop.counter }}" type="text" value="{{defualt_phase}}" onchange="func({{dict_of_lenghts.song}});"><br>
+        {%endfor%}
+    </td>
+</tr>  
+<tr>
+<td>
+    {{form.phases_names.as_hidden}}
+</td>
+</tr> 
+<table>
 <input type="submit">
 </form>
+
+
+
+
 
 
 {%endblock%}
