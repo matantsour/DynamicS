@@ -13,75 +13,100 @@ New Creation
 {% endblock css_files %} 
 
 {% block js_files %}
-<script type="text/javascript">
-    function func(number_of_phases) 
-    {
-        var txt = "";
-        var fieldName;
-        var fieldVal;
-        for (let i = 1; i <= number_of_phases; i++) 
-        {
-            fieldName = "o" + i.toString();
-            fieldVal = document.forms["form"][fieldName].value;
-            if (fieldVal != null && fieldVal != "") {
-                if (i != number_of_phases)
-                    txt += "'" + fieldName + "'" + ":" + "'" + fieldVal + "'" + ",";
-                else
-                    txt += "'" + fieldName + "'" + ":" + "'" + fieldVal + "'";
-            }
-        }
-        document.forms["form"]["phases_names"].value = txt;
-    }
-</script>
+<script src="{% static 'js/new_program_single_js.js' %}"></script> 
 {% endblock js_files %} 
 
 {% block content%}
 
 
-<form name ="form" action="{% url 'newProgramSingle' %}" method="POST" onsubmit="func({{dict_of_lenghts.song}});">
-{% csrf_token %}
-<table name="newCreationForm">
-<tr>
-    <td class='label'>
-        יוצר:
-    </td>
-    <td>
-        <div name="selectCustomer">
-            <select name="customer_id" id="customersnameid">
-                {%for customer in all_customers%}
-                    <option value={{customer.id}}>{{customer.fname}} {{customer.lname}}</option>
-                {%endfor%}
-            </select>
+<form name ="form" action="{% url 'newProgramSingle' %}" method="POST" onsubmit="single_creation_update_phases({{dict_of_lenghts.song}});">
+    <table id="phasesEditTable"> 
+        <tr id="0">
+            <td>
+                <input name="o0" type="text" onchange="single_creation_update_phases(6);"/>
+            </td>
+            <td>
+                <label class="phaseTableOptionsLabel" name="add_o0" onclick="addRow('0',6)">add</label>
+            </td>
+            <td>
+                <label class="phaseTableOptionsLabel" name="delete_o0" onclick="deleteRow('0',6)">delete</label>
+            </td>
+        
+        </tr>
+        <tr id="1">
+            <td>
+                <input name="o1" type="text" onchange="single_creation_update_phases(6);"/>
+            </td>
             
+            <td>
+                <label class="phaseTableOptionsLabel" name="add_o1" onclick="addRow('1',6)">add</label>
+            </td>
+            <td>
+                <label class="phaseTableOptionsLabel" name="delete_o1" onclick="deleteRow('1',6)">delete</label>
+            </td>
+        
+        </tr>
+        <tr id="2">
+            <td>
+                <input name="o2" type="text" onchange="single_creation_update_phases(6);"/>
+            </td>
+            <td>
+                <label class="phaseTableOptionsLabel" name="add_o2" onclick="addRow('2',6)">add</label>
+            </td>
+            <td>
+                <label class="phaseTableOptionsLabel" name="delete_o2" onclick="deleteRow('2',6)">delete</label>
+            </td>
+        
+        </tr>
+        <tr id="3">
+            <td>
+                <input name="o3" type="text" onchange="single_creation_update_phases(6);"/>
+            </td>
+            <td>
+                <label class="phaseTableOptionsLabel" name="add_o3" onclick="addRow('3',6)">add</label>
+            </td>
+            <td>
+                <label class="phaseTableOptionsLabel" name="delete_o3" onclick="deleteRow('3',6)">delete</label>
+            </td>
+        
+        </tr>
+        
+        <tr id="4">
+            <td>
+                <input name="o4" type="text" onchange="single_creation_update_phases(6);"/>
+            </td>
+            <td>
+                <label class="phaseTableOptionsLabel" name="add_o4" onclick="addRow('4',6)">add</label>
+            </td>
+            <td>
+                <label class="phaseTableOptionsLabel" name="delete_o4" onclick="deleteRow('4',6)">delete</label>
+            </td>
+        
+        </tr>
+        <tr id="5">
+            <td>
+                <input name="o5" type="text" onchange="single_creation_update_phases(6);"/>
+            </td>
+            <td>
+                <label class="phaseTableOptionsLabel" name="add_o5" onclick="addRow('5',6)">add</label>
+            </td>
             
-        </div>
-    </td>
-</tr>    
-<tr>
-    <td class='label'>שם היצירה:
-    </td>
-    <td>{{form.creation_name}}
-    </td>
-</tr>
-<tr>
-    <td class='label'>
-        שלבים:
-    </td>
-    <td>
-        {%for defualt_phase in dict_of_defaults.song%}
-        <input name="o{{ forloop.counter }}" type="text" value="{{defualt_phase}}" onchange="func({{dict_of_lenghts.song}});"><br>
-        {%endfor%}
-    </td>
-</tr>  
-<tr>
-<td>
-    {{form.phases_names.as_hidden}}
-</td>
-</tr> 
-<table>
-<input type="submit">
+            <td>
+                <label class="phaseTableOptionsLabel" name="delete_o5" onclick="deleteRow('5',6)">delete</label>
+            </td>
+        
+        </tr>
+        <tr>
+            <td>
+                <input id="phases_names" type="text" onchange="update_phases();"/>
+            </td>
+        </tr>
+        
+    </table>
+        
+        
 </form>
-
+        
 
 
 
