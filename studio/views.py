@@ -235,6 +235,7 @@ class newProgramSingle(View):
             id=request.session["user_logged_in_id"])[0]
         customer_user_type = User_Type.objects.filter(type="customer") #need to check if user is allowed
         all_customers = User.objects.filter(user_type__in=customer_user_type)
+        all_customers_names=[cus.fname+" "+cus.lname+"|"+str(cus.id) for cus in all_customers]
         form = newProgramSingleForm()
         dict_of_defaults = {"song":["פגישה ראשונה","קביעת מילים ולחן","סקיצה ראשונה","עריכה מוזיקלית","עריכה סופית","אישור לקוח"],
                             "podcast":["פגישה ראשונה","הקלטה","עריכה","אישור לקוח"]}
@@ -242,9 +243,11 @@ class newProgramSingle(View):
                             "podcast":len(dict_of_defaults["podcast"])}
         return render(request, "studio/pages/new_program_page/pages/new_program_single.html",
                       {'all_customers': all_customers,
+                      "all_customers_names":all_customers_names,
                       "form":form,
                       "dict_of_defaults":dict_of_defaults,
-                      "dict_of_lenghts":dict_of_lenghts
+                      "dict_of_lenghts":dict_of_lenghts,
+                      
                        })
 
     def post(self, request):

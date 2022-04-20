@@ -151,9 +151,9 @@ function addRow(rownumber, number_of_phases) {
 
     new_input_tag = "<input name='o" + newrownumber + "'" + "type='text' onchange='single_creation_update_phases(" + number_of_phases + ")'>";
     cell1.innerHTML = new_input_tag;
-    new_add_label_tag = "<label class='newphaseTableOptionsLabel' name='add_o" + newrownumber + "' onclick='addRow(" + newrownumber + "," + number_of_phases + ")'>add</label>"
+    new_add_label_tag = "<label class='newphaseTableOptionsLabel' name='add_o" + newrownumber + "' onclick='addRow(" + newrownumber + "," + number_of_phases + ")'>הוסף</label>"
     cell2.innerHTML = new_add_label_tag;
-    new_delete_label_tag = "<label class='newphaseTableOptionsLabel' name='delete_o" + newrownumber + "' onclick='deleteRow(" + newrownumber + "," + number_of_phases + ")'>delete</label>"
+    new_delete_label_tag = "<label class='newphaseTableOptionsLabel' name='delete_o" + newrownumber + "' onclick='deleteRow(" + newrownumber + "," + number_of_phases + ")'>מחק</label>"
     cell3.innerHTML = new_delete_label_tag;
 
 }

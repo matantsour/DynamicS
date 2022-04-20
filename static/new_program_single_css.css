@@ -1,13 +1,16 @@
 .newphaseTableOptionsLabel {
-    color: yellow;
+    color: white;
     font-weight: bold;
-    text-decoration: underline;
     cursor: pointer;
 }
 
 .phaseTableOptionsLabel {
     color: white;
     font-weight: bold;
-    text-decoration: underline;
     cursor: pointer;
+}
+
+.label {
+    color: white;
+    font-weight: bold;
 }
