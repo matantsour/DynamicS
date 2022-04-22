@@ -1,0 +1,15 @@
+{%for defualt_phase in dict_of_defaults.song%}
+        
+<tr id="{{forloop.counter|add:"-1"}}">
+    <td>
+        <input name="o{{forloop.counter|add:"-1"}}" type="text" onchange="single_creation_update_phases({{dict_of_lenghts.song}});" value='{{defualt_phase}}'>
+    </td>
+    <td>
+        <label class="phaseTableOptionsLabel" name="add_o{{forloop.counter|add:"-1"}}" onclick="addRow('{{forloop.counter|add:"-1"}}',{{dict_of_lenghts.song}})">הוסף</label>
+    </td>
+    <td>
+        <label class="phaseTableOptionsLabel" name="delete_o{{forloop.counter|add:"-1"}}" onclick="deleteRow('{{forloop.counter|add:"-1"}}',{{dict_of_lenghts.song}})">מחק</label>
+    </td>
+
+</tr>
+{%endfor%}

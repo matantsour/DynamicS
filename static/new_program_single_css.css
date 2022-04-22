@@ -1,3 +1,14 @@
+#insert_creation_name_field {
+    background-color: black;
+    font-weight: bold;
+    color: white;
+}
+
+.labelclass {
+    color: white;
+    font-weight: bold;
+}
+
 .newphaseTableOptionsLabel {
     color: white;
     font-weight: bold;

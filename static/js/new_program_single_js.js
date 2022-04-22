@@ -174,3 +174,29 @@ function single_creation_update_phases(number_of_phases) {
     }
     document.forms["form"]["phases_names"].value = txt;
 }
+
+function TheCreatorWasChosen() {
+    var choice = document.getElementById("myInput").value;
+    document.getElementById("myInput").value = "-";
+    var presented_choice = choice.substr(0, choice.indexOf('|'));
+    document.getElementById("id_creator_choice").value = choice;
+    document.getElementById("id_creator_choice_presented").innerHTML = presented_choice;
+}
+
+function TheCreationNameWasChosen() {
+    var choice = document.getElementById("insert_creation_name_field").value;
+    document.getElementById("id_creation_name").value = choice;
+
+}
+
+
+function checkForm(number_of_phases) {
+    single_creation_update_phases(number_of_phases)
+    var a = document.getElementById("id_phases_names").value;
+    var b = document.getElementById("id_creator_choice").value;
+    var c = document.getElementById("id_creation_name").value;
+    if (a == null || a == "" || b == null || b == "" || c == null || c == "") {
+        alert("יש למלא שם יוצר, שם יצירה ושלבים");
+        return false;
+    }
+}

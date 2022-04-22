@@ -5,6 +5,13 @@
       display: inline-block;
   }
   
+  #myInput[type=text]::placeholder {
+      color: rgb(191, 42, 42);
+      font-weight: bold;
+      letter-spacing: 2px;
+      font-size: 13px;
+  }
+  
   #myInput {
       border: 1px solid transparent;
       background-color: #f1f1f1;
@@ -24,6 +31,11 @@
       border: 1px solid transparent;
       padding: 10px;
       font-size: 12px;
+  }
+  
+  #mySubmit[type=submit]:active {
+      background-color: #CE233C;
+      color: white;
   }
   
   .autocomplete-items {
