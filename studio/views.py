@@ -253,10 +253,38 @@ class newProgramSingle(View):
                        })
 
     def post(self, request):
+        user_ob = User.objects.filter(
+            id=request.session["user_logged_in_id"])[0]
         form = newProgramSingleForm(request.POST)
         success=False
         if form.is_valid():
             print(form.cleaned_data)
+            creator_id=int(form.cleaned_data["creator_choice"].split('|')[1])
+            creation_name=form.cleaned_data["creation_name"]
+            phases_list=form.cleaned_data["phases_names"]
+            phases_list='{'+phases_list[:len(phases_list)-1]+'}' #dict rep
+            phases_list=ast.literal_eval(phases_list) #now it's a dictionary
+            phases_list=list(phases_list.values()) #but might have duplicates becuase of unknown error
+            phases_list = list(dict.fromkeys(phases_list))
+            print(phases_list)
+            #get creator, supervisor
+            creator=User.objects.filter(id=creator_id)[0]
+            supervisor=Employee.objects.filter(u_id=user_ob)[0]
+            #creating objects
+            newcreation = Creation.objects.create(
+                name=creation_name,
+                creator=creator,
+            )
+            newcreation.supervisors.add(supervisor)
+            print(phases_list)
+            for phase in phases_list:
+                new_phase_ob=Phase.objects.create(
+                    creation_id =newcreation ,
+                    status = Status.objects.filter(desc="not_done")[0],
+                    name = phase
+                )
+
+
             success = True
         return render(request, "studio/pages/new_program_page/pages/new_program_created.html",
                       {"success": success,

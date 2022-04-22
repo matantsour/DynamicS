@@ -150,11 +150,11 @@ class Creation(models.Model):
     creator = models.ForeignKey(
         User, null=True, blank=True, on_delete=models.SET_NULL, related_name="creations")
     supervisors = models.ManyToManyField(
-        Employee, null=False, blank=True, through='Creations_Supervisors',related_name="creations")  
+        Employee, null=True, blank=True, through='Creations_Supervisors',related_name="creations")  
     creation_date = models.DateField(blank=True, null=False, auto_now_add=True)
     album_id = models.ForeignKey(
         Album, null=True, blank=True, on_delete=models.SET_NULL, related_name="creations")
-    profit = models.FloatField()
+    profit = models.FloatField(null=True, blank=True)
 
     def __str__(self): 
         crtor = self.creator.fname+" "+self.creator.lname
