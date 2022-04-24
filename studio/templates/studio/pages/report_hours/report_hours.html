@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+Report Hours
+{% endblock title %}
+
+
+{% block css_files %}
+{% endblock css_files %} 
+
+
+{% block content%}
+<h1>Report working hours </h1>
+<br>
+<form>                        {# comment - we should choose a different url to send to after submiting the form #}
+                        {#  <form action="{% url 'update_personal_details' user_id=u.id%}" method="POST"> #} 
+    {% csrf_token %}
+
+    {{report_form.as_ul}}
+    <button type="submit"> אישור </button>
+</form>
+
+
+
+{%endblock%}

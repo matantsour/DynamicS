@@ -55,3 +55,14 @@ class AddNote(forms.ModelForm):
     class Meta:
         model = Note
         fields = ['text']
+
+import datetime
+class TimePickerInput(forms.TimeInput):
+        input_type = 'time'
+
+class ReportHoursForm(forms.Form):
+    reporting_date=forms.DateField(required=True,initial=datetime.date.today)
+    creation=forms.CharField(max_length=200, required=True)
+    starting_time=forms.TimeField(required=True,widget=TimePickerInput)
+    ending_time = forms.TimeField(required=True,widget=TimePickerInput)
+#widget=forms.HiddenInput()

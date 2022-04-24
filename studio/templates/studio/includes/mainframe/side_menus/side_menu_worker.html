@@ -23,7 +23,7 @@
       <td class="side_menu" ><a class="side_menu_link" href="{% url "newProgram" %}">תכנית חדשה</td>
    </tr>
    <tr class="side_menu" >
-      <td class="side_menu">דיווח שעות</td>
+      <td class="side_menu"><a class="side_menu_link" href="{% url "report_hours" %}">דיווח שעות</td>
    </tr>
    <tr class="side_menu">
       <td class="side_menu" ><a  class="side_menu_link" href="{% url 'update_personal_details' user_id=request.session.user_logged_in_id%}">

@@ -25,6 +25,8 @@ urlpatterns = [
     path("newProgramSingle/",views.newProgramSingle.as_view(),name="newProgramSingle"),
     path("newProgramMultiple/",views.newProgramMultiple.as_view(),name="newProgramMultiple"),
 
+     #hours reporting
+    path("HoursReporting/",views.ReportHours.as_view(),name="report_hours"),
 
     #edit_user_details
     path("update_personal_details/<int:user_id>",views.Update_user_details.as_view(),name="update_personal_details"),

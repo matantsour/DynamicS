@@ -374,6 +374,16 @@ class delete_user(View):
 
 # functional views
 
+class ReportHours(View):
+    def get(self, request):
+        report_form = ReportHoursForm()
+        return render(request, "studio/pages/report_hours/report_hours.html",{'report_form':report_form})
+        
+
+    def post(self, request, user_id):
+        pass
+
+# functional views
 
 def delete_user(request, user_id):
     User.objects.get(id=user_id).delete()
