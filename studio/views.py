@@ -15,23 +15,40 @@ from django.utils import timezone
 import ast
 from django.views.generic.edit import CreateView
 from .calendarAPI import *
+import datetime
 
 
 ##
 # Create your util functions here, then move them to utils.
 def createMeeting(request):  # details="2022-05-20-20-00-topic-users"
+    startDateTime = datetime.datetime( year = 2022, 
+                            month = 5,
+                            day = 10,
+                            hour = 16,
+                            minute = 30,
+                            second = 0,
+                            microsecond = 0 ).isoformat()
+
+    endDateTime = datetime.datetime( year = 2022, 
+                            month = 5,
+                            day = 10,
+                            hour = 18,
+                            minute = 00,
+                            second = 0,
+                            microsecond = 0 ).isoformat()
+    
     service = get_calendar_service()
     event = {
-        'summary': 'Test',
-        'location': 'Uranus',
+        'summary': 'Test2',
+        'location': 'Dynamic Studio,Kfar Saba',
         'description': 'Meeting about the client songs',
         'start': {
-            'dateTime': '2022-05-10T09:00:00-07:00',
-            'timeZone': 'America/Los_Angeles',
+            'dateTime': startDateTime,
+            'timeZone': 'Israel',
         },
         'end': {
-            'dateTime': '2022-05-10T09:00:00-07:00',
-            'timeZone': 'America/Los_Angeles',
+            'dateTime': endDateTime,
+            'timeZone': 'Israel',
         },
         'attendees': [
             #{'email': 'vlad.census@gmail.com'},
@@ -65,7 +82,10 @@ class indexView(View):
                 user.update_login_time(timezone.now())
             else:
                 request.session["is_logged_in"] = False
+            return render(request, "studio/index.html", {"login_form": login_form})
 
+        
+    
         
 
 
