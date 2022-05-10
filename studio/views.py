@@ -309,7 +309,6 @@ class newProgramSingle(View):
             # but might have duplicates becuase of unknown error
             phases_list = list(phases_list.values())
             phases_list = list(dict.fromkeys(phases_list))
-            print(phases_list)
             # get creator, supervisor
             creator = User.objects.filter(id=creator_id)[0]
             supervisor = Employee.objects.filter(u_id=user_ob)[0]
@@ -326,7 +325,33 @@ class newProgramSingle(View):
                     status=Status.objects.filter(desc="not_done")[0],
                     name=phase
                 )
-
+                if phase=='פגישה ראשונה':
+                    first_phase_object=new_phase_ob
+            #create meeting:
+            m_phase=first_phase_object
+            m_start_date =form.cleaned_data["start_date"]
+            m_end_date = form.cleaned_data["start_date"]
+            m_start_time = form.cleaned_data["start_time"]
+            m_end_time =datetime.datetime( year = m_start_date.year, 
+                            month = m_start_date.month,
+                            day = m_start_date.day,
+                            hour = m_start_time.hour+1,
+                            minute = m_start_time.minute,
+                            second = 0,
+                            microsecond = 0 )
+            m_topic = first_phase_object.name
+            m_location ='Dynamic Studio Kfar Saba' 
+            meeting_ob=Meeting(phase_id=m_phase,
+                               start_date=m_start_date,
+                               end_date=m_end_date,
+                               start_time=m_start_time,
+                               end_time=m_end_time,
+                               topic=m_topic,
+                               location=m_location)
+            meeting_ob.save()
+            meeting_ob.attendees.add(user_ob,creator)
+            schedule_event(meeting_ob)
+            #set success as True
             success = True
         return render(request, "studio/pages/new_program_page/pages/new_program_created.html",
                       {"success": success,

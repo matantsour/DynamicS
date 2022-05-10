@@ -179,6 +179,7 @@ New Creation
              <input type="text" id='insert_creation_name_field' onchange='TheCreationNameWasChosen()'> </div>
          </td>
         </tr>
+      <tr> 
         <td>
           <label id='1000000' class='labelclass'>סוג יצירה</label>
        </td>
@@ -187,8 +188,18 @@ New Creation
         <label for="musical">יצירה מוזיקלית</label><br>
         <input type="radio" name="creation_type" value="other" required id='id_creation_type_1'>
         <label for="other">יצירה אחרת</label><br>        
-       </td> 
-    </tr>
+       </td>
+      </tr>
+      <tr> 
+        <td>
+          <label id='1000000' class='labelclass'>קבע פגישה ראשונה</label>
+       </td>
+       <td colspan='2' class='labelclass'>
+        {{ form.start_date }}
+          <br>      
+          {{ form.start_time }}
+       </td>
+      </tr>
   </table>
   <!--END Presented Fields-->
     

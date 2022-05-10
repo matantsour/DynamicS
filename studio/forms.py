@@ -1,13 +1,15 @@
 from django import forms
 from .widgets import DatePickerInput, TimePickerInput, DateTimePickerInput
 from .models import Note,CreationFile
-
+import datetime
 
 class newProgramSingleForm(forms.Form):
     creator_choice=forms.CharField(max_length=100, required=True,widget=forms.HiddenInput())
     creation_name=forms.CharField(max_length=200, required=True,widget=forms.HiddenInput())
     phases_names=forms.CharField(max_length=1000, required=True,widget=forms.HiddenInput())
     creation_type = forms.ChoiceField(widget=forms.RadioSelect(), choices=[('musical', 'יצירה מוזיקלית'), ('other', 'יצירה אחרת')],initial={'musical':'יצירה מוזיקלית'})
+    start_date=forms.DateField(required=True,initial=datetime.date.today,widget=DatePickerInput)
+    start_time=forms.TimeField(required=True,widget=TimePickerInput)
 #widget=forms.HiddenInput()
 
 
@@ -56,7 +58,7 @@ class AddNote(forms.ModelForm):
         model = Note
         fields = ['text']
 
-import datetime
+
 class TimePickerInput(forms.TimeInput):
         input_type = 'time'
 

@@ -1,4 +1,6 @@
 from .models import *
+from .calendarAPI import *
+import datetime
 
 SESSIONS_DEFALUTS = {"is_logged_in":False,
                     "user_type":"guest",
@@ -7,6 +9,7 @@ SESSIONS_DEFALUTS = {"is_logged_in":False,
                      }
 
 #Views Utils
+
 
 def permitted_creations_list(user_id):
     fetched_user=User.objects.filter(id=user_id)[0]
