@@ -14,10 +14,31 @@ from django.urls import reverse
 from django.utils import timezone
 import ast
 from django.views.generic.edit import CreateView
+from .calendarAPI import *
 
 
 ##
 # Create your util functions here, then move them to utils.
+def createMeeting(request):  # details="2022-05-20-20-00-topic-users"
+    service = get_calendar_service()
+    event = {
+        'summary': 'Test',
+        'location': 'Uranus',
+        'description': 'Meeting about the client songs',
+        'start': {
+            'dateTime': '2022-05-10T09:00:00-07:00',
+            'timeZone': 'America/Los_Angeles',
+        },
+        'end': {
+            'dateTime': '2022-05-10T09:00:00-07:00',
+            'timeZone': 'America/Los_Angeles',
+        },
+        'attendees': [
+            #{'email': 'vlad.census@gmail.com'},
+        ]
+            }
+    event = service.events().insert(calendarId='primary', body=event).execute()
+    return HttpResponseRedirect(reverse("index-page"))
 
 
 # create your class views here
@@ -45,7 +66,7 @@ class indexView(View):
             else:
                 request.session["is_logged_in"] = False
 
-        return render(request, "studio/index.html", {"login_form": login_form})
+        
 
 
 class creationsView(View):
@@ -256,21 +277,23 @@ class newProgramSingle(View):
         user_ob = User.objects.filter(
             id=request.session["user_logged_in_id"])[0]
         form = newProgramSingleForm(request.POST)
-        success=False
+        success = False
         if form.is_valid():
             print(form.cleaned_data)
-            creator_id=int(form.cleaned_data["creator_choice"].split('|')[1])
-            creation_name=form.cleaned_data["creation_name"]
-            phases_list=form.cleaned_data["phases_names"]
-            phases_list='{'+phases_list[:len(phases_list)-1]+'}' #dict rep
-            phases_list=ast.literal_eval(phases_list) #now it's a dictionary
-            phases_list=list(phases_list.values()) #but might have duplicates becuase of unknown error
+            creator_id = int(form.cleaned_data["creator_choice"].split('|')[1])
+            creation_name = form.cleaned_data["creation_name"]
+            phases_list = form.cleaned_data["phases_names"]
+            phases_list = '{'+phases_list[:len(phases_list)-1]+'}'  # dict rep
+            phases_list = ast.literal_eval(
+                phases_list)  # now it's a dictionary
+            # but might have duplicates becuase of unknown error
+            phases_list = list(phases_list.values())
             phases_list = list(dict.fromkeys(phases_list))
             print(phases_list)
-            #get creator, supervisor
-            creator=User.objects.filter(id=creator_id)[0]
-            supervisor=Employee.objects.filter(u_id=user_ob)[0]
-            #creating objects
+            # get creator, supervisor
+            creator = User.objects.filter(id=creator_id)[0]
+            supervisor = Employee.objects.filter(u_id=user_ob)[0]
+            # creating objects
             newcreation = Creation.objects.create(
                 name=creation_name,
                 creator=creator,
@@ -278,12 +301,11 @@ class newProgramSingle(View):
             newcreation.supervisors.add(supervisor)
             print(phases_list)
             for phase in phases_list:
-                new_phase_ob=Phase.objects.create(
-                    creation_id =newcreation ,
-                    status = Status.objects.filter(desc="not_done")[0],
-                    name = phase
+                new_phase_ob = Phase.objects.create(
+                    creation_id=newcreation,
+                    status=Status.objects.filter(desc="not_done")[0],
+                    name=phase
                 )
-
 
             success = True
         return render(request, "studio/pages/new_program_page/pages/new_program_created.html",
@@ -374,16 +396,17 @@ class delete_user(View):
 
 # functional views
 
+
 class ReportHours(View):
     def get(self, request):
         report_form = ReportHoursForm()
-        return render(request, "studio/pages/report_hours/report_hours.html",{'report_form':report_form})
-        
+        return render(request, "studio/pages/report_hours/report_hours.html", {'report_form': report_form})
 
     def post(self, request, user_id):
         pass
 
 # functional views
+
 
 def delete_user(request, user_id):
     User.objects.get(id=user_id).delete()
