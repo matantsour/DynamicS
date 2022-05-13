@@ -408,15 +408,119 @@ class createMeeting(View):
                        })
         return HttpResponseRedirect(reverse("index-page"))
 class newProgramMultiple(View):
+
     def get(self, request):
         user_ob = User.objects.filter(
             id=request.session["user_logged_in_id"])[0]
-        customer_user_type = User_Type.objects.filter(type="customer")
+        customer_user_type = User_Type.objects.filter(
+            type="customer")  # need to grab all customers
         all_customers = User.objects.filter(user_type__in=customer_user_type)
-        return render(request, "studio/pages/new_program_page/pages/new_program_multiple.html", {"user_name": user_ob.lname, 'all_customers': all_customers})
+        all_customers_names = [cus.fname+" "+cus.lname +
+                               "|"+str(cus.id) for cus in all_customers]
+        form = newProgramMultipleForm(initial={'creation_type': 'musical'})
+        dict_of_defaults = {"song": ["פגישה ראשונה", "קביעת מילים ולחן", "סקיצה ראשונה", "עריכה מוזיקלית", "עריכה סופית", "אישור לקוח"],
+                            "podcast": ["פגישה ראשונה", "הקלטה", "עריכה", "אישור לקוח"]}
+        dict_of_lenghts = {"song": len(dict_of_defaults["song"]),
+                           "podcast": len(dict_of_defaults["podcast"])}
+        return render(request, "studio/pages/new_program_page/pages/new_program_multiple.html",
+                      {'all_customers': all_customers,
+                       "all_customers_names": all_customers_names,
+                       "form": form,
+                       "dict_of_defaults": dict_of_defaults,
+                       "dict_of_lenghts": dict_of_lenghts,
+
+                       })
 
     def post(self, request):
-        pass
+        user_ob = User.objects.filter(
+            id=request.session["user_logged_in_id"])[0]
+        form = newProgramMultipleForm(request.POST)
+        success = False
+        
+        if form.is_valid():
+            ALBUM_DONE=form.cleaned_data["albumDone"]
+            #create album if not exist
+            newAlbumOb, created= Album.objects.get_or_create(name=form.cleaned_data["albumName"])
+            #create the creation, its phases and connect to album
+            creator_id = int(form.cleaned_data["creator_choice"].split('|')[1])
+            creation_name = form.cleaned_data["creation_name"]
+            phases_list = form.cleaned_data["phases_names"]
+            phases_list = '{'+phases_list[:len(phases_list)-1]+'}'  # dict rep
+            phases_list = ast.literal_eval(
+                phases_list)  # now it's a dictionary
+            # but might have duplicates becuase of unknown error
+            phases_list = list(phases_list.values())
+            phases_list = list(dict.fromkeys(phases_list))
+            # get creator, supervisor
+            creator = User.objects.filter(id=creator_id)[0]
+            supervisor = Employee.objects.filter(u_id=user_ob)[0]
+            # creating objects
+            newcreation = Creation.objects.create(
+                name=creation_name,
+                creator=creator,
+                album_id=newAlbumOb
+            )
+            newcreation.supervisors.add(supervisor)
+            print(phases_list)
+            for phase in phases_list:
+                new_phase_ob = Phase.objects.create(
+                    creation_id=newcreation,
+                    status=Status.objects.filter(desc="not_done")[0],
+                    name=phase
+                )
+                if phase == 'פגישה ראשונה':
+                    first_phase_object = new_phase_ob
+            # create meeting:
+            m_phase = first_phase_object
+            m_start_date = form.cleaned_data["start_date"]
+            m_end_date = form.cleaned_data["start_date"]
+            m_start_time = form.cleaned_data["start_time"]
+            m_end_time = datetime.datetime(year=m_start_date.year,
+                                           month=m_start_date.month,
+                                           day=m_start_date.day,
+                                           hour=m_start_time.hour+1,
+                                           minute=m_start_time.minute,
+                                           second=0,
+                                           microsecond=0)
+            m_topic = first_phase_object.name
+            m_location = 'Dynamic Studio Kfar Saba'
+            meeting_ob = Meeting(phase_id=m_phase,
+                                 start_date=m_start_date,
+                                 end_date=m_end_date,
+                                 start_time=m_start_time,
+                                 end_time=m_end_time,
+                                 topic=m_topic,
+                                 location=m_location)
+            meeting_ob.save()
+            meeting_ob.attendees.add(user_ob, creator)
+            createMeetinginProgram(meeting_ob)
+            # set success as True
+            success = True
+
+        ##REDIRECTION BASED ON SITUATION: "ALBUM_DONE==TRUE"
+        if ALBUM_DONE!="1":
+            #loading neccecery data
+            customer_user_type = User_Type.objects.filter(
+                type="customer")  # need to grab all customers
+            all_customers = User.objects.filter(user_type__in=customer_user_type)
+            all_customers_names = [cus.fname+" "+cus.lname +
+                                "|"+str(cus.id) for cus in all_customers]
+            dict_of_defaults = {"song": ["פגישה ראשונה", "קביעת מילים ולחן", "סקיצה ראשונה", "עריכה מוזיקלית", "עריכה סופית", "אישור לקוח"],
+                                "podcast": ["פגישה ראשונה", "הקלטה", "עריכה", "אישור לקוח"]}
+            dict_of_lenghts = {"song": len(dict_of_defaults["song"]),
+                            "podcast": len(dict_of_defaults["podcast"])}
+            return render(request, "studio/pages/new_program_page/pages/new_program_multiple.html",
+                      {'all_customers': all_customers,
+                       "all_customers_names": all_customers_names,
+                       "form": form,
+                       "dict_of_defaults": dict_of_defaults,
+                       "dict_of_lenghts": dict_of_lenghts,
+                        "existing_creator":form.cleaned_data["creator_choice"]
+                       })
+        else:
+            return render(request, "studio/pages/new_program_page/pages/new_album_created.html",
+                      {"success": success,
+                       })
 
 
 class Update_user_details(View):

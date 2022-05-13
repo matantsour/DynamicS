@@ -1,3 +1,12 @@
+function changeAlbumDoneStatus()
+{
+    var element = document.getElementById("id_albumDone");
+    element.value="1"
+    document.getElementById('form').submit();
+
+}
+
+
 function getFirstElementByName(element_name) {
     var elements = document.getElementsByName(element_name);
     if (elements.length) {
