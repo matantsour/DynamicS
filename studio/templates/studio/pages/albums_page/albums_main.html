@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css_files %}
+<link rel="stylesheet" href="{% static "albums_css.css" %}">
+{% endblock css_files %} 
+{% block title %}
+Albums
+{% endblock title %}
+
+{% block content%}
+<p>&nbsp;</p>
+
+
+<table class='albumsTable'>
+{%for album_id, album_name in albums.items %}
+<tr>
+    <td class='albumstabletd'>
+
+        {%if   album_name == "כל היצירות"%}
+        <a class="allCreationsLabel" href="{% url "artwork" album_id %}">{{album_name}}</a>
+
+        {%elif   album_name == "יצירות ללא אלבום"%}
+        <a class="boldLabel" href="{% url "artwork" album_id %}">*{{album_name}}*</a>
+        {%elif   album_name == "יצירות עם אלבום"%}
+        <a class="boldLabel" href="{% url "artwork" album_id %}">*{{album_name}}*</a>
+        {%else%}
+        <a class="label" href="{% url "artwork" album_id %}">{{album_name}}</a>
+        {%endif%}
+
+    </td>
+</tr>
+{%endfor%}
+</table>
+
+{%endblock%}

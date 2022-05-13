@@ -9,10 +9,10 @@ urlpatterns = [
 
 
     #albums
-    path("albums/",views.albumsView.as_view(),name='artwork_albums'),
+    path("albums/",views.albumsView.as_view(),name='albums'),
 
     #creations
-    path("creations/<int:album_id>",views.creationsView.as_view(),name="artwork"),
+    path("creations/<album_id>",views.creationsView.as_view(),name="artwork"),
     path("creations/client_approval/<int:creation_id>",views.client_approved_click,name="client_approved_click"),
     path("creations/last_version/<int:creation_id>",views.last_version.as_view(),name="last_version"),
     path("creations/notes/<int:creation_id>",views.notesView.as_view(),name="notes"),

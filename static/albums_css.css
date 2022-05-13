@@ -1,0 +1,29 @@
+table.albumsTable {
+    border-collapse: separate;
+    border-spacing: 0 15px;
+}
+
+td.albumstabletd {
+    width: 150px;
+    text-align: center;
+    border: 1px solid white;
+    padding: 5px;
+}
+
+.allCreationsLabel {
+    color: white;
+    text-decoration: none;
+    font-size: larger;
+    font-weight: bold;
+}
+
+.boldLabel {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.label {
+    color: white;
+    text-decoration: none;
+}

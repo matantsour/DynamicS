@@ -6,7 +6,7 @@
      
    </tr>
    <tr class="side_menu">
-      <td class="side_menu"> <a class="side_menu_link" href="{% url "artwork_albums" %}">ניהול יצירות</a></td>
+      <td class="side_menu"> <a class="side_menu_link" href="{% url "albums" %}">ניהול יצירות</a></td>
    </tr>
    <tr class="side_menu">
       <td class="side_menu" ><a class="side_menu_link" href="{% url "newProgram" %}">תכנית חדשה</td>
@@ -31,10 +31,7 @@
       <td class="side_menu">הכנסות והוצאות</td>
    </tr>
    <tr class="side_menu" >
-      <td class="side_menu">עדכון פרטים אישיים</td>
-   </tr>
-   <tr class="side_menu" >
-      <td class="side_menu">התנתק מהמערכת</td>
-   </tr>
+      <td class="side_menu"><a  class="side_menu_link" href="{% url 'update_personal_details' user_id=request.session.user_logged_in_id%}">
+         עדכון פרטים אישיים</a></td>
 </table>
 </body>

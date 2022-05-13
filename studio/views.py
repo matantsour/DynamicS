@@ -90,6 +90,7 @@ class indexView(View):
 
 class creationsView(View):
     def get(self, request,album_id):
+        album_id=int(album_id)
         if request.session["user_type"] != "guest":
             # get creations based on which user is logged in
             user_ob = User.objects.filter(
@@ -100,8 +101,19 @@ class creationsView(View):
                 extract_creations = Employee.objects.filter(u_id=user_ob)[
                     0].creations.all()
             #filter creations based on album
-            if album_id!=0:
-                extract_creations=[c for c in extract_creations if c.album_id.id==album_id]
+            if album_id==0:
+                pass #do nothing, the user wants to see all the creations
+            elif album_id==-1:#creations with no album.
+                extract_creations=[c for c in extract_creations if c.album_id==None]
+            elif album_id==-2:#creations with any album.
+                extract_creations=[c for c in extract_creations if c.album_id!=None]
+            else: #specific album
+                extract_creations_fixed=[]
+                for c in extract_creations:
+                    if c.album_id!=None:
+                        if c.album_id.id==album_id:
+                            extract_creations_fixed.append(c)
+                extract_creations=extract_creations_fixed            
             list_of_creations = sorted(
                 extract_creations, key=lambda c: c.completion_percent(), reverse=True)
             # sort creations
@@ -135,9 +147,24 @@ class creationsView(View):
 
 class albumsView(View):
     def get(self,request):
-        pass
-    def get(self,request):
-        pass
+        if request.session["user_type"] != "guest":
+            # get creations based on which user is logged in
+            user_ob = User.objects.filter(
+                id=request.session["user_logged_in_id"])[0]
+            if request.session["user_type"] == 'customer':
+                extract_creations = user_ob.creations.all()
+            else:
+                extract_creations = Employee.objects.filter(u_id=user_ob)[
+                    0].creations.all()
+            #extract albums
+            albums={0:"כל היצירות"}
+            albums.update({str(-1):"יצירות ללא אלבום"})
+            albums.update({str(-2):"יצירות עם אלבום"})
+            albums.update({str(c.album_id.id):c.album_id.name for c in extract_creations if c.album_id!=None })
+            print(albums)
+        return render(request, "studio/pages/albums_page/albums_main.html",{"albums":albums})
+    def post(self,request):
+        return render(request, "studio/pages/albums_page/albums_main.html")
 
 
 class CreateFileView(View):
