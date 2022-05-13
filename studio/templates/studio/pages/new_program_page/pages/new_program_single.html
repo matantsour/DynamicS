@@ -143,6 +143,8 @@ New Creation
 <form name ="form" autocomplete="off" action="{% url 'newProgramSingle' %}" method="POST" onsubmit="return checkForm({{dict_of_lenghts.song}});">   
   {% csrf_token %}  
   <table id="labels"> 
+
+    
   <!-- important form fields-->
     <tr>
       <td colspan='3'>

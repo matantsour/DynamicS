@@ -12,6 +12,11 @@ class newProgramSingleForm(forms.Form):
     start_time=forms.TimeField(required=True,widget=TimePickerInput)
 #widget=forms.HiddenInput()
 
+class CreateMeetingForm(forms.Form):
+    start_time=forms.TimeField(required=True,widget=TimePickerInput)
+    start_date = forms.DateField(required=True,initial=datetime.date.today,widget=DatePickerInput)  
+    creator_creation_phase=forms.CharField(max_length=300, required=True,widget=forms.HiddenInput())
+    #widget=forms.DateInput(format='%d-%m-%Y')
 
 class CreationFileForm(forms.ModelForm):
     class Meta:
@@ -68,3 +73,6 @@ class ReportHoursForm(forms.Form):
     starting_time=forms.TimeField(required=True,widget=TimePickerInput)
     ending_time = forms.TimeField(required=True,widget=TimePickerInput)
 #widget=forms.HiddenInput()
+
+
+            

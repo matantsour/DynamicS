@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+New Meeting Output
+{% endblock title %}
+
+{% block css_files %}
+
+{% endblock css_files %} 
+
+{% block js_files %}
+
+{% endblock js_files %} 
+
+{% block content%}
+{%if success%}
+Created Successfuly
+
+{% else %}
+Something Went Wrong,try again
+{% endif %}
+
+{%endblock%}

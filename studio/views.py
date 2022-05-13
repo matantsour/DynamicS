@@ -20,27 +20,29 @@ import datetime
 
 ##
 # Create your util functions here, then move them to utils.
-def createMeeting(request):  # details="2022-05-20-20-00-topic-users"
-    startDateTime = datetime.datetime( year = 2022, 
-                            month = 5,
-                            day = 10,
-                            hour = 16,
-                            minute = 30,
-                            second = 0,
-                            microsecond = 0 ).isoformat()
 
-    endDateTime = datetime.datetime( year = 2022, 
-                            month = 5,
-                            day = 10,
-                            hour = 18,
-                            minute = 00,
-                            second = 0,
-                            microsecond = 0 ).isoformat()
-    
+
+def createMeetinginProgram(meeting):  # details="2022-05-20-20-00-topic-users"
+    startDateTime = datetime.datetime(year=meeting.start_date.year,
+                                      month=meeting.start_date.month,
+                                      day=meeting.start_date.day,
+                                      hour=meeting.start_time.hour,
+                                      minute=meeting.start_time.minute,
+                                      second=0,
+                                      microsecond=0).isoformat()
+
+    endDateTime = datetime.datetime(year=meeting.end_date.year,
+                                    month=meeting.end_date.month,
+                                    day=meeting.end_date.day,
+                                    hour=meeting.end_time.hour,
+                                    minute=meeting.end_time.minute,
+                                    second=0,
+                                    microsecond=0).isoformat()
+
     service = get_calendar_service()
     event = {
-        'summary': 'Test2',
-        'location': 'Dynamic Studio,Kfar Saba',
+        'summary': meeting.phase_id.creation_id.name + ": " + meeting.topic,
+        'location': meeting.location,
         'description': 'Meeting about the client songs',
         'start': {
             'dateTime': startDateTime,
@@ -53,7 +55,7 @@ def createMeeting(request):  # details="2022-05-20-20-00-topic-users"
         'attendees': [
             #{'email': 'vlad.census@gmail.com'},
         ]
-            }
+    }
     event = service.events().insert(calendarId='primary', body=event).execute()
     return HttpResponseRedirect(reverse("index-page"))
 
@@ -83,10 +85,6 @@ class indexView(View):
             else:
                 request.session["is_logged_in"] = False
             return render(request, "studio/index.html", {"login_form": login_form})
-
-        
-    
-        
 
 
 class creationsView(View):
@@ -325,39 +323,90 @@ class newProgramSingle(View):
                     status=Status.objects.filter(desc="not_done")[0],
                     name=phase
                 )
-                if phase=='פגישה ראשונה':
-                    first_phase_object=new_phase_ob
-            #create meeting:
-            m_phase=first_phase_object
-            m_start_date =form.cleaned_data["start_date"]
+                if phase == 'פגישה ראשונה':
+                    first_phase_object = new_phase_ob
+            # create meeting:
+            m_phase = first_phase_object
+            m_start_date = form.cleaned_data["start_date"]
             m_end_date = form.cleaned_data["start_date"]
             m_start_time = form.cleaned_data["start_time"]
-            m_end_time =datetime.datetime( year = m_start_date.year, 
-                            month = m_start_date.month,
-                            day = m_start_date.day,
-                            hour = m_start_time.hour+1,
-                            minute = m_start_time.minute,
-                            second = 0,
-                            microsecond = 0 )
+            m_end_time = datetime.datetime(year=m_start_date.year,
+                                           month=m_start_date.month,
+                                           day=m_start_date.day,
+                                           hour=m_start_time.hour+1,
+                                           minute=m_start_time.minute,
+                                           second=0,
+                                           microsecond=0)
             m_topic = first_phase_object.name
-            m_location ='Dynamic Studio Kfar Saba' 
-            meeting_ob=Meeting(phase_id=m_phase,
-                               start_date=m_start_date,
-                               end_date=m_end_date,
-                               start_time=m_start_time,
-                               end_time=m_end_time,
-                               topic=m_topic,
-                               location=m_location)
+            m_location = 'Dynamic Studio Kfar Saba'
+            meeting_ob = Meeting(phase_id=m_phase,
+                                 start_date=m_start_date,
+                                 end_date=m_end_date,
+                                 start_time=m_start_time,
+                                 end_time=m_end_time,
+                                 topic=m_topic,
+                                 location=m_location)
             meeting_ob.save()
-            meeting_ob.attendees.add(user_ob,creator)
-            schedule_event(meeting_ob)
-            #set success as True
+            meeting_ob.attendees.add(user_ob, creator)
+            createMeetinginProgram(meeting_ob)
+            # set success as True
             success = True
         return render(request, "studio/pages/new_program_page/pages/new_program_created.html",
                       {"success": success,
                        })
 
 
+class createMeeting(View):
+    def get(self,request):
+        
+        form = CreateMeetingForm()
+       
+        list_of_options = []
+        for u in User.objects.all():
+            for c in u.creations.all():
+                for p in c.phases.all():
+                    list_of_options.append("|".join([c.name, p.name,u.fname+" "+u.lname,str(u.id),p.phase_id]))
+        return render(request, "studio/pages/new_meeting_page/pages/new_meeting_main.html",
+                      {"form":form,
+                      "list_of_options": list_of_options
+                       })
+    def post(self,request):
+        success = False
+        user_ob = User.objects.filter(
+            id=request.session["user_logged_in_id"])[0]
+        form = CreateMeetingForm(request.POST)
+        if form.is_valid():
+            p_id=form.cleaned_data['creator_creation_phase'].split("|")[-1]
+            u_id=form.cleaned_data['creator_creation_phase'].split("|")[-2]
+            phase=Phase.objects.get(phase_id=p_id)
+            creator=User.objects.get(id=u_id)
+            m_start_date = form.cleaned_data["start_date"]
+            m_end_date = form.cleaned_data["start_date"]
+            m_start_time = form.cleaned_data["start_time"]
+            m_end_time = datetime.datetime(year=m_start_date.year,
+                                           month=m_start_date.month,
+                                           day=m_start_date.day,
+                                           hour=m_start_time.hour+1,
+                                           minute=m_start_time.minute,
+                                           second=0,
+                                           microsecond=0)
+            m_topic = phase.name
+            m_location = 'Dynamic Studio Kfar Saba'
+            meeting_ob = Meeting(phase_id=phase,
+                                 start_date=m_start_date,
+                                 end_date=m_end_date,
+                                 start_time=m_start_time,
+                                 end_time=m_end_time,
+                                 topic=m_topic,
+                                 location=m_location)
+            meeting_ob.save()
+            meeting_ob.attendees.add(user_ob, creator)
+            createMeetinginProgram(meeting_ob)
+            success = True
+        return render(request, "studio/pages/new_meeting_page/pages/new_meeting_created.html",
+                      {"success": success,
+                       })
+        return HttpResponseRedirect(reverse("index-page"))
 class newProgramMultiple(View):
     def get(self, request):
         user_ob = User.objects.filter(

@@ -19,7 +19,7 @@ urlpatterns = [
 
     #Meetings
     path("meetings/",views.userMeetingView.as_view(),name="meetings"),
-    path("new_meeting/",views.createMeeting,name="new_meeting"),
+    path("new_meeting/",views.createMeeting.as_view(),name="new_meeting"),
     
     #new program
     path("newProgram/",views.newProgram.as_view(),name="newProgram"),
