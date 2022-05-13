@@ -5,6 +5,16 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
+#installs and requirements
+# pip install google
+# # pip3 install google-api-python-client
+# #pip install google-auth-oauthlib
+# #credentials for google account
+# מייל: studiodymanic@gmail.com
+# סיסמא: DymanicStudio216
+# #
+
+
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 

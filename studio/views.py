@@ -87,8 +87,9 @@ class indexView(View):
             return render(request, "studio/index.html", {"login_form": login_form})
 
 
+
 class creationsView(View):
-    def get(self, request):
+    def get(self, request,album_id):
         if request.session["user_type"] != "guest":
             # get creations based on which user is logged in
             user_ob = User.objects.filter(
@@ -98,6 +99,9 @@ class creationsView(View):
             else:
                 extract_creations = Employee.objects.filter(u_id=user_ob)[
                     0].creations.all()
+            #filter creations based on album
+            if album_id!=0:
+                extract_creations=[c for c in extract_creations if c.album_id.id==album_id]
             list_of_creations = sorted(
                 extract_creations, key=lambda c: c.completion_percent(), reverse=True)
             # sort creations
@@ -118,7 +122,7 @@ class creationsView(View):
         else:
             return HttpResponseRedirect(reverse("index-page"))
 
-    def post(self, request):
+    def post(self, request,album_id):
         form = phaseStatusForm(request.POST)
         if form.is_valid():
             # transform changes to dict {phase_id:new_status}
@@ -127,7 +131,13 @@ class creationsView(View):
             for p_id, new_status_desc in changes.items():
                 extract_phase = Phase.objects.filter(phase_id=p_id)[0]
                 extract_phase.update_phase_status(new_status_desc)
-        return HttpResponseRedirect(reverse("artwork"))
+        return HttpResponseRedirect(reverse(viewname="artwork",args=[album_id]))
+
+class albumsView(View):
+    def get(self,request):
+        pass
+    def get(self,request):
+        pass
 
 
 class CreateFileView(View):

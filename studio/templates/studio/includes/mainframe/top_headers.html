@@ -5,25 +5,27 @@
         <img src="{% static "studio/images/logo2.jpg" %}" />
         </td>
     <td class="headers" style="width: 10%">
-    האולפן
+        <a class="headers" href="https://dynamicstudio.co.il/">האולפן</a>
     </td>
     <td class="headers" style="width: 10%">
-    השירותים שלנו</td>
+    <a class="headers" href="https://dynamicstudio.co.il/music-prod/">השירותים שלנו</a></td>
     <td class="headers" style="width: 10%">
-    השכרת אולפן
+        <a class="headers" href="https://dynamicstudio.co.il/rent/">השכרת אולפן</a>
     </td>
     <td class="headers" style="width: 10%">
-    על הצוות
+        <a class="headers" href="https://dynamicstudio.co.il/team/">על הצוות</a>
     </td>
     <td class="headers" style="width: 12%">
     &nbsp;</td>
     <td class="headers" style="width: 12%">
     &nbsp;</td>
     <td class="headers" style="width: 15%">
-    אזור אישי
+    
     {% if request.session.is_logged_in%}
     <br>
-    <a href="{% url "logout_link"  %}">התנתק</a>
+    <a class="headers" href="{% url "logout_link"  %}">התנתק</a>
+    {%else %}
+    <a class="headers" href="{% url "index-page"  %}">אזור אישי</a>
     {%endif%}
 </td>
 

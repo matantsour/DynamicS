@@ -57,6 +57,15 @@ table.headers {
     border-spacing: 0;
 }
 
+a.headers {
+    font-family: Assistant;
+    text-align: center;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 900;
+    color: white;
+}
+
 td.headers {
     border: solid 1px #CE233C;
     background-color: #CE233C;
