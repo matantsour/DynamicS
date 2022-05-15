@@ -354,14 +354,18 @@ class newProgramSingle(View):
             )
             newcreation.supervisors.add(supervisor)
             print(phases_list)
-            for phase in phases_list:
+            #create first phase
+            first_phase_object= Phase.objects.create(
+                    creation_id=newcreation,
+                    status=Status.objects.filter(desc="not_done")[0],
+                    name=phases_list[0]
+                )
+            for phase in phases_list[1:]:
                 new_phase_ob = Phase.objects.create(
                     creation_id=newcreation,
                     status=Status.objects.filter(desc="not_done")[0],
                     name=phase
                 )
-                if phase == 'פגישה ראשונה':
-                    first_phase_object = new_phase_ob
             # create meeting:
             m_phase = first_phase_object
             m_start_date = form.cleaned_data["start_date"]
@@ -499,14 +503,18 @@ class newProgramMultiple(View):
             )
             newcreation.supervisors.add(supervisor)
             print(phases_list)
-            for phase in phases_list:
+                        #create first phase
+            first_phase_object= Phase.objects.create(
+                    creation_id=newcreation,
+                    status=Status.objects.filter(desc="not_done")[0],
+                    name=phases_list[0]
+                )
+            for phase in phases_list[1:]:
                 new_phase_ob = Phase.objects.create(
                     creation_id=newcreation,
                     status=Status.objects.filter(desc="not_done")[0],
                     name=phase
                 )
-                if phase == 'פגישה ראשונה':
-                    first_phase_object = new_phase_ob
             # create meeting:
             m_phase = first_phase_object
             m_start_date = form.cleaned_data["start_date"]
