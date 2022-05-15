@@ -36,6 +36,16 @@
 
 {% block content%}
 
+<br>
+
+<!-- documenting_changes_to_phases -->
+<form action="" method="post">
+    {% csrf_token %}
+    <table>
+    <div id="changes_regis" style="display: none;"> {{ update_phases_form.changes }} </div>
+    </table>
+    <input id='approve_changes_button' name="submit" type="submit" style="display: none;" value="שמור שינויים" />
+  </form>
 
 
 <br>
@@ -95,15 +105,6 @@
 
 {%endfor%}
 </div>
-
-<!-- documenting_changes_to_phases -->
-<form action="" method="post">
-    {% csrf_token %}
-    <table>
-    <div id="changes_regis" style="display: none;"> {{ update_phases_form.changes }} </div>
-    </table>
-    <input id='approve_changes_button' name="submit" type="submit" style="display: none;" value="שמור שינויים" />
-  </form>
 
 
 <!-- CREATIONS <> DONE-->

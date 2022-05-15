@@ -12,7 +12,8 @@ urlpatterns = [
     path("albums/",views.albumsView.as_view(),name='albums'),
 
     #managing creations
-    path("creations/clients",views.albumsView.as_view(),name='creations_per_client'),
+    path("creations/clients",views.creations_by_creator.as_view(),name='creations_by_creator'),
+    path("creations/supervisors",views.creations_by_supervisor.as_view(),name='creations_by_supervisor'),
     #creations
     path("creations/<int:client_id>/<album_id>",views.creationsView.as_view(),name="artwork"),
     path("creations/deleteCreation/<int:creation_id>",views.deleteCreation,name="delete_creation"),

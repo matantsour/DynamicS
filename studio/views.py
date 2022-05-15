@@ -22,10 +22,10 @@ import datetime
 # Create your util functions here, then move them to utils.
 
 
-def deleteCreation(request,creation_id):
-    creation=Creation.objects.get(id=creation_id)
+def deleteCreation(request, creation_id):
+    creation = Creation.objects.get(id=creation_id)
     creation.delete()
-    return HttpResponseRedirect(reverse(viewname="artwork",args=[request.session["client_overview_id"],request.session["album_id"]]))
+    return HttpResponseRedirect(reverse(viewname="artwork", args=[request.session["client_overview_id"], request.session["album_id"]]))
 
 
 def createMeetinginProgram(meeting):  # details="2022-05-20-20-00-topic-users"
@@ -93,14 +93,14 @@ class indexView(View):
             return render(request, "studio/index.html", {"login_form": login_form})
 
 
-
 class creationsView(View):
-    def get(self, request,client_id=0,album_id=0):
-        album_id=int(album_id)
-        request.session["album_id"]=album_id
-        client_id=int(client_id)
-        request.session["client_overview_id"]=client_id
-        if client_id==0: # see creations the current user is working on (either client or worker).
+    def get(self, request, client_id=0, album_id=0):
+        album_id = int(album_id)
+        request.session["album_id"] = album_id
+        client_id = int(client_id)
+        request.session["client_overview_id"] = client_id
+        # see creations the current user is working on (either client or worker).
+        if client_id == 0:
             if request.session["user_type"] != "guest":
                 # get creations based on which user is logged in
                 user_ob = User.objects.filter(
@@ -110,20 +110,22 @@ class creationsView(View):
                 else:
                     extract_creations = Employee.objects.filter(u_id=user_ob)[
                         0].creations.all()
-                #filter creations based on album
-                if album_id==0:
-                    pass #do nothing, the user wants to see all the creations
-                elif album_id==-1:#creations with no album.
-                    extract_creations=[c for c in extract_creations if c.album_id==None]
-                elif album_id==-2:#creations with any album.
-                    extract_creations=[c for c in extract_creations if c.album_id!=None]
-                else: #specific album
-                    extract_creations_fixed=[]
+                # filter creations based on album
+                if album_id == 0:
+                    pass  # do nothing, the user wants to see all the creations
+                elif album_id == -1:  # creations with no album.
+                    extract_creations = [
+                        c for c in extract_creations if c.album_id == None]
+                elif album_id == -2:  # creations with any album.
+                    extract_creations = [
+                        c for c in extract_creations if c.album_id != None]
+                else:  # specific album
+                    extract_creations_fixed = []
                     for c in extract_creations:
-                        if c.album_id!=None:
-                            if c.album_id.id==album_id:
+                        if c.album_id != None:
+                            if c.album_id.id == album_id:
                                 extract_creations_fixed.append(c)
-                    extract_creations=extract_creations_fixed            
+                    extract_creations = extract_creations_fixed
                 list_of_creations = sorted(
                     extract_creations, key=lambda c: c.completion_percent(), reverse=True)
                 # sort creations
@@ -135,38 +137,37 @@ class creationsView(View):
                 # creation_phases_update_form
                 update_phases_form = phaseStatusForm()
                 return render(request, "studio/pages/creations_page/creations_main.html",
-                            {"user_name": user_ob.lname,
-                            "list_of_creations": list_of_creations,
-                            "creations_phases_not_done": creations_phases_not_done,
-                            "creations_phases_done": creations_phases_done,
-                            "exists_completed_creations": exists_completed_creations,
-                            "update_phases_form": update_phases_form})
+                              {"user_name": user_ob.lname,
+                               "list_of_creations": list_of_creations,
+                               "creations_phases_not_done": creations_phases_not_done,
+                               "creations_phases_done": creations_phases_done,
+                               "exists_completed_creations": exists_completed_creations,
+                               "update_phases_form": update_phases_form})
             else:
                 return HttpResponseRedirect(reverse("index-page"))
-        elif client_id!=0: # see creations of a specific client as a manger view
+        elif client_id != 0:  # see creations of a specific client as a manger view
             user_ob = User.objects.filter(
-                    id=client_id)[0]
+                id=client_id)[0]
             extract_creations = user_ob.creations.all()
             list_of_creations = sorted(
-                    extract_creations, key=lambda c: c.completion_percent(), reverse=True)
+                extract_creations, key=lambda c: c.completion_percent(), reverse=True)
             # sort creations
             creations_phases_not_done = {
-                    c: c.phases.all() for c in list_of_creations if c.completion_percent() != 1}
+                c: c.phases.all() for c in list_of_creations if c.completion_percent() != 1}
             creations_phases_done = {
-                    c: c.phases.all() for c in list_of_creations if c.completion_percent() == 1}
+                c: c.phases.all() for c in list_of_creations if c.completion_percent() == 1}
             exists_completed_creations = True if creations_phases_done else False
             # creation_phases_update_form
             update_phases_form = phaseStatusForm()
             return render(request, "studio/pages/creations_page/creations_main.html",
-                            {"user_name": user_ob.lname,
-                            "list_of_creations": list_of_creations,
-                            "creations_phases_not_done": creations_phases_not_done,
-                            "creations_phases_done": creations_phases_done,
-                            "exists_completed_creations": exists_completed_creations,
-                            "update_phases_form": update_phases_form})
+                          {"user_name": user_ob.lname,
+                           "list_of_creations": list_of_creations,
+                           "creations_phases_not_done": creations_phases_not_done,
+                           "creations_phases_done": creations_phases_done,
+                           "exists_completed_creations": exists_completed_creations,
+                           "update_phases_form": update_phases_form})
 
-
-    def post(self, request,client_id=0,album_id=0):
+    def post(self, request, client_id=0, album_id=0):
         form = phaseStatusForm(request.POST)
         if form.is_valid():
             # transform changes to dict {phase_id:new_status}
@@ -175,10 +176,11 @@ class creationsView(View):
             for p_id, new_status_desc in changes.items():
                 extract_phase = Phase.objects.filter(phase_id=p_id)[0]
                 extract_phase.update_phase_status(new_status_desc)
-        return HttpResponseRedirect(reverse(viewname="artwork",args=[request.session["client_overview_id"],request.session["album_id"]]))
+        return HttpResponseRedirect(reverse(viewname="artwork", args=[request.session["client_overview_id"], request.session["album_id"]]))
+
 
 class albumsView(View):
-    def get(self,request):
+    def get(self, request):
         if request.session["user_type"] != "guest":
             # get creations based on which user is logged in
             user_ob = User.objects.filter(
@@ -188,15 +190,42 @@ class albumsView(View):
             else:
                 extract_creations = Employee.objects.filter(u_id=user_ob)[
                     0].creations.all()
-            #extract albums
-            albums={0:"כל היצירות"}
-            albums.update({str(-1):"יצירות ללא אלבום"})
-            albums.update({str(-2):"יצירות עם אלבום"})
-            albums.update({str(c.album_id.id):c.album_id.name for c in extract_creations if c.album_id!=None })
+            # extract albums
+            albums = {0: "כל היצירות"}
+            albums.update({str(-1): "יצירות ללא אלבום"})
+            albums.update({str(-2): "יצירות עם אלבום"})
+            albums.update(
+                {str(c.album_id.id): c.album_id.name for c in extract_creations if c.album_id != None})
             print(albums)
-        return render(request, "studio/pages/albums_page/albums_main.html",{"albums":albums})
-    def post(self,request):
-        return render(request, "studio/pages/albums_page/albums_main.html")
+        return render(request, "studio/pages/albums_page/albums_main.html", {"albums": albums})
+
+    def post(self, request):
+        return HttpResponseRedirect(reverse(viewname="index-page"))
+
+class creations_by_creator(View):
+    def get(self, request):
+        if request.session["user_type"] == "manager":
+            creators_data = { creation.creator.id : creation.creator.fname+" "+ creation.creator.lname for creation in Creation.objects.all()}
+            return render(request, "studio/pages/creations_page/mods/creations_by_creator.html", {"creators_data": creators_data})
+        else:
+            return HttpResponseRedirect(reverse(viewname="index-page"))
+
+    def post(self, request):
+        return HttpResponseRedirect(reverse(viewname="creations_per_client"))
+
+
+class creations_by_supervisor(View):
+    def get(self, request):
+        if request.session["user_type"] == "manager":
+            supervisors_data={creations_supers_ob.supervisor.u_id.id:creations_supers_ob.supervisor.u_id.fname+" "+creations_supers_ob.supervisor.u_id.lname for creations_supers_ob  in Creations_Supervisors.objects.all()}
+            return render(request, "studio/pages/creations_page/mods/creations_by_supervisor.html", {"supervisors_data": supervisors_data})
+        else:
+            return HttpResponseRedirect(reverse(viewname="index-page"))
+
+    def post(self, request):
+        return HttpResponseRedirect(reverse(viewname="creations_per_client"))
+
+
 
 
 class CreateFileView(View):
@@ -252,7 +281,8 @@ class notesView(View):
     def get(self, request, creation_id):
         u_id = request.session["user_logged_in_id"]
         ok_list = permitted_creations_list(u_id)
-        if creation_id not in ok_list and request.session["user_type"]!='manager': #managers can look + add any notes anywhere
+        # managers can look + add any notes anywhere
+        if creation_id not in ok_list and request.session["user_type"] != 'manager':
             return HttpResponseRedirect(reverse("index-page"))
         find_creation = Creation.objects.filter(id=creation_id)
         if find_creation:
@@ -386,12 +416,12 @@ class newProgramSingle(View):
             )
             newcreation.supervisors.add(supervisor)
             print(phases_list)
-            #create first phase
-            first_phase_object= Phase.objects.create(
-                    creation_id=newcreation,
-                    status=Status.objects.filter(desc="not_done")[0],
-                    name=phases_list[0]
-                )
+            # create first phase
+            first_phase_object = Phase.objects.create(
+                creation_id=newcreation,
+                status=Status.objects.filter(desc="not_done")[0],
+                name=phases_list[0]
+            )
             for phase in phases_list[1:]:
                 new_phase_ob = Phase.objects.create(
                     creation_id=newcreation,
@@ -430,29 +460,31 @@ class newProgramSingle(View):
 
 
 class createMeeting(View):
-    def get(self,request):
-        
+    def get(self, request):
+
         form = CreateMeetingForm()
-       
+
         list_of_options = []
         for u in User.objects.all():
             for c in u.creations.all():
                 for p in c.phases.all():
-                    list_of_options.append("|".join([c.name, p.name,u.fname+" "+u.lname,str(u.id),p.phase_id]))
+                    list_of_options.append(
+                        "|".join([c.name, p.name, u.fname+" "+u.lname, str(u.id), p.phase_id]))
         return render(request, "studio/pages/new_meeting_page/pages/new_meeting_main.html",
-                      {"form":form,
-                      "list_of_options": list_of_options
+                      {"form": form,
+                       "list_of_options": list_of_options
                        })
-    def post(self,request):
+
+    def post(self, request):
         success = False
         user_ob = User.objects.filter(
             id=request.session["user_logged_in_id"])[0]
         form = CreateMeetingForm(request.POST)
         if form.is_valid():
-            p_id=form.cleaned_data['creator_creation_phase'].split("|")[-1]
-            u_id=form.cleaned_data['creator_creation_phase'].split("|")[-2]
-            phase=Phase.objects.get(phase_id=p_id)
-            creator=User.objects.get(id=u_id)
+            p_id = form.cleaned_data['creator_creation_phase'].split("|")[-1]
+            u_id = form.cleaned_data['creator_creation_phase'].split("|")[-2]
+            phase = Phase.objects.get(phase_id=p_id)
+            creator = User.objects.get(id=u_id)
             m_start_date = form.cleaned_data["start_date"]
             m_end_date = form.cleaned_data["start_date"]
             m_start_time = form.cleaned_data["start_time"]
@@ -480,6 +512,8 @@ class createMeeting(View):
                       {"success": success,
                        })
         return HttpResponseRedirect(reverse("index-page"))
+
+
 class newProgramMultiple(View):
 
     def get(self, request):
@@ -509,12 +543,13 @@ class newProgramMultiple(View):
             id=request.session["user_logged_in_id"])[0]
         form = newProgramMultipleForm(request.POST)
         success = False
-        
+
         if form.is_valid():
-            ALBUM_DONE=form.cleaned_data["albumDone"]
-            #create album if not exist
-            newAlbumOb, created= Album.objects.get_or_create(name=form.cleaned_data["albumName"])
-            #create the creation, its phases and connect to album
+            ALBUM_DONE = form.cleaned_data["albumDone"]
+            # create album if not exist
+            newAlbumOb, created = Album.objects.get_or_create(
+                name=form.cleaned_data["albumName"])
+            # create the creation, its phases and connect to album
             creator_id = int(form.cleaned_data["creator_choice"].split('|')[1])
             creation_name = form.cleaned_data["creation_name"]
             phases_list = form.cleaned_data["phases_names"]
@@ -535,12 +570,12 @@ class newProgramMultiple(View):
             )
             newcreation.supervisors.add(supervisor)
             print(phases_list)
-                        #create first phase
-            first_phase_object= Phase.objects.create(
-                    creation_id=newcreation,
-                    status=Status.objects.filter(desc="not_done")[0],
-                    name=phases_list[0]
-                )
+            # create first phase
+            first_phase_object = Phase.objects.create(
+                creation_id=newcreation,
+                status=Status.objects.filter(desc="not_done")[0],
+                name=phases_list[0]
+            )
             for phase in phases_list[1:]:
                 new_phase_ob = Phase.objects.create(
                     creation_id=newcreation,
@@ -574,30 +609,31 @@ class newProgramMultiple(View):
             # set success as True
             success = True
 
-        ##REDIRECTION BASED ON SITUATION: "ALBUM_DONE==TRUE"
-        if ALBUM_DONE!="1":
-            #loading neccecery data
+        # REDIRECTION BASED ON SITUATION: "ALBUM_DONE==TRUE"
+        if ALBUM_DONE != "1":
+            # loading neccecery data
             customer_user_type = User_Type.objects.filter(
                 type="customer")  # need to grab all customers
-            all_customers = User.objects.filter(user_type__in=customer_user_type)
+            all_customers = User.objects.filter(
+                user_type__in=customer_user_type)
             all_customers_names = [cus.fname+" "+cus.lname +
-                                "|"+str(cus.id) for cus in all_customers]
+                                   "|"+str(cus.id) for cus in all_customers]
             dict_of_defaults = {"song": ["פגישה ראשונה", "קביעת מילים ולחן", "סקיצה ראשונה", "עריכה מוזיקלית", "עריכה סופית", "אישור לקוח"],
                                 "podcast": ["פגישה ראשונה", "הקלטה", "עריכה", "אישור לקוח"]}
             dict_of_lenghts = {"song": len(dict_of_defaults["song"]),
-                            "podcast": len(dict_of_defaults["podcast"])}
+                               "podcast": len(dict_of_defaults["podcast"])}
             return render(request, "studio/pages/new_program_page/pages/new_program_multiple.html",
-                      {'all_customers': all_customers,
-                       "all_customers_names": all_customers_names,
-                       "form": form,
-                       "dict_of_defaults": dict_of_defaults,
-                       "dict_of_lenghts": dict_of_lenghts,
-                        "existing_creator":form.cleaned_data["creator_choice"]
-                       })
+                          {'all_customers': all_customers,
+                           "all_customers_names": all_customers_names,
+                           "form": form,
+                           "dict_of_defaults": dict_of_defaults,
+                           "dict_of_lenghts": dict_of_lenghts,
+                           "existing_creator": form.cleaned_data["creator_choice"]
+                           })
         else:
             return render(request, "studio/pages/new_program_page/pages/new_album_created.html",
-                      {"success": success,
-                       })
+                          {"success": success,
+                           })
 
 
 class Update_user_details(View):
@@ -669,8 +705,6 @@ class delete_user(View):
     def post(self, request, user_id):
         pass
 
-# functional views
-
 
 class ReportHours(View):
     def get(self, request):
@@ -679,8 +713,6 @@ class ReportHours(View):
 
     def post(self, request, user_id):
         pass
-
-# functional views
 
 
 def delete_user(request, user_id):

@@ -8,14 +8,21 @@
    <tr class="side_menu">
       <td class="side_menu">
           <a class="side_menu_link" href="{% url "albums" %}">
-             ליווי יצירות
+             יצירות שאני מלווה
           </a>
          </td>
    </tr>
    <tr class="side_menu">
       <td class="side_menu">
-          <a class="side_menu_link" href="{% url "albums" %}">
-             ניהול יצירות
+          <a class="side_menu_link" href="{% url "creations_by_creator" %}">
+             ניהול יצירות לפי לקוח
+          </a>
+         </td>
+   </tr>
+   <tr class="side_menu">
+      <td class="side_menu">
+          <a class="side_menu_link" href="{% url "creations_by_supervisor" %}">
+             ניהול יצירות לפי עובד
           </a>
          </td>
    </tr>
@@ -24,9 +31,6 @@
    </tr>
    <tr class="side_menu">
       <td class="side_menu">  <a class="side_menu_link" href="{% url "new_meeting" %}"> קבע פגישה</td>
-   </tr>
-   <tr class="side_menu">
-      <td class="side_menu">לקוחות</td>
    </tr>
    <tr class="side_menu" >
       <td class="side_menu">יומן הסטודיו</td>

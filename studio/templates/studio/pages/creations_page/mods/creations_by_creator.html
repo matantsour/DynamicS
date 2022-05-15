@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css_files %}
+<link rel="stylesheet" href="{% static "albums_css.css" %}">
+{% endblock css_files %} 
+{% block title %}
+Albums
+{% endblock title %}
+
+{% block content%}
+<p>&nbsp;</p>
+
+
+<table class='albumsTable'>
+{%for creator_id, creator_name in creators_data.items %}
+<tr>
+    <td class='albumstabletd'>
+
+        <a class="boldLabel" href="{% url "artwork" client_id=creator_id album_id=0 %}">*{{creator_name}}*</a>
+    </td>
+</tr>
+{%endfor%}
+</table>
+
+{%endblock%}
