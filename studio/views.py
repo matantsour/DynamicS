@@ -22,6 +22,12 @@ import datetime
 # Create your util functions here, then move them to utils.
 
 
+def deleteCreation(request,creation_id):
+    creation=Creation.objects.get(id=creation_id)
+    creation.delete()
+    return HttpResponseRedirect(reverse(viewname="artwork",args=[request.session["client_overview_id"],request.session["album_id"]]))
+
+
 def createMeetinginProgram(meeting):  # details="2022-05-20-20-00-topic-users"
     startDateTime = datetime.datetime(year=meeting.start_date.year,
                                       month=meeting.start_date.month,
@@ -89,52 +95,78 @@ class indexView(View):
 
 
 class creationsView(View):
-    def get(self, request,album_id):
+    def get(self, request,client_id=0,album_id=0):
         album_id=int(album_id)
-        if request.session["user_type"] != "guest":
-            # get creations based on which user is logged in
-            user_ob = User.objects.filter(
-                id=request.session["user_logged_in_id"])[0]
-            if request.session["user_type"] == 'customer':
-                extract_creations = user_ob.creations.all()
+        request.session["album_id"]=album_id
+        client_id=int(client_id)
+        request.session["client_overview_id"]=client_id
+        if client_id==0: # see creations the current user is working on (either client or worker).
+            if request.session["user_type"] != "guest":
+                # get creations based on which user is logged in
+                user_ob = User.objects.filter(
+                    id=request.session["user_logged_in_id"])[0]
+                if request.session["user_type"] == 'customer':
+                    extract_creations = user_ob.creations.all()
+                else:
+                    extract_creations = Employee.objects.filter(u_id=user_ob)[
+                        0].creations.all()
+                #filter creations based on album
+                if album_id==0:
+                    pass #do nothing, the user wants to see all the creations
+                elif album_id==-1:#creations with no album.
+                    extract_creations=[c for c in extract_creations if c.album_id==None]
+                elif album_id==-2:#creations with any album.
+                    extract_creations=[c for c in extract_creations if c.album_id!=None]
+                else: #specific album
+                    extract_creations_fixed=[]
+                    for c in extract_creations:
+                        if c.album_id!=None:
+                            if c.album_id.id==album_id:
+                                extract_creations_fixed.append(c)
+                    extract_creations=extract_creations_fixed            
+                list_of_creations = sorted(
+                    extract_creations, key=lambda c: c.completion_percent(), reverse=True)
+                # sort creations
+                creations_phases_not_done = {
+                    c: c.phases.all() for c in list_of_creations if c.completion_percent() != 1}
+                creations_phases_done = {
+                    c: c.phases.all() for c in list_of_creations if c.completion_percent() == 1}
+                exists_completed_creations = True if creations_phases_done else False
+                # creation_phases_update_form
+                update_phases_form = phaseStatusForm()
+                return render(request, "studio/pages/creations_page/creations_main.html",
+                            {"user_name": user_ob.lname,
+                            "list_of_creations": list_of_creations,
+                            "creations_phases_not_done": creations_phases_not_done,
+                            "creations_phases_done": creations_phases_done,
+                            "exists_completed_creations": exists_completed_creations,
+                            "update_phases_form": update_phases_form})
             else:
-                extract_creations = Employee.objects.filter(u_id=user_ob)[
-                    0].creations.all()
-            #filter creations based on album
-            if album_id==0:
-                pass #do nothing, the user wants to see all the creations
-            elif album_id==-1:#creations with no album.
-                extract_creations=[c for c in extract_creations if c.album_id==None]
-            elif album_id==-2:#creations with any album.
-                extract_creations=[c for c in extract_creations if c.album_id!=None]
-            else: #specific album
-                extract_creations_fixed=[]
-                for c in extract_creations:
-                    if c.album_id!=None:
-                        if c.album_id.id==album_id:
-                            extract_creations_fixed.append(c)
-                extract_creations=extract_creations_fixed            
+                return HttpResponseRedirect(reverse("index-page"))
+        elif client_id!=0: # see creations of a specific client as a manger view
+            user_ob = User.objects.filter(
+                    id=client_id)[0]
+            extract_creations = user_ob.creations.all()
             list_of_creations = sorted(
-                extract_creations, key=lambda c: c.completion_percent(), reverse=True)
+                    extract_creations, key=lambda c: c.completion_percent(), reverse=True)
             # sort creations
             creations_phases_not_done = {
-                c: c.phases.all() for c in list_of_creations if c.completion_percent() != 1}
+                    c: c.phases.all() for c in list_of_creations if c.completion_percent() != 1}
             creations_phases_done = {
-                c: c.phases.all() for c in list_of_creations if c.completion_percent() == 1}
+                    c: c.phases.all() for c in list_of_creations if c.completion_percent() == 1}
             exists_completed_creations = True if creations_phases_done else False
             # creation_phases_update_form
             update_phases_form = phaseStatusForm()
             return render(request, "studio/pages/creations_page/creations_main.html",
-                          {"user_name": user_ob.lname,
-                           "list_of_creations": list_of_creations,
-                           "creations_phases_not_done": creations_phases_not_done,
-                           "creations_phases_done": creations_phases_done,
-                           "exists_completed_creations": exists_completed_creations,
-                           "update_phases_form": update_phases_form})
-        else:
-            return HttpResponseRedirect(reverse("index-page"))
+                            {"user_name": user_ob.lname,
+                            "list_of_creations": list_of_creations,
+                            "creations_phases_not_done": creations_phases_not_done,
+                            "creations_phases_done": creations_phases_done,
+                            "exists_completed_creations": exists_completed_creations,
+                            "update_phases_form": update_phases_form})
 
-    def post(self, request,album_id):
+
+    def post(self, request,client_id=0,album_id=0):
         form = phaseStatusForm(request.POST)
         if form.is_valid():
             # transform changes to dict {phase_id:new_status}
@@ -143,7 +175,7 @@ class creationsView(View):
             for p_id, new_status_desc in changes.items():
                 extract_phase = Phase.objects.filter(phase_id=p_id)[0]
                 extract_phase.update_phase_status(new_status_desc)
-        return HttpResponseRedirect(reverse(viewname="artwork",args=[album_id]))
+        return HttpResponseRedirect(reverse(viewname="artwork",args=[request.session["client_overview_id"],request.session["album_id"]]))
 
 class albumsView(View):
     def get(self,request):
@@ -220,7 +252,7 @@ class notesView(View):
     def get(self, request, creation_id):
         u_id = request.session["user_logged_in_id"]
         ok_list = permitted_creations_list(u_id)
-        if creation_id not in ok_list:
+        if creation_id not in ok_list and request.session["user_type"]!='manager': #managers can look + add any notes anywhere
             return HttpResponseRedirect(reverse("index-page"))
         find_creation = Creation.objects.filter(id=creation_id)
         if find_creation:

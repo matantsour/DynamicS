@@ -5,7 +5,9 @@ import datetime
 SESSIONS_DEFALUTS = {"is_logged_in":False,
                     "user_type":"guest",
                      "user_logged_in_fname":False,
-                     "user_logged_in_id":False
+                     "user_logged_in_id":False,
+                     "album_id":0,
+                     "client_overview_id":0
                      }
 
 #Views Utils

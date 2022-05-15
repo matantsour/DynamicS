@@ -11,8 +11,11 @@ urlpatterns = [
     #albums
     path("albums/",views.albumsView.as_view(),name='albums'),
 
+    #managing creations
+    path("creations/clients",views.albumsView.as_view(),name='creations_per_client'),
     #creations
-    path("creations/<album_id>",views.creationsView.as_view(),name="artwork"),
+    path("creations/<int:client_id>/<album_id>",views.creationsView.as_view(),name="artwork"),
+    path("creations/deleteCreation/<int:creation_id>",views.deleteCreation,name="delete_creation"),
     path("creations/client_approval/<int:creation_id>",views.client_approved_click,name="client_approved_click"),
     path("creations/last_version/<int:creation_id>",views.last_version.as_view(),name="last_version"),
     path("creations/notes/<int:creation_id>",views.notesView.as_view(),name="notes"),

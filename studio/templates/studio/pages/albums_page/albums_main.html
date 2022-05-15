@@ -17,14 +17,14 @@ Albums
     <td class='albumstabletd'>
 
         {%if   album_name == "כל היצירות"%}
-        <a class="allCreationsLabel" href="{% url "artwork" album_id %}">{{album_name}}</a>
+        <a class="allCreationsLabel" href="{% url "artwork" client_id=0 album_id=album_id %}">{{album_name}}</a>
 
         {%elif   album_name == "יצירות ללא אלבום"%}
-        <a class="boldLabel" href="{% url "artwork" album_id %}">*{{album_name}}*</a>
+        <a class="boldLabel" href="{% url "artwork" client_id=0 album_id=album_id %}">*{{album_name}}*</a>
         {%elif   album_name == "יצירות עם אלבום"%}
-        <a class="boldLabel" href="{% url "artwork" album_id %}">*{{album_name}}*</a>
+        <a class="boldLabel" href="{% url "artwork" client_id=0 album_id=album_id %}">*{{album_name}}*</a>
         {%else%}
-        <a class="label" href="{% url "artwork" album_id %}">{{album_name}}</a>
+        <a class="label" href="{% url "artwork" client_id=0 album_id=album_id %}">{{album_name}}</a>
         {%endif%}
 
     </td>
