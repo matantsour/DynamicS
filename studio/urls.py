@@ -15,7 +15,7 @@ urlpatterns = [
     path("creations/clients",views.creations_by_creator.as_view(),name='creations_by_creator'),
     path("creations/supervisors",views.creations_by_supervisor.as_view(),name='creations_by_supervisor'),
     #creations
-    path("creations/<int:client_id>/<album_id>",views.creationsView.as_view(),name="artwork"),
+    path("creations/<int:supervisor_id>/<int:client_id>/<album_id>",views.creationsView.as_view(),name="artwork"),
     path("creations/deleteCreation/<int:creation_id>",views.deleteCreation,name="delete_creation"),
     path("creations/client_approval/<int:creation_id>",views.client_approved_click,name="client_approved_click"),
     path("creations/last_version/<int:creation_id>",views.last_version.as_view(),name="last_version"),

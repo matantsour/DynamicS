@@ -25,7 +25,7 @@ import datetime
 def deleteCreation(request, creation_id):
     creation = Creation.objects.get(id=creation_id)
     creation.delete()
-    return HttpResponseRedirect(reverse(viewname="artwork", args=[request.session["client_overview_id"], request.session["album_id"]]))
+    return HttpResponseRedirect(reverse(viewname="artwork", args=[request.session["supervisor_id"],request.session["client_overview_id"], request.session["album_id"]]))
 
 
 def createMeetinginProgram(meeting):  # details="2022-05-20-20-00-topic-users"
@@ -94,13 +94,15 @@ class indexView(View):
 
 
 class creationsView(View):
-    def get(self, request, client_id=0, album_id=0):
+    def get(self, request, supervisor_id=0,client_id=0, album_id=0):
         album_id = int(album_id)
         request.session["album_id"] = album_id
         client_id = int(client_id)
         request.session["client_overview_id"] = client_id
+        supervisor_id = int(supervisor_id)
+        request.session["supervisor_id"] = supervisor_id
         # see creations the current user is working on (either client or worker).
-        if client_id == 0:
+        if client_id == 0 and supervisor_id==0:
             if request.session["user_type"] != "guest":
                 # get creations based on which user is logged in
                 user_ob = User.objects.filter(
@@ -145,7 +147,7 @@ class creationsView(View):
                                "update_phases_form": update_phases_form})
             else:
                 return HttpResponseRedirect(reverse("index-page"))
-        elif client_id != 0:  # see creations of a specific client as a manger view
+        elif client_id != 0 and supervisor_id==0:  # see creations of a specific client as a manger view
             user_ob = User.objects.filter(
                 id=client_id)[0]
             extract_creations = user_ob.creations.all()
@@ -166,8 +168,29 @@ class creationsView(View):
                            "creations_phases_done": creations_phases_done,
                            "exists_completed_creations": exists_completed_creations,
                            "update_phases_form": update_phases_form})
-
-    def post(self, request, client_id=0, album_id=0):
+        elif supervisor_id!=0 and client_id == 0:  # see creations of a specific worker as a manger view
+            user_ob = User.objects.filter(
+                id=supervisor_id)[0]
+            employee_ob=Employee.objects.get(u_id=user_ob)
+            extract_creations = employee_ob.creations.all()
+            list_of_creations = sorted(
+                extract_creations, key=lambda c: c.completion_percent(), reverse=True)
+            # sort creations
+            creations_phases_not_done = {
+                c: c.phases.all() for c in list_of_creations if c.completion_percent() != 1}
+            creations_phases_done = {
+                c: c.phases.all() for c in list_of_creations if c.completion_percent() == 1}
+            exists_completed_creations = True if creations_phases_done else False
+            # creation_phases_update_form
+            update_phases_form = phaseStatusForm()
+            return render(request, "studio/pages/creations_page/creations_main.html",
+                          {"user_name": user_ob.lname,
+                           "list_of_creations": list_of_creations,
+                           "creations_phases_not_done": creations_phases_not_done,
+                           "creations_phases_done": creations_phases_done,
+                           "exists_completed_creations": exists_completed_creations,
+                           "update_phases_form": update_phases_form})
+    def post(self, request, supervisor_id=0, client_id=0, album_id=0):
         form = phaseStatusForm(request.POST)
         if form.is_valid():
             # transform changes to dict {phase_id:new_status}
@@ -176,7 +199,7 @@ class creationsView(View):
             for p_id, new_status_desc in changes.items():
                 extract_phase = Phase.objects.filter(phase_id=p_id)[0]
                 extract_phase.update_phase_status(new_status_desc)
-        return HttpResponseRedirect(reverse(viewname="artwork", args=[request.session["client_overview_id"], request.session["album_id"]]))
+        return HttpResponseRedirect(reverse(viewname="artwork", args=[request.session["supervisor_id"],request.session["client_overview_id"], request.session["album_id"]]))
 
 
 class albumsView(View):

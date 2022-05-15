@@ -12,11 +12,11 @@ Albums
 
 
 <table class='albumsTable'>
-{%for creator_id, creator_name in supervisors_data.items %}
+{%for supervisor_id, supervisor_name in supervisors_data.items %}
 <tr>
     <td class='albumstabletd'>
 
-        <a class="boldLabel" href="{% url "artwork" client_id=creator_id album_id=0 %}">*{{creator_name}}*</a>
+        <a class="boldLabel" href="{% url "artwork" supervisor_id=supervisor_id client_id=0 album_id=0 %}">*{{supervisor_name}}*</a>
     </td>
 </tr>
 {%endfor%}

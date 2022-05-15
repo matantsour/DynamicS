@@ -16,7 +16,7 @@ Albums
 <tr>
     <td class='albumstabletd'>
 
-        <a class="boldLabel" href="{% url "artwork" client_id=creator_id album_id=0 %}">*{{creator_name}}*</a>
+        <a class="boldLabel" href="{% url "artwork" supervisor_id=0 client_id=creator_id album_id=0 %}">*{{creator_name}}*</a>
     </td>
 </tr>
 {%endfor%}
