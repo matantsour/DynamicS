@@ -297,7 +297,7 @@ class last_version(View):
 
 def client_approved_click(request, creation_id):
     creation = Creation.objects.get(id=creation_id).client_approved()
-    return redirect('artwork')
+    return HttpResponseRedirect(reverse(viewname="artwork", args=[request.session["supervisor_id"],request.session["client_overview_id"], request.session["album_id"]]))
 
 
 class notesView(View):
