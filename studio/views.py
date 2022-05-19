@@ -46,6 +46,7 @@ def createMeetinginProgram(meeting):  # details="2022-05-20-20-00-topic-users"
                                     microsecond=0).isoformat()
 
     service = get_calendar_service()
+
     event = {
         'summary': meeting.phase_id.creation_id.name + ": " + meeting.topic,
         'location': meeting.location,
@@ -59,7 +60,8 @@ def createMeetinginProgram(meeting):  # details="2022-05-20-20-00-topic-users"
             'timeZone': 'Israel',
         },
         'attendees': [
-            #{'email': 'vlad.census@gmail.com'},
+            {"email":u.login_details.email}
+            for u in meeting.attendees.all()
         ]
     }
     event = service.events().insert(calendarId='primary', body=event).execute()
@@ -91,7 +93,6 @@ class indexView(View):
             else:
                 request.session["is_logged_in"] = False
             return render(request, "studio/index.html", {"login_form": login_form})
-
 
 class creationsView(View):
     def get(self, request, supervisor_id=0,client_id=0, album_id=0):
@@ -201,7 +202,6 @@ class creationsView(View):
                 extract_phase.update_phase_status(new_status_desc)
         return HttpResponseRedirect(reverse(viewname="artwork", args=[request.session["supervisor_id"],request.session["client_overview_id"], request.session["album_id"]]))
 
-
 class albumsView(View):
     def get(self, request):
         if request.session["user_type"] != "guest":
@@ -236,7 +236,6 @@ class creations_by_creator(View):
     def post(self, request):
         return HttpResponseRedirect(reverse(viewname="creations_per_client"))
 
-
 class creations_by_supervisor(View):
     def get(self, request):
         if request.session["user_type"] == "manager":
@@ -247,8 +246,6 @@ class creations_by_supervisor(View):
 
     def post(self, request):
         return HttpResponseRedirect(reverse(viewname="creations_per_client"))
-
-
 
 
 class CreateFileView(View):
