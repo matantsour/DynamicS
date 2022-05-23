@@ -3,7 +3,7 @@ import re
 from unicodedata import name
 from django.shortcuts import render, redirect
 from django.views import View
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,HttpResponseNotFound
 from importlib import import_module
 from django.conf import settings
 from .models import *
@@ -19,7 +19,7 @@ import datetime
 
 
 ##
-# Create your util functions here, then move them to utils.
+# Create your util function00s here, then move them to utils.
 
 
 def deleteCreation(request, creation_id):
@@ -251,12 +251,19 @@ class creations_by_supervisor(View):
 class CreateFileView(View):
     def get(self, request, creation_id):
         u_id = request.session["user_logged_in_id"]
-        ok_list = permitted_creations_list(u_id)
-        if creation_id not in ok_list:
+        if request.session["user_type"] in ['guest','customer']:
             return HttpResponseRedirect(reverse("index-page"))
+        elif request.session["user_type"]=='worker':
+            ok_list = permitted_creations_list(u_id)
+            if creation_id not in ok_list:
+                return HttpResponseRedirect(reverse("index-page"))
+        #if we've gotten this far, it means that either the logged in user is manager or worker with permitted access
         form = CreationFileForm()
-        all_files = CreationFile.objects.all()
-        print(all_files)
+        try:
+            creation_ob = Creation.objects.filter(id=creation_id)[0]
+        except Creation.DoesNotExist:
+            return HttpResponseNotFound("<h1>משהו השתבש, נסה שוב</h1>")
+        all_files = CreationFile.objects.filter(creation=creation_ob)
         return render(request, "studio/pages/upload_files_page/upload_files_main.html", {
             "form": form,
             "files": all_files,
@@ -266,19 +273,25 @@ class CreateFileView(View):
     def post(self, request, creation_id):
         submitted_form = CreationFileForm(request.POST, request.FILES)
         u_id = request.session["user_logged_in_id"]
-        ok_list = permitted_creations_list(u_id)
-        if creation_id not in ok_list:
+        if request.session["user_type"] in ['guest','customer']:
             return HttpResponseRedirect(reverse("index-page"))
-        creation = Creation.objects.filter(id=creation_id)[0]
+        elif request.session["user_type"]=='worker':
+            ok_list = permitted_creations_list(u_id)
+            if creation_id not in ok_list:
+                return HttpResponseRedirect(reverse("index-page"))
+        creation_ob = Creation.objects.filter(id=creation_id)[0]
         nowdate = str(timezone.localdate()).replace("-", "_")
-        fname = creation.name[:3]+"_"+nowdate+"." + \
+        fname = creation_ob.name[:3]+"_"+nowdate+"." + \
             str(request.FILES["audioFile"]).split(".")[-1]
         print(fname)
         if submitted_form.is_valid():
+            #delete old file
+            for f in CreationFile.objects.filter(creation=creation_ob):
+                f.delete()
             newfile = CreationFile(audioFile=request.FILES["audioFile"],
-                                   creation=creation, fname=fname)
+                                   creation=creation_ob, fname=fname)
             newfile.save()
-            return render(request, "studio/includes/welcome_user.html")
+            return HttpResponseRedirect(reverse(viewname="files_upload", args=[int(creation_id)]))
 
         return render(request, "studio/pages/upload_files_page/upload_files_main.html", {
             "form": form,

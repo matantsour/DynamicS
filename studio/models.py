@@ -313,7 +313,7 @@ def content_Audio_file_name(instance, filename):
 class CreationFile(models.Model):
     id = models.AutoField(primary_key=True)
     creation = models.ForeignKey(
-        Creation, null=True, blank=True, on_delete=models.SET_NULL, related_name="files")
+        Creation, null=True, blank=True, on_delete=models.CASCADE, related_name="files")
     file_creation_date = models.DateField(
         null=False, blank=True, editable=False, auto_now=True)
     fname=models.CharField(max_length=300,null=True, blank=True,editable=False)
