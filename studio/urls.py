@@ -18,12 +18,9 @@ urlpatterns = [
     path("creations/<int:supervisor_id>/<int:client_id>/<album_id>",views.creationsView.as_view(),name="artwork"),
     path("creations/deleteCreation/<int:creation_id>",views.deleteCreation,name="delete_creation"),
     path("creations/client_approval/<int:creation_id>",views.client_approved_click,name="client_approved_click"),
-    path("creations/last_version/<int:creation_id>",views.last_version.as_view(),name="last_version"),
     path("creations/notes/<int:creation_id>",views.notesView.as_view(),name="notes"),
-    
-    #files
-    path("files_upload/<int:creation_id>",views.CreateFileView.as_view(),name="files_upload"),
-
+    #Files or Last Version
+    path("creations/last_version/<int:creation_id>",views.lastVersion.as_view(),name="last_version"),
     #Meetings
     path("meetings/",views.userMeetingView.as_view(),name="meetings"),
     path("new_meeting/",views.createMeeting.as_view(),name="new_meeting"),

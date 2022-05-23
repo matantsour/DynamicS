@@ -248,23 +248,25 @@ class creations_by_supervisor(View):
         return HttpResponseRedirect(reverse(viewname="creations_per_client"))
 
 
-class CreateFileView(View):
+class lastVersion(View):
     def get(self, request, creation_id):
         u_id = request.session["user_logged_in_id"]
+        hide_upload_file_form=False
         if request.session["user_type"] in ['guest','customer']:
-            return HttpResponseRedirect(reverse("index-page"))
+            hide_upload_file_form=True
         elif request.session["user_type"]=='worker':
             ok_list = permitted_creations_list(u_id)
             if creation_id not in ok_list:
-                return HttpResponseRedirect(reverse("index-page"))
-        #if we've gotten this far, it means that either the logged in user is manager or worker with permitted access
+                hide_upload_file_form=True
+        #if we've gotten this far, it means that either the logged in user is manager or worker with permitted access. hide_upload_file_form=True
         form = CreationFileForm()
         try:
             creation_ob = Creation.objects.filter(id=creation_id)[0]
         except Creation.DoesNotExist:
             return HttpResponseNotFound("<h1>משהו השתבש, נסה שוב</h1>")
         all_files = CreationFile.objects.filter(creation=creation_ob)
-        return render(request, "studio/pages/upload_files_page/upload_files_main.html", {
+        return render(request, "studio\pages\last_version_page\last_version_main.html", {
+            "hide_upload_file_form":hide_upload_file_form,
             "form": form,
             "files": all_files,
             "creation_id": creation_id
@@ -272,13 +274,6 @@ class CreateFileView(View):
 
     def post(self, request, creation_id):
         submitted_form = CreationFileForm(request.POST, request.FILES)
-        u_id = request.session["user_logged_in_id"]
-        if request.session["user_type"] in ['guest','customer']:
-            return HttpResponseRedirect(reverse("index-page"))
-        elif request.session["user_type"]=='worker':
-            ok_list = permitted_creations_list(u_id)
-            if creation_id not in ok_list:
-                return HttpResponseRedirect(reverse("index-page"))
         creation_ob = Creation.objects.filter(id=creation_id)[0]
         nowdate = str(timezone.localdate()).replace("-", "_")
         fname = creation_ob.name[:3]+"_"+nowdate+"." + \
@@ -290,19 +285,10 @@ class CreateFileView(View):
                 f.delete()
             newfile = CreationFile(audioFile=request.FILES["audioFile"],
                                    creation=creation_ob, fname=fname)
-            newfile.save()
-            return HttpResponseRedirect(reverse(viewname="files_upload", args=[int(creation_id)]))
+            newfile.save()           
 
-        return render(request, "studio/pages/upload_files_page/upload_files_main.html", {
-            "form": form,
-            "creation": find_creation
-        })
+        return HttpResponseRedirect(reverse(viewname="last_version", args=[int(creation_id)]))
 
-
-class last_version(View):
-    def get(self, request, creation_id):
-        creationfile = CreationFile.objects.all()[0]
-        return render(request, "studio/pages/last_version_page/last_version_main.html", {"creationfile": creationfile})
 
 
 def client_approved_click(request, creation_id):

@@ -5,7 +5,7 @@
 
 <table>
     <tr>
-        <td><button class="button" onclick="openInNewTab('{% url "last_version" creation_id=creation.id%}')">גרסא אחרונה</button> </td>
+        <td><button class="button" onclick="return windowpop('{% url 'last_version' creation_id=creation.id%}',1400,700)">גרסא אחרונה</button> </td>
     </tr>
     <tr>
         <td><button class="button" onclick="return windowpop('{% url 'notes' creation_id=creation.id %}',330, 330)">שלח הערה</button> </td>

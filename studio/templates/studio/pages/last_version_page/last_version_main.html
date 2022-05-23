@@ -1,10 +1,62 @@
+{% extends 'base.html' %}
 {% load static %}
 
+
+{% block title %}
+Last Version
+{% endblock title %}
+
+
 {% block css_files %}
-<link rel="stylesheet"  href="{% static  "last_version_css.css"  %}">
+<link rel="stylesheet"  href="{% static  "files_upload_css.css"  %}">
 {% endblock css_files %} 
 
 
 {% block content%}
-<img src="{{ creationfile.image.url }}">
-{% endblock content %} 
+
+<br>
+
+{% if not files%}
+<h2>טרם הועלתה גרסא ליצירה</h2>
+{% endif %}
+
+{% if not hide_upload_file_form%}
+<form action="{% url 'last_version' creation_id=creation_id %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table class="uploadFileFormTable">
+        <tr>
+            <td colspan="2">העלה קובץ חדש
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                {{ form.audioFile }}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button class="upload_button" type="submit">Upload!</button>
+            </td>
+        </tr>
+        
+        
+    </table>
+
+  </form>
+{%endif%}
+
+  <table>
+    {% for f in files%}
+    <tr>
+        <td> <audio controls id="player">
+                <source src="{{f.audioFile.url}}" type="audio/mp3"> 
+        </td>
+        <td class="label">
+            {{f.file_creation_date}}
+        </td>
+    </tr>
+    {% endfor%}
+
+
+    </table>
+{%endblock%}

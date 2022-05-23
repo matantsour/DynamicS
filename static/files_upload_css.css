@@ -1,0 +1,27 @@
+.uploadFileFormTable {
+    color: white;
+}
+
+.upload_button {
+    background-color: rgb(78, 11, 112);
+    color: #FFFFFF;
+    border-radius: 10px;
+    width: 200px;
+    height: 50px;
+}
+
+.upload_button[type=submit]:active {
+    background-color: #000000;
+    color: white;
+    border-color: white;
+    border-width: thick;
+    cursor: pointer;
+}
+
+.upload_button[type=submit]:hover {
+    cursor: pointer;
+}
+
+.label {
+    color: white
+}
